@@ -20,6 +20,8 @@ export const AUTH_ERROR_CODES = [
   'NOT_FOUND',
   'CONFLICT',
   'POLICY_NOT_ACCEPTED',
+  'STALE',
+  'CHANGESET_INVALID',
 ] as const;
 export type AuthErrorCode = (typeof AUTH_ERROR_CODES)[number];
 

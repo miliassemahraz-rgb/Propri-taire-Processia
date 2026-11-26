@@ -19,6 +19,8 @@ const MESSAGES: Record<AuthErrorCode, string> = {
   NOT_FOUND: 'Ressource introuvable.',
   CONFLICT: 'Conflit avec l’état actuel de la ressource.',
   POLICY_NOT_ACCEPTED: 'La politique de données du fournisseur doit être acceptée.',
+  STALE: 'Le modèle a changé depuis la version de départ de la modification.',
+  CHANGESET_INVALID: 'La modification est refusée par les règles du modèle.',
 };
 
 const STATUS: Record<AuthErrorCode, number> = {
@@ -39,6 +41,8 @@ const STATUS: Record<AuthErrorCode, number> = {
   NOT_FOUND: 404,
   CONFLICT: 409,
   POLICY_NOT_ACCEPTED: 422,
+  STALE: 409,
+  CHANGESET_INVALID: 422,
 };
 
 /** Erreur applicative portant un code stable (contrat `ApiError`). */

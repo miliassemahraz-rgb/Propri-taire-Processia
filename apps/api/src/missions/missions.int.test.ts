@@ -1,5 +1,4 @@
 import type { INestApplication } from '@nestjs/common';
-import { Controller, Module, Post } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { loadEnv } from '@processia/config/env';
 import { CSRF_HEADER, SESSION_COOKIE } from '@processia/contracts';
@@ -19,24 +18,11 @@ import { decryptSecret } from '../auth/crypto.js';
 import { KEY_PURPOSE } from '../clients/ai-config.service.js';
 import { ENV } from '../env.js';
 import { RATE_LIMIT_OPTIONS } from '../auth/guards.js';
-import { Can } from '../policy/decorators.js';
 
 // Intégration : exige `pnpm services:up`. Vraie application Nest sur HTTP, base `processia_test`,
 // rôle `processia_app` (soumis à la RLS).
 
 const urls = resolveDbUrls(process.env, { test: true });
-
-/** Route de test protégée par `model.edit` (l'édition du modèle arrive avec WP-08). */
-@Controller('missions/:missionId/test-edit')
-class EditController {
-  @Can('model.edit')
-  @Post()
-  edit(): { ok: boolean } {
-    return { ok: true };
-  }
-}
-@Module({ controllers: [EditController] })
-class EditModule {}
 
 let app: INestApplication;
 let base: string;
@@ -86,6 +72,23 @@ class Client {
   }
 }
 
+/**
+ * Édition réelle du modèle (WP-08) : un ChangeSet de disposition sur la tête courante.
+ * Protégée par `model.edit` : c'est la route qui remplace l'ancienne route de test.
+ */
+async function edit(client: Client, missionId: string): Promise<Reply> {
+  const head = await client.call('GET', `/missions/${missionId}/model`);
+  const baseVersion = head.status === 200 ? (head.body.version as number) : 0;
+  return client.call('POST', `/missions/${missionId}/model/changes`, {
+    changeSet: {
+      baseVersion,
+      cause: 'layout',
+      summary: 'Test de droit',
+      ops: [{ op: 'set_layout', diagram: 'L0', positions: {} }],
+    },
+  });
+}
+
 let adminC: Client;
 let managerC: Client;
 let consultantA: Client;
@@ -99,7 +102,7 @@ beforeAll(async () => {
   admin = new pg.Pool({ connectionString: urls.admin, max: 2 });
   const env = loadEnv({ ...process.env, DATABASE_APP_URL: urls.app });
   masterKey = env.MASTER_KEY;
-  const moduleRef = await Test.createTestingModule({ imports: [AppModule, EditModule] })
+  const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(ENV)
     .useValue(env)
     .overrideProvider(RATE_LIMIT_OPTIONS)
@@ -186,20 +189,20 @@ describe('WP-06 : droits, missions, affectations', () => {
         })
       ).status,
     ).toBe(403);
-    expect((await managerC.call('POST', `/missions/${other.id}/test-edit`)).status).toBe(403);
+    expect((await edit(managerC, other.id)).status).toBe(403);
     // Sur la sienne, il gère.
-    expect((await managerC.call('POST', `/missions/${MISSION}/test-edit`)).status).toBe(201);
+    expect((await edit(managerC, MISSION)).status).toBe(201);
     // L'administrateur voit toutes les missions.
     const all = await adminC.call('GET', '/missions');
     expect(all.body.map((m: { id: string }) => m.id).sort()).toEqual([MISSION, other.id].sort());
   });
 
   it('l’administrateur ne peut pas appeler model.edit ; le validateur non plus', async () => {
-    expect((await adminC.call('POST', `/missions/${MISSION}/test-edit`)).status).toBe(403);
-    expect((await adminC.call('POST', `/missions/${other.id}/test-edit`)).status).toBe(403);
-    expect((await validatorC.call('POST', `/missions/${MISSION}/test-edit`)).status).toBe(403);
-    expect((await consultantB.call('POST', `/missions/${MISSION}/test-edit`)).status).toBe(201);
-    expect((await consultantA.call('POST', `/missions/${other.id}/test-edit`)).status).toBe(404);
+    expect((await edit(adminC, MISSION)).status).toBe(403);
+    expect((await edit(adminC, other.id)).status).toBe(403);
+    expect((await edit(validatorC, MISSION)).status).toBe(403);
+    expect((await edit(consultantB, MISSION)).status).toBe(201);
+    expect((await edit(consultantA, other.id)).status).toBe(404);
     // Sans session : 401 (la garde de droits ne précède pas celle de session).
     expect((await new Client().call('GET', '/missions')).status).toBe(401);
   });
@@ -272,7 +275,7 @@ describe('WP-06 : droits, missions, affectations', () => {
     );
     expect(before.progress).toEqual({
       phase: 'analysis',
-      completeness: null,
+      completeness: 0, // deux éditions de test (WP-08) ont créé des versions du modèle vide
       pendingSubmissions: 0,
     });
 
@@ -289,11 +292,15 @@ describe('WP-06 : droits, missions, affectations', () => {
     // Une version du modèle (instantané complet) et une soumission en attente.
     const model = buildCompleteModel();
     const expected = overallCompleteness(completeness(model));
+    // Les éditions des tests précédents ont déjà créé des versions : on ajoute la suivante.
+    const [{ head_version: head }] = (
+      await admin.query(`select head_version from missions where id = $1`, [MISSION])
+    ).rows as [{ head_version: number }];
     await admin.query(
-      `insert into model_versions (mission_id, version, snapshot, cause) values ($1, 1, $2, 'test')`,
-      [MISSION, JSON.stringify(model)],
+      `insert into model_versions (mission_id, version, snapshot, cause) values ($1, $2, $3, 'test')`,
+      [MISSION, head + 1, JSON.stringify({ ...model, version: head + 1, missionId: MISSION })],
     );
-    await admin.query(`update missions set head_version = 1 where id = $1`, [MISSION]);
+    await admin.query(`update missions set head_version = $2 where id = $1`, [MISSION, head + 1]);
     await admin.query(
       `insert into validation_submissions (mission_id, kind, round, model_version, submitted_by)
        values ($1, 'analysis_dossier', 1, 1, $2)`,
