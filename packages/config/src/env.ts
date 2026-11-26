@@ -14,6 +14,10 @@ export const envSchema = z.object({
 
   // Base de données
   DATABASE_URL: z.string().url(),
+  // Rôles de WP-04 : migrations (propriétaire) et application (non propriétaire, soumis à la RLS).
+  // DATABASE_URL reste le compte d'administration du cluster (amorçage des rôles, seed, tests).
+  DATABASE_OWNER_URL: z.string().url().optional(),
+  DATABASE_APP_URL: z.string().url().optional(),
   DATABASE_TEST_URL: z.string().url().optional(),
 
   // Stockage objet S3 (MinIO en local)

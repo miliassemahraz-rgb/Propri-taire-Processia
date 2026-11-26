@@ -14,13 +14,19 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "node scripts/migrate.mjs"
+    "db:generate": "drizzle-kit generate --config=drizzle.config.mjs",
+    "db:migrate": "tsc -p tsconfig.build.json && node scripts/migrate.mjs",
+    "db:seed": "tsc -p tsconfig.build.json && node scripts/seed.mjs"
   },
   "dependencies": {
     "@processia/config": "workspace:*",
-    "@processia/model": "workspace:*"
+    "@processia/model": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "pg": "8.23.1"
   },
   "devDependencies": {
-    "@processia/config": "workspace:*"
+    "@processia/config": "workspace:*",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.11"
   }
 }
