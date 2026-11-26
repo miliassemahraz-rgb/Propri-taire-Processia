@@ -13,9 +13,21 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "schema:export": "tsx src/scripts/export-schema.ts && prettier --write schema fixtures"
   },
   "devDependencies": {
-    "@processia/config": "workspace:*"
-  }
+    "@processia/config": "workspace:*",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "tsx": "4.23.15"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "files": [
+    "dist",
+    "schema",
+    "fixtures"
+  ]
 }

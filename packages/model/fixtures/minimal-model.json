@@ -1,0 +1,887 @@
+{
+  "schemaVersion": 1,
+  "missionId": "mission-test",
+  "version": 1,
+  "elements": {
+    "01900000-0000-7000-8000-000000000001": {
+      "id": "01900000-0000-7000-8000-000000000001",
+      "code": "TRT-01",
+      "label": "Secteur",
+      "provenance": {
+        "origin": "document",
+        "refs": [
+          {
+            "sourceId": "01900000-ffff-7000-8000-000000000001",
+            "sourceRevision": 1,
+            "locator": {
+              "paragraph": 1,
+              "charStart": 0,
+              "charEnd": 24
+            },
+            "quote": "Nous relançons les clients"
+          }
+        ],
+        "author": {
+          "type": "ai"
+        },
+        "at": "2026-01-15T09:00:00.000Z",
+        "confidence": 0.9
+      },
+      "status": {
+        "value": "extracted",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "business_trait",
+      "facet": "sector",
+      "text": "Cabinet d’expertise comptable"
+    },
+    "01900000-0000-7000-8000-000000000002": {
+      "id": "01900000-0000-7000-8000-000000000002",
+      "code": "TRM-02",
+      "label": "Liasse",
+      "provenance": {
+        "origin": "ai_knowledge",
+        "refs": [],
+        "author": {
+          "type": "ai"
+        },
+        "at": "2026-01-15T09:00:00.000Z",
+        "rationale": "Usage courant dans la profession"
+      },
+      "status": {
+        "value": "hypothesis",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "glossary_term",
+      "term": "Liasse",
+      "definition": "Ensemble des documents fiscaux de fin d’exercice",
+      "synonyms": []
+    },
+    "01900000-0000-7000-8000-000000000003": {
+      "id": "01900000-0000-7000-8000-000000000003",
+      "code": "ACT-03",
+      "label": "Comptable",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "actor",
+      "category": "internal",
+      "responsibilities": ["Saisir les pièces"]
+    },
+    "01900000-0000-7000-8000-000000000004": {
+      "id": "01900000-0000-7000-8000-000000000004",
+      "code": "ACT-04",
+      "label": "Client",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "actor",
+      "category": "external",
+      "responsibilities": ["Saisir les pièces"],
+      "stakeholder": true
+    },
+    "01900000-0000-7000-8000-000000000005": {
+      "id": "01900000-0000-7000-8000-000000000005",
+      "code": "OUT-05",
+      "label": "Logiciel comptable",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "tool",
+      "nature": "software"
+    },
+    "01900000-0000-7000-8000-000000000007": {
+      "id": "01900000-0000-7000-8000-000000000007",
+      "code": "DON-06",
+      "label": "Dossier client",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "data_object",
+      "nature": "business_object",
+      "fields": [
+        {
+          "id": "01900000-0000-7000-8000-000000000006",
+          "name": "Montant TTC",
+          "type": "amount",
+          "provenance": {
+            "origin": "consultant",
+            "refs": [],
+            "author": {
+              "type": "user",
+              "userId": "user-1"
+            },
+            "at": "2026-01-15T09:00:00.000Z"
+          },
+          "status": {
+            "value": "confirmed",
+            "decidedBy": "user-1",
+            "decidedAt": "2026-01-15T09:00:00.000Z"
+          }
+        }
+      ],
+      "toolIds": ["01900000-0000-7000-8000-000000000005"]
+    },
+    "01900000-0000-7000-8000-000000000008": {
+      "id": "01900000-0000-7000-8000-000000000008",
+      "code": "RG-07",
+      "label": "Relance à 7 jours",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "rule",
+      "type": "decision",
+      "statement": {
+        "text": "Relancer le client si la pièce manque",
+        "when": "pièce absente après 7 jours",
+        "then": "envoyer une relance"
+      },
+      "appliesTo": []
+    },
+    "01900000-0000-7000-8000-000000000009": {
+      "id": "01900000-0000-7000-8000-000000000009",
+      "code": "P-08",
+      "label": "Tenue comptable",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "activity",
+      "level": "macro",
+      "raci": [],
+      "inputs": [],
+      "outputs": [],
+      "toolIds": [],
+      "ruleIds": [],
+      "execution": "manual",
+      "macroCategory": "core"
+    },
+    "01900000-0000-7000-8000-00000000000a": {
+      "id": "01900000-0000-7000-8000-00000000000a",
+      "code": "P-09",
+      "label": "Pilotage",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "activity",
+      "level": "macro",
+      "raci": [],
+      "inputs": [],
+      "outputs": [],
+      "toolIds": [],
+      "ruleIds": [],
+      "execution": "manual",
+      "macroCategory": "steering"
+    },
+    "01900000-0000-7000-8000-00000000000b": {
+      "id": "01900000-0000-7000-8000-00000000000b",
+      "code": "P-10",
+      "label": "Relance des pièces manquantes",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "activity",
+      "level": "process",
+      "raci": [
+        {
+          "actorId": "01900000-0000-7000-8000-000000000003",
+          "role": "R"
+        }
+      ],
+      "inputs": ["01900000-0000-7000-8000-000000000007"],
+      "outputs": [],
+      "toolIds": ["01900000-0000-7000-8000-000000000005"],
+      "ruleIds": ["01900000-0000-7000-8000-000000000008"],
+      "execution": "manual",
+      "parentId": "01900000-0000-7000-8000-000000000009",
+      "responsibleActorId": "01900000-0000-7000-8000-000000000003",
+      "scope": "application"
+    },
+    "01900000-0000-7000-8000-00000000000c": {
+      "id": "01900000-0000-7000-8000-00000000000c",
+      "code": "P-11",
+      "label": "Envoyer la relance",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "activity",
+      "level": "task",
+      "raci": [],
+      "inputs": [],
+      "outputs": [],
+      "toolIds": [],
+      "ruleIds": [],
+      "execution": "user",
+      "parentId": "01900000-0000-7000-8000-00000000000b",
+      "responsibleActorId": "01900000-0000-7000-8000-000000000003",
+      "automation": {
+        "type": "rules_notifications",
+        "capability": "reminder"
+      }
+    },
+    "01900000-0000-7000-8000-00000000000d": {
+      "id": "01900000-0000-7000-8000-00000000000d",
+      "code": "P-12",
+      "label": "Rédiger le courriel",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "activity",
+      "level": "step",
+      "raci": [],
+      "inputs": [],
+      "outputs": [],
+      "toolIds": [],
+      "ruleIds": [],
+      "execution": "manual",
+      "parentId": "01900000-0000-7000-8000-00000000000c",
+      "order": 1
+    },
+    "01900000-0000-7000-8000-00000000000e": {
+      "id": "01900000-0000-7000-8000-00000000000e",
+      "code": "EVT-13",
+      "label": "Début",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "event",
+      "containerId": "01900000-0000-7000-8000-00000000000b",
+      "position": "start",
+      "trigger": "none"
+    },
+    "01900000-0000-7000-8000-000000000010": {
+      "id": "01900000-0000-7000-8000-000000000010",
+      "code": "EVT-14",
+      "label": "Fin",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "event",
+      "containerId": "01900000-0000-7000-8000-00000000000b",
+      "position": "end",
+      "trigger": "none"
+    },
+    "01900000-0000-7000-8000-000000000012": {
+      "id": "01900000-0000-7000-8000-000000000012",
+      "code": "EVT-15",
+      "label": "Délai dépassé",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "event",
+      "containerId": "01900000-0000-7000-8000-00000000000b",
+      "position": "boundary",
+      "trigger": "timer",
+      "attachedToId": "01900000-0000-7000-8000-00000000000c",
+      "timer": "J+7 après la demande"
+    },
+    "01900000-0000-7000-8000-000000000014": {
+      "id": "01900000-0000-7000-8000-000000000014",
+      "code": "GW-16",
+      "label": "Pièce reçue ?",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "gateway",
+      "containerId": "01900000-0000-7000-8000-00000000000b",
+      "type": "exclusive",
+      "ruleId": "01900000-0000-7000-8000-000000000008",
+      "actorId": "01900000-0000-7000-8000-000000000003"
+    },
+    "01900000-0000-7000-8000-000000000016": {
+      "id": "01900000-0000-7000-8000-000000000016",
+      "code": "SEQ-17",
+      "label": "Début vers tâche",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "sequence_flow",
+      "containerId": "01900000-0000-7000-8000-00000000000b",
+      "fromId": "01900000-0000-7000-8000-00000000000e",
+      "toId": "01900000-0000-7000-8000-00000000000c"
+    },
+    "01900000-0000-7000-8000-00000000001a": {
+      "id": "01900000-0000-7000-8000-00000000001a",
+      "code": "SEQ-18",
+      "label": "Tâche vers passerelle",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "sequence_flow",
+      "containerId": "01900000-0000-7000-8000-00000000000b",
+      "fromId": "01900000-0000-7000-8000-00000000000c",
+      "toId": "01900000-0000-7000-8000-000000000014",
+      "condition": "toujours",
+      "isDefault": true
+    },
+    "01900000-0000-7000-8000-00000000001e": {
+      "id": "01900000-0000-7000-8000-00000000001e",
+      "code": "LNK-19",
+      "label": "Pilotage vers tenue",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "process_link",
+      "fromId": "01900000-0000-7000-8000-00000000000a",
+      "toId": "01900000-0000-7000-8000-000000000009",
+      "nature": "steers",
+      "dataObjectIds": ["01900000-0000-7000-8000-000000000007"]
+    },
+    "01900000-0000-7000-8000-000000000021": {
+      "id": "01900000-0000-7000-8000-000000000021",
+      "code": "FLX-20",
+      "label": "Relance par courriel",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "information_flow",
+      "fromActorId": "01900000-0000-7000-8000-000000000003",
+      "toActorId": "01900000-0000-7000-8000-000000000004",
+      "dataObjectIds": ["01900000-0000-7000-8000-000000000007"],
+      "channel": "email",
+      "activityId": "01900000-0000-7000-8000-00000000000c"
+    },
+    "01900000-0000-7000-8000-000000000024": {
+      "id": "01900000-0000-7000-8000-000000000024",
+      "code": "IND-21",
+      "label": "Volume mensuel",
+      "provenance": {
+        "origin": "document",
+        "refs": [
+          {
+            "sourceId": "01900000-ffff-7000-8000-000000000001",
+            "sourceRevision": 1,
+            "locator": {
+              "paragraph": 1,
+              "charStart": 0,
+              "charEnd": 24
+            },
+            "quote": "Nous relançons les clients"
+          }
+        ],
+        "author": {
+          "type": "ai"
+        },
+        "at": "2026-01-15T09:00:00.000Z",
+        "confidence": 0.9
+      },
+      "status": {
+        "value": "extracted",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "indicator",
+      "targetId": "01900000-0000-7000-8000-00000000000b",
+      "measure": "volume",
+      "value": {
+        "exact": 120
+      },
+      "unit": "dossiers",
+      "period": "month",
+      "nature": "estimated"
+    },
+    "01900000-0000-7000-8000-000000000026": {
+      "id": "01900000-0000-7000-8000-000000000026",
+      "code": "ECA-22",
+      "label": "Délai de relance",
+      "provenance": {
+        "origin": "ai_knowledge",
+        "refs": [],
+        "author": {
+          "type": "ai"
+        },
+        "at": "2026-01-15T09:00:00.000Z",
+        "rationale": "Usage courant dans la profession"
+      },
+      "status": {
+        "value": "hypothesis",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "discrepancy",
+      "elementIds": ["01900000-0000-7000-8000-000000000008"],
+      "sides": [
+        {
+          "claim": "Délai de 7 jours",
+          "refs": [
+            {
+              "sourceId": "01900000-ffff-7000-8000-000000000001",
+              "sourceRevision": 1,
+              "locator": {
+                "paragraph": 1,
+                "charStart": 0,
+                "charEnd": 24
+              },
+              "quote": "Nous relançons les clients"
+            }
+          ]
+        },
+        {
+          "claim": "Délai de 15 jours",
+          "refs": [
+            {
+              "sourceId": "01900000-ffff-7000-8000-000000000001",
+              "sourceRevision": 1,
+              "locator": {
+                "paragraph": 1,
+                "charStart": 0,
+                "charEnd": 24
+              },
+              "quote": "Nous relançons les clients"
+            }
+          ]
+        }
+      ],
+      "state": "open"
+    },
+    "01900000-0000-7000-8000-000000000027": {
+      "id": "01900000-0000-7000-8000-000000000027",
+      "code": "CST-23",
+      "label": "Ressaisie des pièces",
+      "provenance": {
+        "origin": "deterministic_rule",
+        "refs": [],
+        "author": {
+          "type": "system"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "finding",
+      "family": "waste",
+      "type": "rekeying",
+      "location": ["01900000-0000-7000-8000-00000000000c"],
+      "severity": 2,
+      "detection": {
+        "by": "rule",
+        "detectorId": "rekeying"
+      }
+    },
+    "01900000-0000-7000-8000-00000000002a": {
+      "id": "01900000-0000-7000-8000-00000000002a",
+      "code": "OPT-25",
+      "label": "Relance automatique",
+      "provenance": {
+        "origin": "consultant",
+        "refs": [],
+        "author": {
+          "type": "user",
+          "userId": "user-1"
+        },
+        "at": "2026-01-15T09:00:00.000Z"
+      },
+      "status": {
+        "value": "confirmed",
+        "decidedBy": "user-1",
+        "decidedAt": "2026-01-15T09:00:00.000Z"
+      },
+      "meta": {
+        "createdInVersion": 1,
+        "updatedInVersion": 1
+      },
+      "kind": "optimisation",
+      "findingIds": ["01900000-0000-7000-8000-000000000027"],
+      "changeSet": {
+        "baseVersion": 1,
+        "cause": "optimisation",
+        "summary": "Automatiser la relance",
+        "ops": [
+          {
+            "op": "update",
+            "id": "01900000-0000-7000-8000-00000000000c",
+            "set": {
+              "execution": "automatic"
+            }
+          },
+          {
+            "op": "add",
+            "element": {
+              "id": "tmp:1",
+              "code": "P-24",
+              "label": "Relance automatique",
+              "provenance": {
+                "origin": "consultant",
+                "refs": [],
+                "author": {
+                  "type": "user",
+                  "userId": "user-1"
+                },
+                "at": "2026-01-15T09:00:00.000Z"
+              },
+              "status": {
+                "value": "confirmed",
+                "decidedBy": "user-1",
+                "decidedAt": "2026-01-15T09:00:00.000Z"
+              },
+              "meta": {
+                "createdInVersion": 1,
+                "updatedInVersion": 1
+              },
+              "kind": "activity",
+              "level": "step",
+              "raci": [],
+              "inputs": [],
+              "outputs": [],
+              "toolIds": [],
+              "ruleIds": [],
+              "execution": "manual",
+              "parentId": "01900000-0000-7000-8000-00000000000c"
+            }
+          }
+        ]
+      },
+      "touchedElementIds": ["01900000-0000-7000-8000-00000000000c"],
+      "dependsOn": [],
+      "gain": {
+        "assumptions": [],
+        "formula": "volume × durée",
+        "score": 3
+      },
+      "effort": {
+        "score": 2,
+        "justification": "Configuration du moteur",
+        "drivers": ["engine_configuration"]
+      },
+      "automationType": "rules_notifications"
+    }
+  },
+  "rejectedHypotheses": [
+    {
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000002c",
+        "code": "TRM-26",
+        "label": "Terme rejeté",
+        "provenance": {
+          "origin": "ai_knowledge",
+          "refs": [],
+          "author": {
+            "type": "ai"
+          },
+          "at": "2026-01-15T09:00:00.000Z",
+          "rationale": "Usage courant dans la profession"
+        },
+        "status": {
+          "value": "hypothesis",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "glossary_term",
+        "term": "Bilan",
+        "definition": "Hypothèse écartée",
+        "synonyms": []
+      },
+      "by": "user-1",
+      "at": "2026-01-16T09:00:00.000Z",
+      "reason": "Hors périmètre"
+    }
+  ],
+  "layout": {
+    "L0": {
+      "01900000-0000-7000-8000-000000000009": {
+        "x": 0,
+        "y": 0,
+        "w": 120,
+        "h": 60
+      }
+    }
+  }
+}
