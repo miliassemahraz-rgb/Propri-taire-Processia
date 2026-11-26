@@ -8,6 +8,12 @@
     "intro": "Analyse et cartographie des processus métier.",
     "status": "Socle technique en place. Les écrans arrivent dans les prochains lots."
   },
+  "email": {
+    "invitation": {
+      "subject": "Invitation à rejoindre Processia",
+      "body": "Bonjour,\n\nVous êtes invité(e) à rejoindre Processia. Ouvrez le lien suivant pour choisir votre mot de passe (valable {hours} heures, utilisable une seule fois) :\n\n{link}\n\nÀ votre première connexion, vous configurerez la double authentification.\n"
+    }
+  },
   "a11y": {
     "skipToContent": "Aller au contenu principal"
   }

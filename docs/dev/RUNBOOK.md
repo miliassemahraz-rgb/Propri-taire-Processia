@@ -39,10 +39,30 @@ pnpm e2e                                     # E2E de fumée : build du web, dé
 
 **Navigateur Playwright.** En CI, `pnpm --filter @processia/e2e exec playwright install --with-deps chromium`. Dans un environnement où Chromium est déjà installé (cas des agents), ne pas lancer `playwright install` : définir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium`. Les traces sont désactivées (`trace: 'off'`). Pour viser un serveur déjà lancé : `E2E_BASE_URL=http://localhost:3000`.
 
+## Comptes de développement et connexion locale
+
+`pnpm db:migrate && pnpm db:seed` crée cinq comptes, tous avec le **mot de passe de développement** `Processia-dev-2026!` (valeur publique, réservée au développement local ; `db:seed` refuse de tourner en production) :
+
+| Courriel                       | Rôle global            |
+| ------------------------------ | ---------------------- |
+| `admin@processia.local`        | administrateur         |
+| `responsable@processia.local`  | responsable de mission |
+| `consultante1@processia.local` | consultant             |
+| `consultant2@processia.local`  | consultant             |
+| `validateur@processia.local`   | validateur client      |
+
+La double authentification est obligatoire et n'est pas pré-enrôlée : à la première connexion (`POST /auth/login`), l'API répond `mfa_enroll`. `POST /auth/mfa/enroll` renvoie le QR code et la clé de saisie manuelle ; `POST /auth/mfa/confirm` valide le premier code et renvoie les 10 codes de secours (affichés une seule fois). Sans application d'authentification, `pnpm --filter @processia/api build && pnpm --filter @processia/api dev:totp admin@processia.local` affiche le code courant d'un compte déjà enrôlé (développement uniquement).
+
+- Le cookie de session `__Host-sid` est `Secure` : les navigateurs l'acceptent sur `http://localhost`, mais pas sur une autre adresse en HTTP. Avec `curl`, ajouter `-k` n'y change rien : lire `Set-Cookie` et renvoyer `Cookie` à la main, plus l'en-tête `x-csrf-token` (valeur `csrfToken` des réponses) sur chaque requête non GET.
+- Un compte verrouillé (6 échecs) se débloque seul au bout de 15 minutes ; en développement : `UPDATE users SET locked_until = NULL, failed_login_count = 0 WHERE email = '...'`.
+- Invitations : `POST /invitations` (administrateur) envoie un courriel visible dans Mailpit (http://localhost:8025) ; le lien est `WEB_ORIGIN/invitations/<jeton>` (72 h, usage unique), accepté par `POST /invitations/:token/accept`.
+- L'API se connecte avec `DATABASE_APP_URL` (rôle `processia_app`, soumis à la RLS), plus avec `DATABASE_URL`.
+
 ## Réinitialiser
 
 ```bash
-pnpm db:reset      # docker compose down -v (supprime les volumes), relance, migre
+pnpm db:reset      # docker compose down -v (supprime les volumes), relance, migre et sème
+                   # (les volumes docker sont PARTAGÉS entre worktrees : ne pas l'utiliser en parallèle)
 pnpm services:down # arrête sans supprimer les données
 ```
 

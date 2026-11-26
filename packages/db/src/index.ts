@@ -14,3 +14,4 @@ export { applyMigrations, bootstrapRoles, migrateDatabase, MIGRATIONS_FOLDER } f
 export { SEED_IDS, seedDevelopment } from './seed.js';
 export { resetTestDatabase, withMissionRollback, withRollback } from './testing.js';
 export { APP_ROLE, OWNER_ROLE, resolveDbUrls, withDatabase, type DbUrls } from './urls.js';
+export { DEV_PASSWORD, DEV_PASSWORD_HASH } from './dev-credentials.js';

@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@processia/model": "workspace:*"
+    "@processia/model": "workspace:*",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@processia/config": "workspace:*"
