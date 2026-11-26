@@ -12,3 +12,5 @@ blob-report/
 !.env.example
 .DS_Store
 *.log
+
+.claude/worktrees/
