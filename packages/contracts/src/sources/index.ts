@@ -52,6 +52,32 @@ export interface RunDto {
   status: RunStatus;
   progress: number;
   error: string | null;
+  /** Version du modèle produite par l'exécution (extraction), une fois terminée. */
+  resultVersion: number | null;
+}
+
+/** Lancement de l'extraction (« Analyser ») : sans `sourceId`, la description est d'abord figée. */
+export const startExtractionSchema = z.object({ sourceId: z.string().uuid().optional() });
+export type StartExtractionRequest = z.infer<typeof startExtractionSchema>;
+
+export interface StartExtractionResult {
+  runId: string;
+  source: SourceDto;
+}
+
+/** Compteurs d'une extraction terminée, portés par la notification `analysis.extraction_done`. */
+export interface ExtractionSummary {
+  sourceId: string;
+  version: number | null;
+  candidates: number;
+  created: number;
+  extracted: number;
+  hypotheses: number;
+  citationsDemoted: number;
+  matched: number;
+  refsAdded: number;
+  discrepancies: number;
+  skipped: number;
 }
 
 export interface ChunkDto {

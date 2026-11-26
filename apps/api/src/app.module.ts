@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AiModule } from './ai/ai.module.js';
+import { AnalysisModule } from './analysis/analysis.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ClientsModule } from './clients/clients.module.js';
 import { DbModule } from './db/db.module.js';
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module.js';
     AiModule,
     JobsModule,
     SourcesModule,
+    AnalysisModule,
     HealthModule,
   ],
 })

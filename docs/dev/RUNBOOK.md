@@ -65,6 +65,12 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Dépôt : `POST /missions/:id/sources/documents` (multipart, champ `file`, 50 Mo, PDF, DOCX, XLSX, PNG, JPEG, TXT, MD). Progression : `GET /missions/:id/runs/:runId` ou le canal `mission_messages`.
 - Les tests d'intégration des sources démarrent leur propre consommateur ; ils exigent PostgreSQL et MinIO (`pnpm services:up`).
 
+## Analyse : extraction du pilote (WP-12)
+
+- « Analyser » : `POST /missions/:id/analysis/extractions` (corps `{}` : fige la description, ou `{ "sourceId": "…" }` : source déjà lisible). Le job `analysis.extraction` est consommé par le worker ; suivi par `GET /missions/:id/runs/:runId`. Une seule extraction à la fois par mission (409).
+- Sans clé IA, le fournisseur factice rejoue le **scénario du pilote** (`packages/test-fixtures/src/pilot.ts`) : collez `PILOT_DESCRIPTION` dans la description du métier pour obtenir les 14 macroprocessus, les 8 acteurs et les 4 parties prenantes du CDC 8. Un autre texte ne produit aucun candidat.
+- Les tests d'acceptation sont dans `apps/api/src/analysis/extraction.int.test.ts` (`pnpm exec vitest run --config vitest.int.config.ts apps/api/src/analysis`).
+
 ## Réinitialiser
 
 ```bash

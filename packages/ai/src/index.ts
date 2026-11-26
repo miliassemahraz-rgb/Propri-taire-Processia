@@ -12,3 +12,8 @@ export * from './anthropic-provider.js';
 export * from './runner.js';
 export * from './pipelines/demo.js';
 export * from './pipelines/document-visual.js';
+export * from './pipelines/extraction.js';
+export * from './extraction/text.js';
+export * from './extraction/candidates.js';
+export * from './extraction/changeset.js';
+export * from './extraction/plan.js';

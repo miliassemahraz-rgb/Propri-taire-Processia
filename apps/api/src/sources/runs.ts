@@ -7,12 +7,14 @@ import { analysisRuns, type MissionTx } from '@processia/db';
 import { eq, sql } from 'drizzle-orm';
 
 export const INGEST_RUN_KIND = 'ingest';
+export const EXTRACTION_RUN_KIND = 'extraction';
 
 export interface RunPatch {
   status?: RunStatus;
   progress?: number;
   error?: string | null;
   jobId?: string | null;
+  resultVersion?: number | null;
 }
 
 /**
@@ -32,6 +34,7 @@ export async function updateRun(
     ...(patch.progress === undefined ? {} : { progress: patch.progress }),
     ...(patch.error === undefined ? {} : { error: patch.error }),
     ...(patch.jobId === undefined ? {} : { jobId: patch.jobId }),
+    ...(patch.resultVersion === undefined ? {} : { resultVersion: patch.resultVersion }),
   };
   const [row] =
     Object.keys(values).length === 0

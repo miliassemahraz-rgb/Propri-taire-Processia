@@ -7,6 +7,7 @@ import { ENV } from '../env.js';
 /** Nom des files pg-boss (une par type de tâche, spécification 1.3 `JobsModule`). */
 export const JOB_QUEUES = {
   ingestDocument: 'ingest.document',
+  analysisExtraction: 'analysis.extraction',
 } as const;
 export type JobQueue = (typeof JOB_QUEUES)[keyof typeof JOB_QUEUES];
 
