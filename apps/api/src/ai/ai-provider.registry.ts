@@ -42,6 +42,16 @@ export class AiProviderRegistry {
     this.fake.registerScenario(pipeline, scenario);
   }
 
+  /**
+   * Le client dispose-t-il d'un fournisseur actif déclarant la capacité `documents` (PDF scanné,
+   * image) ? Sans configuration active, le fournisseur factice par défaut n'en est pas doté :
+   * l'extraction visuelle exige une déclaration explicite de l'administrateur (spec 4.6).
+   */
+  async supportsDocuments(clientId: string): Promise<boolean> {
+    const row = await this.configs.find(clientId);
+    return row !== null && row.active && row.capabilities.documents === true;
+  }
+
   async forClient(clientId: string): Promise<ResolvedAiProvider> {
     const row = await this.configs.find(clientId);
     const models = row?.models ?? {};

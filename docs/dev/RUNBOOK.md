@@ -58,6 +58,13 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Invitations : `POST /invitations` (administrateur) envoie un courriel visible dans Mailpit (http://localhost:8025) ; le lien est `WEB_ORIGIN/invitations/<jeton>` (72 h, usage unique), accepté par `POST /invitations/:token/accept`.
 - L'API se connecte avec `DATABASE_APP_URL` (rôle `processia_app`, soumis à la RLS), plus avec `DATABASE_URL`.
 
+## Worker et dépôt de documents (WP-11)
+
+- `pnpm dev` lance l'API ; les tâches asynchrones (extraction de documents) ne sont consommées que par le worker : `pnpm --filter @processia/api dev:worker` (ou `start:worker` après `pnpm build`). Sans worker, un document déposé reste en statut `pending`.
+- La file pg-boss vit dans le schéma `pgboss` de PostgreSQL ; elle est créée au premier démarrage avec le rôle propriétaire (ADR 0016).
+- Dépôt : `POST /missions/:id/sources/documents` (multipart, champ `file`, 50 Mo, PDF, DOCX, XLSX, PNG, JPEG, TXT, MD). Progression : `GET /missions/:id/runs/:runId` ou le canal `mission_messages`.
+- Les tests d'intégration des sources démarrent leur propre consommateur ; ils exigent PostgreSQL et MinIO (`pnpm services:up`).
+
 ## Réinitialiser
 
 ```bash

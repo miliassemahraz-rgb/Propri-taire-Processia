@@ -11,3 +11,4 @@ export * from './fake-provider.js';
 export * from './anthropic-provider.js';
 export * from './runner.js';
 export * from './pipelines/demo.js';
+export * from './pipelines/document-visual.js';

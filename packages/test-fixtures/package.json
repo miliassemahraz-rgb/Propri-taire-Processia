@@ -16,7 +16,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@processia/model": "workspace:*"
+    "@processia/model": "workspace:*",
+    "exceljs": "4.4.0",
+    "jszip": "3.10.2"
   },
   "devDependencies": {
     "@processia/config": "workspace:*"

@@ -16,9 +16,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@processia/model": "workspace:*"
+    "@processia/model": "workspace:*",
+    "exceljs": "4.4.0",
+    "file-type": "22.3.0",
+    "mammoth": "1.13.0",
+    "unpdf": "2.2.3"
   },
   "devDependencies": {
-    "@processia/config": "workspace:*"
+    "@processia/config": "workspace:*",
+    "@processia/test-fixtures": "workspace:*"
   }
 }

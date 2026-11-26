@@ -22,6 +22,9 @@ const MESSAGES: Record<AuthErrorCode, string> = {
   STALE: 'Le modèle a changé depuis la version de départ de la modification.',
   CHANGESET_INVALID: 'La modification est refusée par les règles du modèle.',
   PHASE_REGRESSION: 'Retour impossible à une phase déjà validée par le client.',
+  FILE_TOO_LARGE: 'Le fichier dépasse la taille maximale de 50 Mo.',
+  UNSUPPORTED_FILE_TYPE:
+    'Type de fichier non pris en charge ou contenu incohérent avec l’extension.',
 };
 
 const STATUS: Record<AuthErrorCode, number> = {
@@ -45,6 +48,8 @@ const STATUS: Record<AuthErrorCode, number> = {
   STALE: 409,
   CHANGESET_INVALID: 422,
   PHASE_REGRESSION: 409,
+  FILE_TOO_LARGE: 413,
+  UNSUPPORTED_FILE_TYPE: 415,
 };
 
 /** Erreur applicative portant un code stable (contrat `ApiError`). */
