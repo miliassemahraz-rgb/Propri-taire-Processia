@@ -53,6 +53,11 @@ export const users = pgTable('users', {
   totpSecretEnc: text('totp_secret_enc'),
   totpEnabledAt: tstz('totp_enabled_at'),
   lastLoginAt: tstz('last_login_at'),
+  /** Échecs de connexion consécutifs (mot de passe ou second facteur) : verrouillage à 6 (WP-05). */
+  failedLoginCount: integer('failed_login_count').notNull().default(0),
+  lockedUntil: tstz('locked_until'),
+  /** Dernier pas de temps TOTP accepté : un code ne sert qu'une fois (anti-rejeu, WP-05). */
+  totpLastStep: bigint('totp_last_step', { mode: 'number' }),
   createdAt: createdAt(),
 });
 

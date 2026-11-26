@@ -1,2 +1,3 @@
-/** @processia/contracts : squelette WP-01. L'implémentation arrive dans le WP indiqué par la spécification. */
+/** @processia/contracts : schémas zod des requêtes et réponses REST. */
 export const PACKAGE_NAME = '@processia/contracts' as const;
+export * from './auth/index.js';

@@ -2,6 +2,7 @@ import { HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
 import { Inject, Injectable, type OnModuleDestroy } from '@nestjs/common';
 import type { Env } from '@processia/config/env';
 import pg from 'pg';
+import { appDatabaseUrl } from '../db/db.module.js';
 import { ENV } from '../env.js';
 
 const PROBE_TIMEOUT_MS = 3000;
@@ -17,7 +18,7 @@ export class DbProbe implements Probe, OnModuleDestroy {
 
   constructor(@Inject(ENV) env: Env) {
     this.pool = new pg.Pool({
-      connectionString: env.DATABASE_URL,
+      connectionString: appDatabaseUrl(env),
       max: 2,
       connectionTimeoutMillis: PROBE_TIMEOUT_MS,
     });

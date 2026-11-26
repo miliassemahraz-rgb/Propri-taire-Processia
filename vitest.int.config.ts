@@ -30,5 +30,7 @@ export default defineConfig({
     environment: 'node',
     env: loadEnvFile(),
     testTimeout: 30_000,
+    // Les fichiers partagent la base processia_test (remise à zéro en beforeAll) : un à la fois.
+    fileParallelism: false,
   },
 });

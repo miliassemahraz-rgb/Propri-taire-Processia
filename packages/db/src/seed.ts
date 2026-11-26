@@ -1,5 +1,7 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
+import { sql } from 'drizzle-orm';
+import { DEV_PASSWORD_HASH } from './dev-credentials.js';
 import * as schema from './schema/index.js';
 
 /** Identifiants fixes : le seed est idempotent et les tests peuvent s'y référer. */
@@ -18,8 +20,8 @@ export const SEED_IDS = {
  * validateur, un client et la mission « Cabinet pilote ». À exécuter avec le compte
  * d'administration (la RLS ne s'applique pas à un superutilisateur).
  *
- * Aucun mot de passe : `password_hash` reste nul tant que WP-05 (authentification) n'a pas fourni
- * le hachage argon2id et l'enrôlement TOTP ; ces comptes ne peuvent donc pas encore se connecter.
+ * Les comptes reçoivent le mot de passe de développement `DEV_PASSWORD` (argon2id) s'ils n'en ont
+ * pas encore ; le TOTP s'enrôle à la première connexion (WP-05).
  */
 export async function seedDevelopment(adminUrl: string): Promise<void> {
   const pool = new pg.Pool({ connectionString: adminUrl, max: 1 });
@@ -31,6 +33,7 @@ export async function seedDevelopment(adminUrl: string): Promise<void> {
       displayName,
       globalRole,
       status: 'active',
+      passwordHash: DEV_PASSWORD_HASH,
     });
     await db.transaction(async (tx) => {
       await tx
@@ -62,7 +65,12 @@ export async function seedDevelopment(adminUrl: string): Promise<void> {
             'client_validator',
           ),
         ])
-        .onConflictDoNothing();
+        .onConflictDoUpdate({
+          target: schema.users.id,
+          set: {
+            passwordHash: sql`coalesce(${schema.users.passwordHash}, excluded.password_hash)`,
+          },
+        });
       await tx
         .insert(schema.clients)
         .values({ id: SEED_IDS.client, name: 'Cabinet client pilote' })

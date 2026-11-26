@@ -51,7 +51,7 @@ pnpm build                # Turborepo : paquets, API, collab, web
 pnpm e2e                  # build du web puis Playwright (voir le RUNBOOK pour le navigateur)
 pnpm dev                  # tous les `dev` (web 3000, API 3001, collab 3002)
 pnpm services:up|down     # docker compose : postgres, minio, mailpit
-pnpm db:migrate           # migrations (squelette jusqu'à WP-04)
+pnpm db:migrate           # migrations (rôles, schéma, RLS) ; pnpm db:seed pour les données de démonstration
 pnpm db:reset             # détruit les volumes, relance les services, migre
 ```
 
