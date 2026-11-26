@@ -79,6 +79,8 @@ Le schéma de référence est `packages/config/src/env.ts` ; `.env.example` en d
 | `SESSION_SECRET`, `COLLAB_JWT_SECRET`                          | secrets (32 caractères minimum), WP-05 et WP-10                                    |
 | `MASTER_KEY`                                                   | clé de chiffrement des clés API des fournisseurs IA (32 caractères minimum), WP-06 |
 | `AI_PROVIDER`, `ANTHROPIC_API_KEY`                             | fournisseur IA (`fake` par défaut)                                                 |
+| `AI_PROVIDER_OVERRIDE`, `AI_RECORD`, `AI_RECORDINGS_DIR`       | force le factice ; mode enregistrement ; dossier des enregistrements (WP-09)       |
+| `AI_PRICE_TABLE`, `AI_BASE_URL`                                | table de prix JSON (estimation du coût) ; URL de base du fournisseur (tests)       |
 
 `POSTGRES_USER` et `POSTGRES_PASSWORD` ne servent qu'à docker compose.
 

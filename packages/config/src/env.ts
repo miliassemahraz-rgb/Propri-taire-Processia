@@ -50,6 +50,16 @@ export const envSchema = z.object({
   // Couche IA (WP-09) : fournisseur factice par défaut
   AI_PROVIDER: z.enum(['fake', 'anthropic']).default('fake'),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
+  /** Force le fournisseur factice, en test et en développement (spec 4.1). */
+  AI_PROVIDER_OVERRIDE: z.enum(['fake']).optional(),
+  /** `1` : écrit les réponses réelles comme enregistrements rejouables (spec 4.2). */
+  AI_RECORD: z.enum(['0', '1']).optional(),
+  /** Dossier des enregistrements `<pipeline>/<inputHash>.json` du fournisseur factice. */
+  AI_RECORDINGS_DIR: z.string().min(1).optional(),
+  /** URL de base de l'API du fournisseur (serveur simulé en test) ; absente : API officielle. */
+  AI_BASE_URL: z.string().url().optional(),
+  /** Table de prix JSON (euros par million de jetons) pour l'estimation du coût. */
+  AI_PRICE_TABLE: z.string().min(2).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
