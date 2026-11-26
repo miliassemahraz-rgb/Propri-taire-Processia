@@ -18,7 +18,8 @@
     "test:int": "vitest run --config vitest.int.config.ts",
     "e2e": "pnpm --filter @processia/web build && pnpm --filter @processia/e2e test",
     "db:migrate": "pnpm --filter @processia/db db:migrate",
-    "db:reset": "docker compose down -v && docker compose up -d --wait && pnpm db:migrate",
+    "db:reset": "docker compose down -v && docker compose up -d --wait && pnpm db:migrate && pnpm db:seed",
+    "db:seed": "pnpm --filter @processia/db db:seed",
     "services:up": "docker compose up -d --wait",
     "services:down": "docker compose down"
   },
