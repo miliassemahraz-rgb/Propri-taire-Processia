@@ -167,7 +167,7 @@ describe('WP-06 : droits, missions, affectations', () => {
     expect((await validatorC.call('GET', '/users')).status).toBe(403);
   });
 
-  it('un responsable de mission voit toutes les missions mais ne gère que les siennes', async () => {
+  it('un responsable de mission voit et gère toutes les missions, membre ou non (PO-30)', async () => {
     const list = await managerC.call('GET', '/missions');
     expect(list.status).toBe(200);
     const ids = list.body.map((m: { id: string }) => m.id);
@@ -177,10 +177,13 @@ describe('WP-06 : droits, missions, affectations', () => {
     expect(seen.myRole).toBeNull();
     expect(seen.progress).not.toBeNull();
     expect((await managerC.call('GET', `/missions/${other.id}`)).status).toBe(200);
-    // Lecture seule sur une mission dont il n'est pas membre.
-    expect(
-      (await managerC.call('PATCH', `/missions/${other.id}`, { phase: 'mapping' })).status,
-    ).toBe(403);
+    // Droits complets sur une mission créée par l'administrateur, dont il n'est pas membre.
+    const patched = await managerC.call('PATCH', `/missions/${other.id}`, {
+      name: 'Renommée',
+      phase: 'mapping',
+    });
+    expect(patched.status).toBe(200);
+    expect(patched.body.phase).toBe('mapping');
     expect(
       (
         await managerC.call('PUT', `/missions/${other.id}/members`, {
@@ -188,9 +191,13 @@ describe('WP-06 : droits, missions, affectations', () => {
           missionRole: 'consultant',
         })
       ).status,
-    ).toBe(403);
-    expect((await edit(managerC, other.id)).status).toBe(403);
-    // Sur la sienne, il gère.
+    ).toBe(200);
+    expect((await edit(managerC, other.id)).status).toBe(201);
+    expect(
+      (await managerC.call('DELETE', `/missions/${other.id}/members/${SEED_IDS.consultantA}`))
+        .status,
+    ).toBe(204);
+    // Sur la sienne aussi.
     expect((await edit(managerC, MISSION)).status).toBe(201);
     // L'administrateur voit toutes les missions.
     const all = await adminC.call('GET', '/missions');
@@ -318,6 +325,43 @@ describe('WP-06 : droits, missions, affectations', () => {
       (m: { id: string }) => m.id === other.id,
     );
     expect(otherSeen.progress.pendingSubmissions).toBe(0);
+  });
+
+  it('pas de retour à une phase déjà validée par le client (PO-31)', async () => {
+    const patch = (phase: string) => managerC.call('PATCH', `/missions/${MISSION}`, { phase });
+    // Le dossier d'analyse est validé : analysis est interdit, le reste est permis.
+    await admin.query(
+      `insert into validation_submissions (mission_id, kind, round, model_version, status, submitted_by)
+       values ($1, 'analysis_dossier', 2, 1, 'validated', $2)`,
+      [MISSION, SEED_IDS.manager],
+    );
+    const refused = await patch('analysis');
+    expect(refused.status).toBe(409);
+    expect(refused.body.code).toBe('PHASE_REGRESSION');
+    expect((await adminC.call('PATCH', `/missions/${MISSION}`, { phase: 'analysis' })).status).toBe(
+      409,
+    );
+    expect((await patch('transformation')).status).toBe(200);
+    expect((await patch('mapping')).status).toBe(200);
+    // L'AS-IS est validé : mapping est interdit.
+    await admin.query(
+      `insert into validation_submissions (mission_id, kind, round, model_version, status, submitted_by)
+       values ($1, 'as_is', 1, 1, 'validated', $2)`,
+      [MISSION, SEED_IDS.manager],
+    );
+    expect((await patch('mapping')).status).toBe(409);
+    expect((await patch('analysis')).status).toBe(409);
+    expect((await patch('transformation')).status).toBe(200);
+    expect((await patch('generation')).status).toBe(200);
+    // Nom et description restent modifiables sans changer de phase.
+    expect(
+      (await adminC.call('PATCH', `/missions/${MISSION}`, { description: 'Nouvelle description' }))
+        .status,
+    ).toBe(200);
+    // Une autre mission, sans validation, accepte tout retour en arrière.
+    expect(
+      (await managerC.call('PATCH', `/missions/${other.id}`, { phase: 'analysis' })).status,
+    ).toBe(200);
   });
 });
 

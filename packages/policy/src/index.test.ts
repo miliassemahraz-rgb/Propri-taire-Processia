@@ -16,32 +16,31 @@ const SUBJECTS: Record<Persona, Subject> = {
   manager: { globalRole: 'mission_manager', missionRole: 'manager' },
   consultant: { globalRole: 'consultant', missionRole: 'consultant' },
   validator: { globalRole: 'client_validator', missionRole: 'validator' },
-  observer: { globalRole: 'mission_manager', missionRole: null },
 };
 
-type Row = [boolean, boolean, boolean, boolean | 'own', boolean];
+type Row = [boolean, boolean, boolean, boolean | 'own'];
 
-/** Spécification 3.5 (amendée PO-22), écrite indépendamment de `MATRIX` : A, M, C, V, O. */
+/** Spécification 3.5 (amendée PO-22 et PO-30), écrite indépendamment de `MATRIX` : A, M, C, V. */
 const EXPECTED: Record<Action, Row> = {
-  'users.manage': [true, false, false, false, false],
-  'users.invite': [true, true, false, false, false],
-  'ai_providers.manage': [true, false, false, false, false],
-  'clients.manage': [true, false, false, false, false],
-  'mission.create': [true, true, false, false, false],
-  'mission.assign': [true, true, false, false, false],
-  'mission.view_progress': [true, true, true, false, true],
-  'mission.read_workspace': [true, true, true, false, true],
-  'model.edit': [false, true, true, false, false],
-  'comment.create': [true, true, true, 'own', true],
-  'submission.create': [false, true, true, false, false],
-  'submission.read': [true, true, true, 'own', true],
-  'submission.decide': [false, false, false, true, false],
-  'export.create': [true, true, true, 'own', true],
-  'history.rollback': [false, true, true, false, false],
-  'model.publish_template': [true, false, false, false, false],
+  'users.manage': [true, false, false, false],
+  'users.invite': [true, true, false, false],
+  'ai_providers.manage': [true, false, false, false],
+  'clients.manage': [true, false, false, false],
+  'mission.create': [true, true, false, false],
+  'mission.assign': [true, true, false, false],
+  'mission.view_progress': [true, true, true, false],
+  'mission.read_workspace': [true, true, true, false],
+  'model.edit': [false, true, true, false],
+  'comment.create': [true, true, true, 'own'],
+  'submission.create': [false, true, true, false],
+  'submission.read': [true, true, true, 'own'],
+  'submission.decide': [false, false, false, true],
+  'export.create': [true, true, true, 'own'],
+  'history.rollback': [false, true, true, false],
+  'model.publish_template': [true, false, false, false],
 };
 
-// Les actions globales dépendent du rôle global : un responsable non membre garde ses droits.
+// Actions portées par le rôle global du compte.
 const GLOBAL = new Set<Action>([
   'users.manage',
   'users.invite',
@@ -65,10 +64,6 @@ describe('matrice des droits 3.5', () => {
     const expected = EXPECTED[action][index];
     const subject = SUBJECTS[persona];
     expect(MATRIX[action][persona]).toBe(expected);
-    if (GLOBAL.has(action) && persona === 'observer') {
-      expect(can(subject, action)).toBe(EXPECTED[action][1]);
-      return;
-    }
     if (expected === 'own') {
       expect(can(subject, action)).toBe(false);
       expect(can(subject, action, { own: false })).toBe(false);
@@ -84,6 +79,16 @@ describe('matrice des droits 3.5', () => {
       for (const action of ACTIONS.filter((a) => !GLOBAL.has(a))) {
         expect(can({ globalRole }, action, { own: true })).toBe(false);
         expect(personaFor({ globalRole }, action)).toBeNull();
+      }
+    }
+  });
+
+  it('PO-30 : un responsable non membre (ou membre d’un autre rôle) a, sur toute action, la colonne responsable', () => {
+    for (const missionRole of [undefined, null] as const) {
+      const subject: Subject = { globalRole: 'mission_manager', missionRole };
+      for (const action of ACTIONS) {
+        expect(personaFor(subject, action)).toBe('manager');
+        expect(can(subject, action)).toBe(EXPECTED[action][1]);
       }
     }
   });
