@@ -3,3 +3,4 @@ export const PACKAGE_NAME = '@processia/contracts' as const;
 export * from './auth/index.js';
 export * from './admin/index.js';
 export * from './model/index.js';
+export * from './sources/index.js';

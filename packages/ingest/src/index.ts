@@ -1,2 +1,9 @@
-/** @processia/ingest : squelette WP-01. L'implémentation arrive dans le WP indiqué par la spécification. */
+/** @processia/ingest : détection du type, extraction de texte et découpage avec localisateurs (WP-11). */
 export const PACKAGE_NAME = '@processia/ingest' as const;
+
+export * from './types.js';
+export * from './detect.js';
+export * from './extract.js';
+export * from './chunk.js';
+export * from './visual.js';
+export * from './paragraphs.js';

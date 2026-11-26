@@ -22,6 +22,8 @@ export const AUTH_ERROR_CODES = [
   'POLICY_NOT_ACCEPTED',
   'STALE',
   'CHANGESET_INVALID',
+  'FILE_TOO_LARGE',
+  'UNSUPPORTED_FILE_TYPE',
 ] as const;
 export type AuthErrorCode = (typeof AUTH_ERROR_CODES)[number];
 

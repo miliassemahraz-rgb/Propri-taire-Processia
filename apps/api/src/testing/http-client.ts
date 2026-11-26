@@ -34,6 +34,18 @@ export class TestClient {
     return { status: res.status, body: parsed };
   }
 
+  /** Dépôt multipart d'un fichier (champ `file`). */
+  async upload(path: string, filename: string, content: Uint8Array): Promise<Reply> {
+    const headers: Record<string, string> = {};
+    if (this.cookie !== undefined) headers['cookie'] = this.cookie;
+    if (this.csrf !== undefined) headers[CSRF_HEADER] = this.csrf;
+    const form = new FormData();
+    form.append('file', new Blob([Buffer.from(content)]), filename);
+    const res = await fetch(`${this.base()}${path}`, { method: 'POST', headers, body: form });
+    const text = await res.text();
+    return { status: res.status, body: text === '' ? {} : JSON.parse(text) };
+  }
+
   async signIn(email: string): Promise<this> {
     expect((await this.call('POST', '/auth/login', { email, password: DEV_PASSWORD })).status).toBe(
       200,

@@ -21,6 +21,9 @@ const MESSAGES: Record<AuthErrorCode, string> = {
   POLICY_NOT_ACCEPTED: 'La politique de données du fournisseur doit être acceptée.',
   STALE: 'Le modèle a changé depuis la version de départ de la modification.',
   CHANGESET_INVALID: 'La modification est refusée par les règles du modèle.',
+  FILE_TOO_LARGE: 'Le fichier dépasse la taille maximale de 50 Mo.',
+  UNSUPPORTED_FILE_TYPE:
+    'Type de fichier non pris en charge ou contenu incohérent avec l’extension.',
 };
 
 const STATUS: Record<AuthErrorCode, number> = {
@@ -43,6 +46,8 @@ const STATUS: Record<AuthErrorCode, number> = {
   POLICY_NOT_ACCEPTED: 422,
   STALE: 409,
   CHANGESET_INVALID: 422,
+  FILE_TOO_LARGE: 413,
+  UNSUPPORTED_FILE_TYPE: 415,
 };
 
 /** Erreur applicative portant un code stable (contrat `ApiError`). */
