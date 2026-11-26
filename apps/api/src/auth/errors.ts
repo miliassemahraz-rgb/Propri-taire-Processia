@@ -16,6 +16,9 @@ const MESSAGES: Record<AuthErrorCode, string> = {
   ACCOUNT_EXISTS: 'Un compte existe déjà pour cette adresse.',
   FORBIDDEN: 'Action non autorisée.',
   VALIDATION_ERROR: 'Requête invalide.',
+  NOT_FOUND: 'Ressource introuvable.',
+  CONFLICT: 'Conflit avec l’état actuel de la ressource.',
+  POLICY_NOT_ACCEPTED: 'La politique de données du fournisseur doit être acceptée.',
 };
 
 const STATUS: Record<AuthErrorCode, number> = {
@@ -33,6 +36,9 @@ const STATUS: Record<AuthErrorCode, number> = {
   ACCOUNT_EXISTS: 409,
   FORBIDDEN: 403,
   VALIDATION_ERROR: 400,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  POLICY_NOT_ACCEPTED: 422,
 };
 
 /** Erreur applicative portant un code stable (contrat `ApiError`). */

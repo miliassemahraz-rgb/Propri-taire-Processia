@@ -70,14 +70,15 @@ pnpm services:down # arrête sans supprimer les données
 
 Le schéma de référence est `packages/config/src/env.ts` ; `.env.example` en donne les valeurs de développement. Les scripts `dev` et `start` des applications lisent `../../.env` s'il existe (`node --env-file-if-exists`). Une variable invalide ou manquante arrête le démarrage avec la liste des variables en cause. Toute nouvelle variable : schéma, `.env.example`, ce tableau.
 
-| Variable                                                       | Rôle                                                  |
-| -------------------------------------------------------------- | ----------------------------------------------------- |
-| `DATABASE_URL`, `DATABASE_TEST_URL`                            | PostgreSQL (base applicative, base de test)           |
-| `S3_*`                                                         | stockage objet : point d'accès, identifiants, buckets |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`                          | courrier                                              |
-| `WEB_PORT`, `API_PORT`, `COLLAB_PORT`, `API_URL`, `WEB_ORIGIN` | ports et URL des services                             |
-| `SESSION_SECRET`, `COLLAB_JWT_SECRET`                          | secrets (32 caractères minimum), WP-05 et WP-10       |
-| `AI_PROVIDER`, `ANTHROPIC_API_KEY`                             | fournisseur IA (`fake` par défaut)                    |
+| Variable                                                       | Rôle                                                                               |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `DATABASE_URL`, `DATABASE_TEST_URL`                            | PostgreSQL (base applicative, base de test)                                        |
+| `S3_*`                                                         | stockage objet : point d'accès, identifiants, buckets                              |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`                          | courrier                                                                           |
+| `WEB_PORT`, `API_PORT`, `COLLAB_PORT`, `API_URL`, `WEB_ORIGIN` | ports et URL des services                                                          |
+| `SESSION_SECRET`, `COLLAB_JWT_SECRET`                          | secrets (32 caractères minimum), WP-05 et WP-10                                    |
+| `MASTER_KEY`                                                   | clé de chiffrement des clés API des fournisseurs IA (32 caractères minimum), WP-06 |
+| `AI_PROVIDER`, `ANTHROPIC_API_KEY`                             | fournisseur IA (`fake` par défaut)                                                 |
 
 `POSTGRES_USER` et `POSTGRES_PASSWORD` ne servent qu'à docker compose.
 

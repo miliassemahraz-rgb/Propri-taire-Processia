@@ -10,6 +10,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { Can } from '../policy/decorators.js';
 import {
   acceptInvitationRequestSchema,
   createInvitationRequestSchema,
@@ -34,7 +35,6 @@ import {
 } from '@processia/contracts';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service.js';
-import { AuthError } from './errors.js';
 import { RateLimitGuard } from './guards.js';
 import {
   clearSessionCookie,
@@ -161,15 +161,15 @@ export class MeController {
 export class InvitationsController {
   constructor(@Inject(InvitationsService) private readonly invitations: InvitationsService) {}
 
-  /** Envoie une invitation. Réservé à l'administrateur ; WP-06 le remplacera par `@Can('users.manage')`. */
+  /** Envoie une invitation. Administrateur : tout rôle ; responsable de mission : consultants et validateurs de ses missions [PO-27]. */
+  @Can('users.invite')
   @Post()
   async create(
     @CurrentAuth() auth: AuthContext,
     @Body(new ZodPipe(createInvitationRequestSchema)) body: CreateInvitationRequest,
     @Req() req: Request,
   ): Promise<CreateInvitationResponse> {
-    if (auth.user.globalRole !== 'admin') throw new AuthError('FORBIDDEN');
-    return this.invitations.create(body, auth.userId, originOf(req).ip);
+    return this.invitations.create(body, auth, originOf(req).ip);
   }
 
   @Public()

@@ -25,6 +25,7 @@ env:
   S3_BUCKET_ARTIFACTS: processia-artifacts
   SESSION_SECRET: ci-only-session-secret-0000000000000
   COLLAB_JWT_SECRET: ci-only-collab-secret-000000000000
+  MASTER_KEY: ci-only-master-key-0000000000000000
   AI_PROVIDER: fake
 
 jobs:

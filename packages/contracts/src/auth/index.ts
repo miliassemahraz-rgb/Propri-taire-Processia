@@ -17,6 +17,9 @@ export const AUTH_ERROR_CODES = [
   'ACCOUNT_EXISTS',
   'FORBIDDEN',
   'VALIDATION_ERROR',
+  'NOT_FOUND',
+  'CONFLICT',
+  'POLICY_NOT_ACCEPTED',
 ] as const;
 export type AuthErrorCode = (typeof AUTH_ERROR_CODES)[number];
 

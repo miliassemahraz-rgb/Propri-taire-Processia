@@ -44,6 +44,8 @@ export const envSchema = z.object({
   // Secrets applicatifs (WP-05 et WP-10)
   SESSION_SECRET: z.string().min(32),
   COLLAB_JWT_SECRET: z.string().min(32),
+  // Chiffrement au repos des clés API des fournisseurs IA (AES-256-GCM, WP-06)
+  MASTER_KEY: z.string().min(32),
 
   // Couche IA (WP-09) : fournisseur factice par défaut
   AI_PROVIDER: z.enum(['fake', 'anthropic']).default('fake'),

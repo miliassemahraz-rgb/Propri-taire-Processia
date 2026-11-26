@@ -98,6 +98,7 @@ services:
       SMTP_HOST: mailpit
       SESSION_SECRET: ${SESSION_SECRET:-dev-only-session-secret-change-me-0000}
       COLLAB_JWT_SECRET: ${COLLAB_JWT_SECRET:-dev-only-collab-secret-change-me-00000}
+      MASTER_KEY: ${MASTER_KEY:-dev-only-master-key-change-me-0000000}
     ports:
       - '3001:3001'
     depends_on:
