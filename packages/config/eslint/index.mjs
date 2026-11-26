@@ -23,6 +23,7 @@ export function createConfig() {
         '**/playwright-report/**',
         '**/test-results/**',
         '**/next-env.d.ts',
+        '.claude/**',
       ],
     },
     js.configs.recommended,
