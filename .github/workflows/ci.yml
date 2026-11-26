@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Valeurs de développement sans secret, identiques à .env.example.
+  DATABASE_URL: postgres://processia:processia@localhost:5432/processia
+  DATABASE_TEST_URL: postgres://processia:processia@localhost:5432/processia_test
+  S3_ENDPOINT: http://localhost:9000
+  S3_REGION: us-east-1
+  S3_ACCESS_KEY: processia
+  S3_SECRET_KEY: processia-dev-secret
+  S3_FORCE_PATH_STYLE: 'true'
+  S3_BUCKET_SOURCES: processia-sources
+  S3_BUCKET_ARTIFACTS: processia-artifacts
+  SESSION_SECRET: ci-only-session-secret-0000000000000
+  COLLAB_JWT_SECRET: ci-only-collab-secret-000000000000
+  AI_PROVIDER: fake
+
+jobs:
+  check:
+    name: Qualité, tests et build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Installation
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Tests unitaires
+        run: pnpm test
+
+      - name: Services (postgres, minio, mailpit)
+        run: docker compose up -d --wait
+
+      - name: Tests d'intégration
+        run: pnpm test:int
+
+      - name: Build
+        run: pnpm build
+
+      - name: Navigateur Playwright
+        run: pnpm --filter @processia/e2e exec playwright install --with-deps chromium
+
+      - name: E2E de fumée
+        run: pnpm --filter @processia/e2e test
+
+      - name: Rapport Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/playwright-report
+          retention-days: 7
+
+      - name: Journaux des services
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Arrêt des services
+        if: always()
+        run: docker compose down -v
+
+  workflows:
+    name: Validation des workflows
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: actionlint
+        run: docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12 -color

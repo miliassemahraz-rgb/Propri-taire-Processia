@@ -1,0 +1,21 @@
+{
+  "name": "@processia/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Messages en français et fonction de traduction typée",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@processia/config": "workspace:*"
+  }
+}

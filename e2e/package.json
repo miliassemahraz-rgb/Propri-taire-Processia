@@ -1,0 +1,16 @@
+{
+  "name": "@processia/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Tests de bout en bout Playwright (parcours, axe-core, coédition)",
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.1",
+    "@playwright/test": "1.65.1",
+    "@processia/config": "workspace:*"
+  }
+}

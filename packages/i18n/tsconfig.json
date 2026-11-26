@@ -1,0 +1,4 @@
+{
+  "extends": "@processia/config/tsconfig/library.json",
+  "include": ["src", "src/**/*.json"]
+}

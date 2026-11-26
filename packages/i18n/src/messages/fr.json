@@ -1,0 +1,14 @@
+{
+  "app": {
+    "name": "Processia",
+    "tagline": "Analyse et cartographie des processus métier"
+  },
+  "home": {
+    "title": "Processia",
+    "intro": "Analyse et cartographie des processus métier.",
+    "status": "Socle technique en place. Les écrans arrivent dans les prochains lots."
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu principal"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "extends": "@processia/config/tsconfig/nest.json",
+  "include": ["src"]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@processia/collab",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Serveur de coédition Yjs fondé sur Hocuspocus (WP-10)",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node --env-file-if-exists=../../.env dist/main.js\"",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@hocuspocus/server": "3.4.4",
+    "@processia/config": "workspace:*"
+  },
+  "devDependencies": {
+    "tsc-watch": "7.2.1"
+  }
+}

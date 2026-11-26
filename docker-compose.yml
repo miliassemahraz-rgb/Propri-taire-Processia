@@ -1,0 +1,164 @@
+# Services de développement de Processia : `docker compose up -d --wait`.
+# Les applications tournent normalement sur l'hôte (`pnpm dev`) ; le profil "apps" les lance aussi
+# en conteneurs : `docker compose --profile apps up -d --wait`.
+name: processia
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-processia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-processia}
+      POSTGRES_DB: processia
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/01-create-test-db.sql:/docker-entrypoint-initdb.d/01-create-test-db.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d processia']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Les images officielles minio/minio ne sont plus publiées sur Docker Hub. Par défaut, le fork
+  # communautaire pgsty/minio (même binaire, mc inclus, testé en WP-01). Pour l'image officielle :
+  # MINIO_IMAGE=quay.io/minio/minio:latest (voir docs/adr/0001 et docs/dev/RUNBOOK.md).
+  minio:
+    image: ${MINIO_IMAGE:-pgsty/minio:RELEASE.2026-08-04T00-00-00Z}
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-processia}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-processia-dev-secret}
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Crée les buckets privés, puis reste en vie pour être déclaré « sain » : `docker compose up
+  # --wait` échoue si un service se termine, même avec le code 0.
+  minio-init:
+    image: ${MINIO_IMAGE:-pgsty/minio:RELEASE.2026-08-04T00-00-00Z}
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-processia}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-processia-dev-secret}
+      S3_BUCKET_SOURCES: ${S3_BUCKET_SOURCES:-processia-sources}
+      S3_BUCKET_ARTIFACTS: ${S3_BUCKET_ARTIFACTS:-processia-artifacts}
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        set -e
+        mc alias set local http://minio:9000 "$$S3_ACCESS_KEY" "$$S3_SECRET_KEY"
+        for bucket in "$$S3_BUCKET_SOURCES" "$$S3_BUCKET_ARTIFACTS"; do
+          mc mb --ignore-existing "local/$$bucket"
+          mc anonymous set none "local/$$bucket"
+        done
+        touch /tmp/buckets-ready
+        exec sleep infinity
+    healthcheck:
+      test: ['CMD', 'test', '-f', '/tmp/buckets-ready']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  mailpit:
+    image: axllent/mailpit:v1.34.0
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # --- Profil "apps" : applications en conteneurs de développement ---
+  api:
+    profiles: ['apps']
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+    environment: &app-env
+      NODE_ENV: development
+      DATABASE_URL: postgres://${POSTGRES_USER:-processia}:${POSTGRES_PASSWORD:-processia}@postgres:5432/processia
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-processia}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-processia-dev-secret}
+      S3_BUCKET_SOURCES: ${S3_BUCKET_SOURCES:-processia-sources}
+      S3_BUCKET_ARTIFACTS: ${S3_BUCKET_ARTIFACTS:-processia-artifacts}
+      SMTP_HOST: mailpit
+      SESSION_SECRET: ${SESSION_SECRET:-dev-only-session-secret-change-me-0000}
+      COLLAB_JWT_SECRET: ${COLLAB_JWT_SECRET:-dev-only-collab-secret-change-me-00000}
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-init:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  collab:
+    profiles: ['apps']
+    build:
+      context: .
+      dockerfile: apps/collab/Dockerfile.dev
+    environment: *app-env
+    ports:
+      - '3002:3002'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:3002/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  web:
+    profiles: ['apps']
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+      API_URL: http://api:3001
+    ports:
+      - '3000:3000'
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  postgres-data:
+  minio-data:

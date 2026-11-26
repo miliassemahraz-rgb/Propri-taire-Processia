@@ -1,0 +1,24 @@
+{
+  "name": "@processia/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Schémas zod des requêtes, réponses REST et événements temps réel",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@processia/model": "workspace:*"
+  },
+  "devDependencies": {
+    "@processia/config": "workspace:*"
+  }
+}

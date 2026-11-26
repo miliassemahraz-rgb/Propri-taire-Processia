@@ -1,0 +1,26 @@
+{
+  "name": "@processia/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Drizzle : schéma, migrations, RLS, seed (WP-04)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "node scripts/migrate.mjs"
+  },
+  "dependencies": {
+    "@processia/config": "workspace:*",
+    "@processia/model": "workspace:*"
+  },
+  "devDependencies": {
+    "@processia/config": "workspace:*"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@processia/exports",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Exports DOCX, XLSX, PDF et ZIP BPMN (WP-15, WP-24)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@processia/model": "workspace:*",
+    "@processia/bpmn": "workspace:*",
+    "@processia/diagnostic": "workspace:*",
+    "@processia/i18n": "workspace:*"
+  },
+  "devDependencies": {
+    "@processia/config": "workspace:*"
+  }
+}

@@ -1,0 +1,12 @@
+# Image de développement de @processia/collab. Contexte de build : la racine du dépôt
+# (`docker compose --profile apps build`). Non destinée à la production (voir WP-25).
+FROM node:22-alpine
+RUN corepack enable
+WORKDIR /workspace
+
+COPY . .
+RUN pnpm install --frozen-lockfile \
+ && pnpm turbo run build --filter=@processia/collab
+
+EXPOSE 3002
+CMD ["pnpm", "--filter", "@processia/collab", "start"]

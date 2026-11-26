@@ -1,0 +1,24 @@
+{
+  "name": "@processia/ingest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Extraction de texte des documents et découpage avec localisateurs (WP-11)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@processia/model": "workspace:*"
+  },
+  "devDependencies": {
+    "@processia/config": "workspace:*"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "@processia/config/tsconfig/library.json",
+  "compilerOptions": { "rootDir": "src", "outDir": "dist" },
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+}

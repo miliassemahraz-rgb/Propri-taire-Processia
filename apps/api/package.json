@@ -1,0 +1,30 @@
+{
+  "name": "@processia/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API NestJS : point d'entrée HTTP (main.ts) et worker de tâches (worker.ts)",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node --env-file-if-exists=../../.env dist/main.js\"",
+    "dev:worker": "tsc-watch -p tsconfig.build.json --onSuccess \"node --env-file-if-exists=../../.env dist/worker.js\"",
+    "start": "node dist/main.js",
+    "start:worker": "node dist/worker.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1178.0",
+    "@nestjs/common": "11.2.12",
+    "@nestjs/core": "11.2.12",
+    "@nestjs/platform-express": "11.2.12",
+    "@processia/config": "workspace:*",
+    "pg": "8.23.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/pg": "8.23.1",
+    "tsc-watch": "7.2.1"
+  }
+}

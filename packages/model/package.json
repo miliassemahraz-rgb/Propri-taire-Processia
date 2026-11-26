@@ -1,0 +1,21 @@
+{
+  "name": "@processia/model",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Méta-modèle : schémas zod, types, opérations, cohérence, complétude, vues. Pur, sans E/S (WP-02, WP-03)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@processia/config": "workspace:*"
+  }
+}
