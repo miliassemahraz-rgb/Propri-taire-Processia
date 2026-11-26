@@ -1,0 +1,3448 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/BusinessModel",
+  "definitions": {
+    "BusinessModel": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "missionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "elements": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Element"
+          }
+        },
+        "rejectedHypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "element": {
+                "$ref": "#/definitions/Element"
+              },
+              "by": {
+                "type": "string",
+                "minLength": 1
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": ["element", "by", "at"],
+            "additionalProperties": false
+          }
+        },
+        "layout": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^(?:L0|L1:.+|L2:.+|L3:.+)$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "additionalProperties": {
+              "$ref": "#/definitions/LayoutBox"
+            }
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "missionId",
+        "version",
+        "elements",
+        "rejectedHypotheses",
+        "layout"
+      ],
+      "additionalProperties": false
+    },
+    "Element": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BusinessTrait"
+        },
+        {
+          "$ref": "#/definitions/GlossaryTerm"
+        },
+        {
+          "$ref": "#/definitions/Actor"
+        },
+        {
+          "$ref": "#/definitions/Activity"
+        },
+        {
+          "$ref": "#/definitions/ProcessEvent"
+        },
+        {
+          "$ref": "#/definitions/Gateway"
+        },
+        {
+          "$ref": "#/definitions/SequenceFlow"
+        },
+        {
+          "$ref": "#/definitions/ProcessLink"
+        },
+        {
+          "$ref": "#/definitions/DataObject"
+        },
+        {
+          "$ref": "#/definitions/Tool"
+        },
+        {
+          "$ref": "#/definitions/InformationFlow"
+        },
+        {
+          "$ref": "#/definitions/Rule"
+        },
+        {
+          "$ref": "#/definitions/Indicator"
+        },
+        {
+          "$ref": "#/definitions/Discrepancy"
+        },
+        {
+          "$ref": "#/definitions/Finding"
+        },
+        {
+          "$ref": "#/definitions/Optimisation"
+        }
+      ]
+    },
+    "BusinessTrait": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "business_trait"
+        },
+        "facet": {
+          "type": "string",
+          "enum": ["sector", "environment", "specificity", "summary", "activity_statement"]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["id", "code", "label", "provenance", "status", "meta", "kind", "facet", "text"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Provenance": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "enum": [
+            "free_text",
+            "answer",
+            "document",
+            "interview",
+            "system_log",
+            "ai_knowledge",
+            "past_mission",
+            "consultant",
+            "deterministic_rule"
+          ]
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SourceRef"
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "aiCallId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["ai", "user", "system"]
+            },
+            "userId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["type"],
+          "additionalProperties": false
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+      },
+      "required": ["origin", "refs", "author", "at"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "origin": {
+                "const": "ai_knowledge"
+              }
+            },
+            "required": ["origin"]
+          },
+          "then": {
+            "required": ["rationale"]
+          }
+        }
+      ]
+    },
+    "SourceRef": {
+      "type": "object",
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "sourceRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "chunkId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "object",
+          "properties": {
+            "page": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "sheet": {
+              "type": "string"
+            },
+            "cell": {
+              "type": "string"
+            },
+            "paragraph": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "charStart": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "charEnd": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["charStart", "charEnd"],
+          "additionalProperties": false
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["sourceId", "sourceRevision", "locator", "quote"],
+      "additionalProperties": false
+    },
+    "StatusInfo": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": ["extracted", "hypothesis", "confirmed", "validated"]
+        },
+        "decidedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decidedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "correction": {
+          "type": "object",
+          "properties": {
+            "previous": {},
+            "note": {
+              "type": "string"
+            }
+          },
+          "required": ["previous"],
+          "additionalProperties": false
+        },
+        "validatedInSubmission": {
+          "type": "string",
+          "minLength": 1
+        },
+        "changedAfterValidation": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                }
+              },
+              "required": ["version", "at"],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "GlossaryTerm": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "glossary_term"
+        },
+        "term": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "synonyms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "term",
+        "definition",
+        "synonyms"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Actor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "actor"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["internal", "external", "third_party_system"]
+        },
+        "responsibilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stakeholder": {
+          "type": "boolean"
+        },
+        "parentId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "appRole": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "category",
+        "responsibilities"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Activity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "activity"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["macro", "process", "task", "step"]
+        },
+        "parentId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "macroCategory": {
+          "type": "string",
+          "enum": ["steering", "core", "support"]
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["mapping_only", "application"]
+        },
+        "responsibleActorId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "raci": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "actorId": {
+                "type": "string",
+                "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["R", "A", "C", "I"]
+              }
+            },
+            "required": ["actorId", "role"],
+            "additionalProperties": false
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "toolIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "ruleIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "execution": {
+          "type": "string",
+          "enum": ["manual", "user", "automatic", "ai_agent"]
+        },
+        "automation": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["rules_notifications", "documents", "integration", "ai_agent"]
+            },
+            "capability": {
+              "type": "string",
+              "enum": [
+                "assign_auto",
+                "reminder",
+                "escalation",
+                "deadline_alert",
+                "state_change",
+                "doc_generation",
+                "e_signature",
+                "ocr_extraction",
+                "connector:accounting",
+                "connector:bank",
+                "connector:edi",
+                "agent:classify_documents",
+                "agent:anomaly_detection",
+                "agent:drafting",
+                "agent:decision_support"
+              ]
+            }
+          },
+          "required": ["type", "capability"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "level",
+        "raci",
+        "inputs",
+        "outputs",
+        "toolIds",
+        "ruleIds",
+        "execution"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "level": {
+                "not": {
+                  "const": "macro"
+                }
+              }
+            },
+            "required": ["level"]
+          },
+          "then": {
+            "required": ["parentId"]
+          }
+        }
+      ]
+    },
+    "ProcessEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "event"
+        },
+        "containerId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "position": {
+          "type": "string",
+          "enum": ["start", "end", "intermediate", "boundary"]
+        },
+        "trigger": {
+          "type": "string",
+          "enum": ["none", "message", "timer", "error", "signal", "conditional"]
+        },
+        "attachedToId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "actorId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "timer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "containerId",
+        "position",
+        "trigger"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "position": {
+                "const": "boundary"
+              }
+            },
+            "required": ["position"]
+          },
+          "then": {
+            "required": ["attachedToId"]
+          }
+        }
+      ]
+    },
+    "Gateway": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "gateway"
+        },
+        "containerId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["exclusive", "parallel", "inclusive"]
+        },
+        "ruleId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "actorId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "containerId",
+        "type"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "SequenceFlow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "sequence_flow"
+        },
+        "containerId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "fromId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "toId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "ruleId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "isDefault": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "containerId",
+        "fromId",
+        "toId"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "ProcessLink": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "process_link"
+        },
+        "fromId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "toId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "nature": {
+          "type": "string",
+          "enum": ["sequence", "feeds", "steers", "supports"]
+        },
+        "dataObjectIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "fromId",
+        "toId",
+        "nature"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "DataObject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "data_object"
+        },
+        "nature": {
+          "type": "string",
+          "enum": ["business_object", "document", "form"]
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataField"
+          }
+        },
+        "toolIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "lifecycleStates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "personalData": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "nature",
+        "fields",
+        "toolIds"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "DataField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "number", "amount", "date", "boolean", "enum", "file", "reference"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "enumValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "referenceObjectId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "personalData": {
+          "type": "boolean"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        }
+      },
+      "required": ["id", "name", "type", "provenance", "status"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Tool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "tool"
+        },
+        "nature": {
+          "type": "string",
+          "enum": ["software", "spreadsheet", "email", "paper", "phone", "other"]
+        },
+        "systemActorId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        }
+      },
+      "required": ["id", "code", "label", "provenance", "status", "meta", "kind", "nature"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "InformationFlow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "information_flow"
+        },
+        "fromActorId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "toActorId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "dataObjectIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["paper", "email", "phone", "software", "portal", "oral", "other", "unknown"]
+        },
+        "activityId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "frequency": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "fromActorId",
+        "toActorId",
+        "dataObjectIds",
+        "channel"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Rule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "rule"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["business", "constraint", "decision", "exception", "dependency"]
+        },
+        "statement": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "when": {
+              "type": "string"
+            },
+            "then": {
+              "type": "string"
+            },
+            "otherwise": {
+              "type": "string"
+            }
+          },
+          "required": ["text"],
+          "additionalProperties": false
+        },
+        "appliesTo": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "exceptionHandling": {
+          "type": "object",
+          "properties": {
+            "circuit": {
+              "type": "string",
+              "enum": ["reminder", "escalation", "deadline", "alert", "other"]
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "activityIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+              }
+            }
+          },
+          "required": ["circuit", "description"],
+          "additionalProperties": false
+        },
+        "legalReference": {
+          "type": "string"
+        },
+        "decisionTable": {
+          "not": {}
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "type",
+        "statement",
+        "appliesTo"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Indicator": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "indicator"
+        },
+        "targetId": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "measure": {
+          "type": "string",
+          "enum": ["volume", "lead_time", "duration", "frequency", "workload", "cost", "error_rate"]
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "exact": {
+              "type": "number"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period": {
+          "type": "string",
+          "enum": ["day", "week", "month", "year", "occurrence"]
+        },
+        "seasonality": {
+          "type": "string"
+        },
+        "nature": {
+          "type": "string",
+          "enum": ["known", "estimated"]
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "targetId",
+        "measure",
+        "value",
+        "unit",
+        "nature"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Discrepancy": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "discrepancy"
+        },
+        "elementIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "sides": {
+          "minItems": 2,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "claim": {
+                "type": "string",
+                "minLength": 1
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/SourceRef"
+                }
+              }
+            },
+            "required": ["claim", "refs"],
+            "additionalProperties": false
+          }
+        },
+        "state": {
+          "type": "string",
+          "enum": ["open", "resolved"]
+        },
+        "resolution": {
+          "type": "object",
+          "properties": {
+            "note": {
+              "type": "string",
+              "minLength": 1
+            },
+            "by": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "keptSide": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["note", "by", "at"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "elementIds",
+        "sides",
+        "state"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "resolved"
+              }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "required": ["resolution"]
+          }
+        }
+      ]
+    },
+    "Finding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "finding"
+        },
+        "family": {
+          "type": "string",
+          "enum": ["waste", "flow_and_delay", "organisation", "risk_compliance"]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "rekeying",
+            "repetitive_task",
+            "duplicate",
+            "redundant_control",
+            "useless_validation_loop",
+            "bottleneck",
+            "waiting_time",
+            "flow_break",
+            "paper_or_email_transfer",
+            "task_without_owner",
+            "incompatible_roles",
+            "single_person_dependency",
+            "missing_control",
+            "missing_traceability",
+            "uncovered_obligation"
+          ]
+        },
+        "location": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "severity": {
+          "anyOf": [
+            {
+              "type": "number",
+              "const": 1
+            },
+            {
+              "type": "number",
+              "const": 2
+            },
+            {
+              "type": "number",
+              "const": 3
+            }
+          ]
+        },
+        "detection": {
+          "type": "object",
+          "properties": {
+            "by": {
+              "type": "string",
+              "enum": ["rule", "ai"]
+            },
+            "detectorId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["by"],
+          "additionalProperties": false
+        },
+        "evidence": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "family",
+        "type",
+        "location",
+        "severity",
+        "detection"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "Optimisation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        },
+        "fieldProvenance": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/Provenance"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/StatusInfo"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "createdInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedInVersion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": ["createdInVersion", "updatedInVersion"],
+          "additionalProperties": false
+        },
+        "kind": {
+          "type": "string",
+          "const": "optimisation"
+        },
+        "findingIds": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "alternativeOf": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+        },
+        "automationType": {
+          "type": "string",
+          "enum": ["rules_notifications", "documents", "integration", "ai_agent", "organisational"]
+        },
+        "changeSet": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ChangeSet"
+            }
+          ]
+        },
+        "touchedElementIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+          }
+        },
+        "gain": {
+          "type": "object",
+          "properties": {
+            "timeHoursPerYear": {
+              "type": "object",
+              "properties": {
+                "low": {
+                  "type": "number"
+                },
+                "high": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["low", "high", "unit"],
+              "additionalProperties": false
+            },
+            "costEurPerYear": {
+              "type": "object",
+              "properties": {
+                "low": {
+                  "type": "number"
+                },
+                "high": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["low", "high", "unit"],
+              "additionalProperties": false
+            },
+            "errorsAvoidedPerYear": {
+              "type": "object",
+              "properties": {
+                "low": {
+                  "type": "number"
+                },
+                "high": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["low", "high", "unit"],
+              "additionalProperties": false
+            },
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "origin": {
+                    "type": "string",
+                    "enum": ["standard_ratio", "model_indicator", "ai", "consultant"]
+                  },
+                  "ref": {
+                    "type": "string"
+                  }
+                },
+                "required": ["label", "value", "unit", "origin"],
+                "additionalProperties": false
+              }
+            },
+            "formula": {
+              "type": "string",
+              "minLength": 1
+            },
+            "score": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                },
+                {
+                  "type": "number",
+                  "const": 3
+                },
+                {
+                  "type": "number",
+                  "const": 4
+                },
+                {
+                  "type": "number",
+                  "const": 5
+                }
+              ]
+            }
+          },
+          "required": ["assumptions", "formula", "score"],
+          "additionalProperties": false
+        },
+        "effort": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                },
+                {
+                  "type": "number",
+                  "const": 3
+                },
+                {
+                  "type": "number",
+                  "const": 4
+                },
+                {
+                  "type": "number",
+                  "const": 5
+                }
+              ]
+            },
+            "justification": {
+              "type": "string",
+              "minLength": 1
+            },
+            "drivers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "engine_configuration",
+                  "new_extension",
+                  "integration",
+                  "organisational_change",
+                  "data_migration"
+                ]
+              }
+            }
+          },
+          "required": ["score", "justification", "drivers"],
+          "additionalProperties": false
+        },
+        "decision": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "enum": ["accepted", "rejected"]
+            },
+            "cause": {
+              "type": "string",
+              "enum": ["direct", "cascade"]
+            },
+            "cascadeFrom": {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+            },
+            "submissionId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "comment": {
+              "type": "string"
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "by": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["value", "cause", "submissionId", "at", "by"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "label",
+        "provenance",
+        "status",
+        "meta",
+        "kind",
+        "findingIds",
+        "changeSet",
+        "touchedElementIds",
+        "dependsOn",
+        "gain",
+        "effort"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "extracted"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "properties": {
+                  "refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": ["refs"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "value": {
+                    "const": "hypothesis"
+                  }
+                },
+                "required": ["value"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "required": ["rationale"]
+              }
+            },
+            "required": ["provenance"]
+          }
+        }
+      ]
+    },
+    "ChangeSet": {
+      "type": "object",
+      "properties": {
+        "baseVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "ops": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelOp"
+          }
+        },
+        "cause": {
+          "type": "string",
+          "enum": [
+            "extraction",
+            "answer",
+            "hypotheses",
+            "hypothesis_decision",
+            "process_flow",
+            "dialogue_edit",
+            "diagnostic",
+            "optimisation",
+            "validation",
+            "rollback",
+            "layout",
+            "to_be_composition"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["baseVersion", "ops", "cause", "summary"],
+      "additionalProperties": false
+    },
+    "ModelOp": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "add"
+            },
+            "element": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Element"
+                }
+              ]
+            }
+          },
+          "required": ["op", "element"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "update"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+            },
+            "set": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "unset": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["op", "id", "set"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "remove"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+            },
+            "cascade": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+              }
+            }
+          },
+          "required": ["op", "id"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "set_status"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["extracted", "hypothesis", "confirmed", "validated"]
+            },
+            "correction": {}
+          },
+          "required": ["op", "id", "status"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "reject_hypothesis"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": ["op", "id"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "set_layout"
+            },
+            "diagram": {
+              "type": "string",
+              "pattern": "^(?:L0|L1:.+|L2:.+|L3:.+)$"
+            },
+            "positions": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "pattern": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|tmp:[0-9]+)$"
+              },
+              "additionalProperties": {
+                "$ref": "#/definitions/LayoutBox"
+              }
+            }
+          },
+          "required": ["op", "diagram", "positions"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "LayoutBox": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "w": {
+          "type": "number"
+        },
+        "h": {
+          "type": "number"
+        }
+      },
+      "required": ["x", "y", "w", "h"],
+      "additionalProperties": false
+    }
+  },
+  "$id": "https://processia.local/schema/business-model.v1.json",
+  "title": "BusinessModel (schemaVersion 1)"
+}

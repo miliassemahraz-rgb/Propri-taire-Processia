@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "capabilities": [
+    {
+      "id": "assign_auto",
+      "type": "rules_notifications",
+      "label": "Affectation automatique",
+      "description": "Affecte une tâche à un acteur ou à un rôle selon des règles (charge, compétence, ordre).",
+      "effort": 1
+    },
+    {
+      "id": "reminder",
+      "type": "rules_notifications",
+      "label": "Relance automatique",
+      "description": "Envoie un rappel à un acteur lorsqu'un délai est dépassé ou qu'une pièce manque.",
+      "effort": 1
+    },
+    {
+      "id": "escalation",
+      "type": "rules_notifications",
+      "label": "Escalade",
+      "description": "Remonte une tâche en retard au responsable hiérarchique ou à un autre acteur.",
+      "effort": 2
+    },
+    {
+      "id": "deadline_alert",
+      "type": "rules_notifications",
+      "label": "Alerte d'échéance",
+      "description": "Prévient les acteurs concernés avant une échéance réglementaire ou contractuelle.",
+      "effort": 1
+    },
+    {
+      "id": "state_change",
+      "type": "rules_notifications",
+      "label": "Changement d'état automatique",
+      "description": "Fait évoluer l'état d'un objet de données lorsqu'une condition est remplie.",
+      "effort": 1
+    },
+    {
+      "id": "doc_generation",
+      "type": "documents",
+      "label": "Génération de document",
+      "description": "Produit un document (courrier, attestation, rapport) à partir d'un gabarit et des données.",
+      "effort": 2
+    },
+    {
+      "id": "e_signature",
+      "type": "documents",
+      "label": "Signature électronique",
+      "description": "Fait signer un document par un ou plusieurs acteurs, avec preuve de signature.",
+      "effort": 3
+    },
+    {
+      "id": "ocr_extraction",
+      "type": "documents",
+      "label": "Extraction de données par reconnaissance de caractères",
+      "description": "Lit un document numérisé et en extrait les champs utiles vers un objet de données.",
+      "effort": 3
+    },
+    {
+      "id": "connector:accounting",
+      "type": "integration",
+      "label": "Connecteur comptable",
+      "description": "Échange des données avec un logiciel de comptabilité.",
+      "effort": 4
+    },
+    {
+      "id": "connector:bank",
+      "type": "integration",
+      "label": "Connecteur bancaire",
+      "description": "Récupère ou transmet des informations bancaires (relevés, paiements).",
+      "effort": 4
+    },
+    {
+      "id": "connector:edi",
+      "type": "integration",
+      "label": "Connecteur d'échange de données informatisé",
+      "description": "Échange des messages structurés avec un partenaire ou une administration.",
+      "effort": 4
+    },
+    {
+      "id": "agent:classify_documents",
+      "type": "ai_agent",
+      "label": "Agent de classement de documents",
+      "description": "Classe automatiquement les documents reçus par type et par dossier.",
+      "effort": 3
+    },
+    {
+      "id": "agent:anomaly_detection",
+      "type": "ai_agent",
+      "label": "Agent de détection d'anomalies",
+      "description": "Repère les incohérences et les valeurs inhabituelles dans les données saisies.",
+      "effort": 4
+    },
+    {
+      "id": "agent:drafting",
+      "type": "ai_agent",
+      "label": "Agent de rédaction",
+      "description": "Prépare un projet de texte (réponse, compte rendu) que l'utilisateur relit.",
+      "effort": 3
+    },
+    {
+      "id": "agent:decision_support",
+      "type": "ai_agent",
+      "label": "Agent d'aide à la décision",
+      "description": "Propose une décision argumentée que l'utilisateur confirme ou corrige.",
+      "effort": 4
+    }
+  ]
+}
