@@ -32,11 +32,10 @@ export type Action = (typeof ACTIONS)[number];
 
 /**
  * Colonne de la matrice appliquée à un sujet.
- *  - `admin`, `manager`, `consultant`, `validator` : les quatre colonnes de la spécification 3.5 ;
- *  - `observer` : responsable de mission global qui n'est pas membre de la mission. Il voit toutes
- *    les missions (PO-22) mais seulement en lecture et commentaire, comme l'administrateur.
+ *  les quatre colonnes de la spécification 3.5. Un responsable de mission global a la colonne
+ *  `manager` sur toutes les missions, membre ou non (PO-22, PO-30 « droits complets »).
  */
-export const PERSONAS = ['admin', 'manager', 'consultant', 'validator', 'observer'] as const;
+export const PERSONAS = ['admin', 'manager', 'consultant', 'validator'] as const;
 export type Persona = (typeof PERSONAS)[number];
 
 /** `true` : autorisé ; `false` : refusé ; `'own'` : autorisé sur les soumissions du validateur. */
@@ -67,30 +66,29 @@ function cells(
   manager: Cell,
   consultant: Cell,
   validator: Cell,
-  observer: Cell,
 ): Record<Persona, Cell> {
-  return { admin, manager, consultant, validator, observer };
+  return { admin, manager, consultant, validator };
 }
 
 /** La matrice 3.5, une ligne par action. L'ordre des colonnes suit `PERSONAS`. */
 export const MATRIX: Record<Action, Record<Persona, Cell>> = {
-  'users.manage': cells(true, false, false, false, false),
+  'users.manage': cells(true, false, false, false),
   // Le responsable invite des consultants et des validateurs pour ses missions (PO-27).
-  'users.invite': cells(true, true, false, false, false),
-  'ai_providers.manage': cells(true, false, false, false, false),
-  'clients.manage': cells(true, false, false, false, false),
-  'mission.create': cells(true, true, false, false, false),
-  'mission.assign': cells(true, true, false, false, false),
-  'mission.view_progress': cells(true, true, true, false, true),
-  'mission.read_workspace': cells(true, true, true, false, true),
-  'model.edit': cells(false, true, true, false, false),
-  'comment.create': cells(true, true, true, 'own', true),
-  'submission.create': cells(false, true, true, false, false),
-  'submission.read': cells(true, true, true, 'own', true),
-  'submission.decide': cells(false, false, false, true, false),
-  'export.create': cells(true, true, true, 'own', true),
-  'history.rollback': cells(false, true, true, false, false),
-  'model.publish_template': cells(true, false, false, false, false),
+  'users.invite': cells(true, true, false, false),
+  'ai_providers.manage': cells(true, false, false, false),
+  'clients.manage': cells(true, false, false, false),
+  'mission.create': cells(true, true, false, false),
+  'mission.assign': cells(true, true, false, false),
+  'mission.view_progress': cells(true, true, true, false),
+  'mission.read_workspace': cells(true, true, true, false),
+  'model.edit': cells(false, true, true, false),
+  'comment.create': cells(true, true, true, 'own'),
+  'submission.create': cells(false, true, true, false),
+  'submission.read': cells(true, true, true, 'own'),
+  'submission.decide': cells(false, false, false, true),
+  'export.create': cells(true, true, true, 'own'),
+  'history.rollback': cells(false, true, true, false),
+  'model.publish_template': cells(true, false, false, false),
 };
 
 export interface Subject {
@@ -115,6 +113,8 @@ const GLOBAL_PERSONA: Record<GlobalRole, Persona> = {
 export function personaFor(subject: Subject, action: Action): Persona | null {
   if (ACTION_SCOPE[action] === 'global') return GLOBAL_PERSONA[subject.globalRole];
   if (subject.globalRole === 'admin') return 'admin';
+  // PO-30 : le responsable de mission global a les droits du responsable sur toutes les missions.
+  if (subject.globalRole === 'mission_manager') return 'manager';
   switch (subject.missionRole ?? null) {
     case 'manager':
       return 'manager';
@@ -123,7 +123,7 @@ export function personaFor(subject: Subject, action: Action): Persona | null {
     case 'validator':
       return 'validator';
     default:
-      return subject.globalRole === 'mission_manager' ? 'observer' : null;
+      return null;
   }
 }
 

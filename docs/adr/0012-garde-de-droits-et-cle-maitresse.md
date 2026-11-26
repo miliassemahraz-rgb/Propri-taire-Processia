@@ -15,7 +15,7 @@ WP-06 doit appliquer la matrice des droits (3.5) et le cloisonnement des mission
   - Avec `:missionId` : lecture de la mission et de l'affectation du demandeur (tables non cloisonnées, sans contexte de mission), 404 si la mission est inexistante ou invisible, 403 si la mission est visible mais le droit refusé, puis pose d'un `MissionContext` (`@CurrentMission()`).
   - `MissionContext.run(fn)` est le seul chemin vers `withMission` pour les contrôleurs : les tables cloisonnées ne s'ouvrent qu'à travers lui.
   - Une route sans `@Can` et sans `:missionId` n'est soumise qu'à `SessionGuard` (liste de ses propres missions, `/me`).
-- **`packages/policy`** est pur : `can(sujet, action, ressource?)` lit la constante `MATRIX` (actions x colonnes `admin`, `manager`, `consultant`, `validator`, `observer`). La colonne est choisie par le rôle global pour les actions globales et par le rôle dans la mission pour les actions de mission.
+- **`packages/policy`** est pur : `can(sujet, action, ressource?)` lit la constante `MATRIX` (actions x colonnes `admin`, `manager`, `consultant`, `validator`). La colonne est choisie par le rôle global pour les actions globales et par le rôle dans la mission pour les actions de mission ; un responsable de mission global a la colonne `manager` sur toutes les missions (amendement PO-30, la colonne `observer` initiale est supprimée).
 - **Clés API** : AES-256-GCM, clé dérivée par HKDF de `MASTER_KEY` avec un contexte (`purpose`) propre aux clés API (le même module sert déjà au secret TOTP, dérivé de `SESSION_SECRET`). Format `v1.<iv>.<tag>.<données>`. L'API ne renvoie que `{ configured, masked }`, où `masked` garde les quatre derniers caractères.
 
 ## Alternatives écartées

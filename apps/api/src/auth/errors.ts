@@ -21,6 +21,7 @@ const MESSAGES: Record<AuthErrorCode, string> = {
   POLICY_NOT_ACCEPTED: 'La politique de données du fournisseur doit être acceptée.',
   STALE: 'Le modèle a changé depuis la version de départ de la modification.',
   CHANGESET_INVALID: 'La modification est refusée par les règles du modèle.',
+  PHASE_REGRESSION: 'Retour impossible à une phase déjà validée par le client.',
 };
 
 const STATUS: Record<AuthErrorCode, number> = {
@@ -43,6 +44,7 @@ const STATUS: Record<AuthErrorCode, number> = {
   POLICY_NOT_ACCEPTED: 422,
   STALE: 409,
   CHANGESET_INVALID: 422,
+  PHASE_REGRESSION: 409,
 };
 
 /** Erreur applicative portant un code stable (contrat `ApiError`). */

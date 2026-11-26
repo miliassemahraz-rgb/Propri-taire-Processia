@@ -22,6 +22,7 @@ export const AUTH_ERROR_CODES = [
   'POLICY_NOT_ACCEPTED',
   'STALE',
   'CHANGESET_INVALID',
+  'PHASE_REGRESSION',
 ] as const;
 export type AuthErrorCode = (typeof AUTH_ERROR_CODES)[number];
 

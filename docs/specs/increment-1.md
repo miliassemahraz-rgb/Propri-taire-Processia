@@ -733,7 +733,7 @@ Toutes les clés primaires sont des `uuid` (v7), sauf indication contraire. Tout
 | Rôle | Missions visibles | Contenu |
 | --- | --- | --- |
 | Administrateur | Toutes | Lecture et commentaire seulement |
-| Responsable de mission | Toutes ; il est membre `manager` de celles qu'il a créées ou auxquelles il est affecté | Selon la matrice 3.5 dans les missions où il est membre ; lecture et commentaire seulement dans les autres [PO-30] |
+| Responsable de mission | Toutes ; il est membre `manager` de celles qu'il a créées ou auxquelles il est affecté | Selon la matrice 3.5, que la mission soit la sienne ou non : droits complets [PO-30] |
 | Consultant | Celles où il est affecté | Selon la matrice 3.5 |
 | Validateur | Uniquement la sienne | Uniquement les soumissions |
 
@@ -777,7 +777,7 @@ Choix **[HORS-CDC]** :
 | `history.rollback` | ✘ | ✔ | ✔ | ✘ |
 | `model.publish_template` | ✔ (incrément 4) | ✘ | ✘ | ✘ |
 
-Un responsable de mission voit toutes les missions [PO-22] ; dans une mission dont il n'est pas membre, il se comporte comme l'administrateur pour les actions de mission (`mission.view_progress`, `mission.read_workspace`, `comment.create`, `submission.read`, `export.create`) et n'a aucun autre droit de mission [PO-30]. `@processia/policy` modélise ce cas par une cinquième colonne, `observer`. Les cellules « (sur ses soumissions) » et « (les siennes) » du validateur exigent `resource.own === true` ; `MissionGuard` le fournit pour un validateur membre de la mission.
+Un responsable de mission voit toutes les missions [PO-22] et a sur chacune, membre ou non, les droits de la colonne « Responsable » [PO-30, droits complets] : `personaFor` lui applique la colonne `manager` partout (il n'y a plus de colonne `observer`). L'administrateur reste en lecture et commentaire seulement (jamais `model.edit`). Le nom, la description et la phase d'une mission sont modifiables par l'administrateur et les responsables de mission (`mission.assign`) ; un retour à une phase déjà validée par le client est refusé en `409 PHASE_REGRESSION` : une soumission `validated` de type `analysis_dossier` interdit `analysis`, `as_is` interdit `mapping` et `analysis`, `to_be` interdit `transformation` et en deçà [PO-31]. Les cellules « (sur ses soumissions) » et « (les siennes) » du validateur exigent `resource.own === true` ; `MissionGuard` le fournit pour un validateur membre de la mission.
 
 `MissionGuard` et `@Can(action)` sont réalisés par une seule garde globale (`PolicyGuard`), évaluée après `SessionGuard` : mission non visible (inexistante, hors affectation) = 404 ; droit refusé sur une mission visible = 403. Le nom du paramètre de route est `:missionId`.
 

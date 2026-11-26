@@ -5,6 +5,7 @@ import {
   type CreateMissionRequest,
   type CreateMissionResponse,
   type MemberDto,
+  MISSION_PHASES,
   type MissionPhase,
   type MissionProgress,
   type MissionSummary,
@@ -47,6 +48,18 @@ const ASSIGNABLE: Record<Exclude<GlobalRole, 'admin'>, readonly MissionRole[]> =
   mission_manager: ['manager', 'consultant'],
   consultant: ['consultant'],
   client_validator: ['validator'],
+};
+
+/**
+ * Phase minimale imposée par la validation du client d'un livrable (PO-31) : une soumission
+ * `validated` de ce type interdit tout retour en deçà. Dossier d'analyse validé : plus de retour à
+ * `analysis` ; AS-IS validé : plus de retour à `mapping` ; TO-BE validé : plus de retour à
+ * `transformation`.
+ */
+const MIN_PHASE_AFTER_VALIDATION: Record<string, MissionPhase> = {
+  analysis_dossier: 'mapping',
+  as_is: 'transformation',
+  to_be: 'generation',
 };
 
 function isUniqueViolation(error: unknown): boolean {
@@ -221,6 +234,7 @@ export class MissionsService {
     auth: AuthContext,
     ip: string | null,
   ): Promise<MissionSummary> {
+    if (input.phase !== undefined) await this.assertPhaseAllowed(ctx.missionId, input.phase);
     await this.db
       .update(missions)
       .set({
@@ -237,6 +251,31 @@ export class MissionsService {
       ip,
     });
     return this.get(ctx, auth);
+  }
+
+  /**
+   * Refuse (409 `PHASE_REGRESSION`) un retour à une phase dont la validation par le client est
+   * enregistrée : soumission `validated` (table `validation_submissions`) du livrable concerné.
+   */
+  private async assertPhaseAllowed(missionId: string, target: MissionPhase): Promise<void> {
+    const validated = await withMission(this.db, missionId, (tx) =>
+      tx
+        .selectDistinct({ kind: validationSubmissions.kind })
+        .from(validationSubmissions)
+        .where(
+          and(
+            eq(validationSubmissions.missionId, missionId),
+            eq(validationSubmissions.status, 'validated'),
+          ),
+        ),
+    );
+    const rank = (phase: MissionPhase): number => MISSION_PHASES.indexOf(phase);
+    for (const { kind } of validated) {
+      const min = MIN_PHASE_AFTER_VALIDATION[kind];
+      if (min !== undefined && rank(target) < rank(min)) {
+        throw new AuthError('PHASE_REGRESSION', { kind, minimumPhase: min });
+      }
+    }
   }
 
   async members(ctx: MissionContext): Promise<MemberDto[]> {
