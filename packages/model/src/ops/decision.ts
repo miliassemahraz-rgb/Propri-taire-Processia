@@ -189,7 +189,7 @@ export type ClosureBlocker =
   | { code: 'DEPENDENCY_NOT_ACCEPTED'; optimisationId: string; dependencyIds: string[] };
 
 /**
- * La clôture exige que toutes les optimisations soient décidées [PO-27, valeur par défaut] et que
+ * La clôture exige que toutes les optimisations soient décidées [PO-29, valeur par défaut] et que
  * toutes les dépendances d'une optimisation acceptée soient acceptées.
  */
 export function closureBlockers(
