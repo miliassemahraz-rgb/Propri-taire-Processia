@@ -14,6 +14,11 @@
       "body": "Bonjour,\n\nVous êtes invité(e) à rejoindre Processia. Ouvrez le lien suivant pour choisir votre mot de passe (valable {hours} heures, utilisable une seule fois) :\n\n{link}\n\nÀ votre première connexion, vous configurerez la double authentification.\n"
     }
   },
+  "aiProviders": {
+    "dataPolicy": {
+      "anthropic": "Les contenus des missions (textes, dialogues, documents) sont transmis à Anthropic pour être analysés. Selon les conditions commerciales de l’API, ils ne servent pas à entraîner les modèles et sont conservés pour une durée limitée à des fins de sécurité. Le cabinet s’assure que ce transfert est compatible avec le secret professionnel, le contrat du client et le RGPD avant d’accepter."
+    }
+  },
   "a11y": {
     "skipToContent": "Aller au contenu principal"
   }

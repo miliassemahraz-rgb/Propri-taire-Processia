@@ -7,6 +7,7 @@ const valid = {
   S3_ACCESS_KEY: 'processia',
   S3_SECRET_KEY: 'processia-secret',
   SESSION_SECRET: 'x'.repeat(32),
+  MASTER_KEY: 'm'.repeat(32),
   COLLAB_JWT_SECRET: 'y'.repeat(32),
 };
 

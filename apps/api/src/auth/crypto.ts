@@ -27,14 +27,20 @@ export function safeEqual(a: string, b: string): boolean {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 
-function deriveKey(secret: string): Buffer {
-  return Buffer.from(hkdfSync('sha256', secret, '', 'processia-totp-secret-v1', 32));
+const DEFAULT_PURPOSE = 'processia-totp-secret-v1';
+
+function deriveKey(secret: string, purpose: string): Buffer {
+  return Buffer.from(hkdfSync('sha256', secret, '', purpose, 32));
 }
 
 /** Chiffre un secret au repos (AES-256-GCM). Format : `v1.<iv>.<tag>.<texte chiffré>`. */
-export function encryptSecret(plain: string, secret: string): string {
+export function encryptSecret(
+  plain: string,
+  secret: string,
+  purpose: string = DEFAULT_PURPOSE,
+): string {
   const iv = randomBytes(12);
-  const cipher = createCipheriv('aes-256-gcm', deriveKey(secret), iv);
+  const cipher = createCipheriv('aes-256-gcm', deriveKey(secret, purpose), iv);
   const data = Buffer.concat([cipher.update(plain, 'utf8'), cipher.final()]);
   return [
     'v1',
@@ -44,12 +50,20 @@ export function encryptSecret(plain: string, secret: string): string {
   ].join('.');
 }
 
-export function decryptSecret(stored: string, secret: string): string {
+export function decryptSecret(
+  stored: string,
+  secret: string,
+  purpose: string = DEFAULT_PURPOSE,
+): string {
   const [version, iv, tag, data] = stored.split('.');
   if (version !== 'v1' || iv === undefined || tag === undefined || data === undefined) {
     throw new Error('Secret chiffré illisible.');
   }
-  const decipher = createDecipheriv('aes-256-gcm', deriveKey(secret), Buffer.from(iv, 'base64url'));
+  const decipher = createDecipheriv(
+    'aes-256-gcm',
+    deriveKey(secret, purpose),
+    Buffer.from(iv, 'base64url'),
+  );
   decipher.setAuthTag(Buffer.from(tag, 'base64url'));
   return Buffer.concat([
     decipher.update(Buffer.from(data, 'base64url')),

@@ -62,6 +62,12 @@ importers:
       '@processia/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@processia/model':
+        specifier: workspace:*
+        version: link:../../packages/model
+      '@processia/policy':
+        specifier: workspace:*
+        version: link:../../packages/policy
       drizzle-orm:
         specifier: 0.45.4
         version: 0.45.4(@types/pg@8.23.1)(pg@8.23.1)

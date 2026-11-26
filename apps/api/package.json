@@ -23,6 +23,8 @@
     "@processia/contracts": "workspace:*",
     "@processia/db": "workspace:*",
     "@processia/i18n": "workspace:*",
+    "@processia/model": "workspace:*",
+    "@processia/policy": "workspace:*",
     "drizzle-orm": "0.45.4",
     "nodemailer": "10.6.1",
     "otplib": "13.6.0",

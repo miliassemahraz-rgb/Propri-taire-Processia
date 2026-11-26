@@ -12,6 +12,7 @@ import { ENV } from '../env.js';
 import { randomToken, sha256Hex } from './crypto.js';
 import { AuthError } from './errors.js';
 import { PasswordService } from './passwords.js';
+import type { AuthContext } from './sessions.service.js';
 import { AuditService, CLOCK, MailService, type Clock } from './services.js';
 
 export const INVITATION_VALIDITY_HOURS = 72;
@@ -29,11 +30,37 @@ export class InvitationsService {
     @Inject(AuditService) private readonly audit: AuditService,
   ) {}
 
+  /**
+   * Un responsable de mission n'invite que des consultants et des validateurs, pour une mission
+   * dont il est responsable affecté, avec le rôle de mission correspondant [PO-27].
+   */
+  private async checkScope(input: CreateInvitationRequest, inviter: AuthContext): Promise<void> {
+    if (inviter.user.globalRole === 'admin') return;
+    const roleFor = { consultant: 'consultant', client_validator: 'validator' } as const;
+    const expected = (roleFor as Record<string, string | undefined>)[input.globalRole];
+    if (expected === undefined || input.missionId === undefined || input.missionRole !== expected) {
+      throw new AuthError('FORBIDDEN');
+    }
+    const [member] = await this.db
+      .select({ role: missionMembers.missionRole })
+      .from(missionMembers)
+      .where(
+        and(
+          eq(missionMembers.missionId, input.missionId),
+          eq(missionMembers.userId, inviter.userId),
+        ),
+      )
+      .limit(1);
+    if (member?.role !== 'manager') throw new AuthError('FORBIDDEN');
+  }
+
   async create(
     input: CreateInvitationRequest,
-    createdBy: string,
+    inviter: AuthContext,
     ip: string | null,
   ): Promise<CreateInvitationResponse> {
+    const createdBy = inviter.userId;
+    await this.checkScope(input, inviter);
     const email = input.email.toLowerCase();
     const [existing] = await this.db
       .select({ id: users.id })

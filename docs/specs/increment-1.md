@@ -733,7 +733,7 @@ Toutes les clés primaires sont des `uuid` (v7), sauf indication contraire. Tout
 | Rôle | Missions visibles | Contenu |
 | --- | --- | --- |
 | Administrateur | Toutes | Lecture et commentaire seulement |
-| Responsable de mission | Celles qu'il a créées ou dont il est membre `manager` | Selon la matrice 3.5 |
+| Responsable de mission | Toutes ; il est membre `manager` de celles qu'il a créées ou auxquelles il est affecté | Selon la matrice 3.5 dans les missions où il est membre ; lecture et commentaire seulement dans les autres [PO-30] |
 | Consultant | Celles où il est affecté | Selon la matrice 3.5 |
 | Validateur | Uniquement la sienne | Uniquement les soumissions |
 
@@ -764,8 +764,9 @@ Choix **[HORS-CDC]** :
 | Action (`Action`) | Admin | Responsable (membre) | Consultant (membre) | Validateur (membre) |
 | --- | --- | --- | --- | --- |
 | `users.manage`, `ai_providers.manage`, `clients.manage` | ✔ | ✘ | ✘ | ✘ |
+| `users.invite` (consultants et validateurs pour ses missions, pour le responsable [PO-27]) | ✔ (tout rôle) | ✔ | ✘ | ✘ |
 | `mission.create`, `mission.assign` | ✔ | ✔ | ✘ | ✘ |
-| `mission.view_progress` | ✔ (toutes) | ✔ (les siennes) | ✔ (les siennes) | ✘ |
+| `mission.view_progress` | ✔ (toutes) | ✔ (toutes) [PO-22] | ✔ (les siennes) | ✘ |
 | `mission.read_workspace` (analyse, cartographie en cours) | ✔ | ✔ | ✔ | ✘ |
 | `model.edit` (lancer des analyses, dialoguer, appliquer des propositions, décider des hypothèses, coéditer) | ✘ | ✔ | ✔ | ✘ |
 | `comment.create` | ✔ | ✔ | ✔ | ✔ (sur ses soumissions) |
@@ -775,6 +776,10 @@ Choix **[HORS-CDC]** :
 | `export.create` | ✔ | ✔ | ✔ | ✔ (exports de ses soumissions) |
 | `history.rollback` | ✘ | ✔ | ✔ | ✘ |
 | `model.publish_template` | ✔ (incrément 4) | ✘ | ✘ | ✘ |
+
+Un responsable de mission voit toutes les missions [PO-22] ; dans une mission dont il n'est pas membre, il se comporte comme l'administrateur pour les actions de mission (`mission.view_progress`, `mission.read_workspace`, `comment.create`, `submission.read`, `export.create`) et n'a aucun autre droit de mission [PO-30]. `@processia/policy` modélise ce cas par une cinquième colonne, `observer`. Les cellules « (sur ses soumissions) » et « (les siennes) » du validateur exigent `resource.own === true` ; `MissionGuard` le fournit pour un validateur membre de la mission.
+
+`MissionGuard` et `@Can(action)` sont réalisés par une seule garde globale (`PolicyGuard`), évaluée après `SessionGuard` : mission non visible (inexistante, hors affectation) = 404 ; droit refusé sur une mission visible = 403. Le nom du paramètre de route est `:missionId`.
 
 `submission.create` découle de « Modifier l'analyse » (CDC 3.2 §6) **[HORS-CDC]**. `export.create` pour le validateur est également **[HORS-CDC]**.
 
@@ -1520,7 +1525,7 @@ Les lots WP-02/03, WP-04/05 et WP-09 peuvent être menés en parallèle s'il y a
 | **PO-19** | Notifications au validateur après validation | In-app et email immédiats, regroupés par version | Un résumé quotidien est possible |
 | **PO-20** | Outils de modélisation cibles pour l'interopérabilité | Camunda Modeler et demo.bpmn.io | Si le cabinet utilise un autre outil (Bizagi, ARIS…), il faudra le tester |
 | **PO-21** | Durée de conservation par défaut (CDC 9.8) et purge | Champ par mission, purge manuelle à l'incrément 1, automatique à l'incrément 2 | — |
-| **PO-22** | Visibilité des missions | Administrateur : toutes, en lecture et commentaire ; responsable de mission : celles qu'il a créées ou dont il est membre | Le CDC dit seulement « plusieurs missions » |
+| **PO-22** | Visibilité des missions | Administrateur et responsables de mission : toutes (l'administrateur en lecture et commentaire) ; consultant : ses affectations ; validateur : sa mission [décidée] | Le CDC dit seulement « plusieurs missions » |
 | **PO-23** | Contenu des prompts et des réponses IA conservé dans `ai_calls` | Conservé pendant la durée de vie de la mission, purgé avec elle | Utile pour l'audit et l'explicabilité, mais contient des données client |
 | **PO-24** | Antivirus sur les documents déposés | Non à l'incrément 1 (contrôle du type et de la taille seulement) | ClamAV ajouterait un conteneur |
 
