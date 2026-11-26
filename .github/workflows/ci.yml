@@ -45,6 +45,9 @@ jobs:
       - name: Installation
         run: pnpm install --frozen-lockfile
 
+      - name: xmllint (validation XSD des BPMN, WP-18)
+        run: command -v xmllint || sudo apt-get install -y libxml2-utils
+
       - name: Lint
         run: pnpm lint
 
@@ -54,6 +57,9 @@ jobs:
       - name: Tests unitaires
         run: pnpm test
 
+      - name: Navigateur Playwright
+        run: pnpm --filter @processia/e2e exec playwright install --with-deps chromium
+
       - name: Services (postgres, minio, mailpit)
         run: docker compose up -d --wait
 
@@ -62,9 +68,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Navigateur Playwright
-        run: pnpm --filter @processia/e2e exec playwright install --with-deps chromium
 
       - name: E2E de fumée
         run: pnpm --filter @processia/e2e test

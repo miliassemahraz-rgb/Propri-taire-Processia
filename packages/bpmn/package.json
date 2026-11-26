@@ -16,9 +16,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@processia/model": "workspace:*"
+    "@processia/model": "workspace:*",
+    "bpmn-moddle": "10.3.1",
+    "elkjs": "0.12.2",
+    "fflate": "0.8.3"
   },
   "devDependencies": {
-    "@processia/config": "workspace:*"
+    "@playwright/test": "1.65.1",
+    "@processia/config": "workspace:*",
+    "bpmn-js": "18.33.1"
   }
 }
