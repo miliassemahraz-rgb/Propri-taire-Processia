@@ -19,6 +19,8 @@ export const ACCOUNTS = {
 } as const;
 
 const TOTP_STEP_MS = 30_000;
+/** Fenêtre du limiteur de débit de l'API (60 s) : une pause de 25 s suffit souvent à repasser. */
+const RATE_LIMIT_PAUSE_MS = 25_000;
 
 /**
  * Code TOTP courant d'un compte déjà enrôlé, par l'outil de développement
@@ -116,8 +118,18 @@ export async function loginAnyState(
   email: string,
   password: string = DEV_PASSWORD,
 ): Promise<void> {
-  await submitLogin(page, email, password);
-  await page.waitForURL(/\/connexion\/(enrolement|verification)/);
+  // Le limiteur de débit de l'API (30 appels par minute et par adresse sur `/auth/*`) peut
+  // refuser la connexion après de nombreux parcours : on attend la fin de la fenêtre et on réessaie.
+  for (let attempt = 0; ; attempt += 1) {
+    await submitLogin(page, email, password);
+    try {
+      await page.waitForURL(/\/connexion\/(enrolement|verification)/, { timeout: 8_000 });
+      break;
+    } catch (error) {
+      if (attempt >= 3) throw error;
+      await page.waitForTimeout(RATE_LIMIT_PAUSE_MS);
+    }
+  }
   if (page.url().includes('/connexion/enrolement')) {
     // Le limiteur de débit de l'API (30 appels par minute et par adresse) peut refuser l'appel
     // d'enrôlement après de nombreuses connexions : on attend la fin de la fenêtre et on recharge.
@@ -138,8 +150,18 @@ export async function loginAnyState(
     await page.getByRole('button', { name: 'Activer' }).click();
     await page.getByRole('button', { name: 'J’ai conservé mes codes, continuer' }).click();
   } else {
-    await page.getByLabel('Code à 6 chiffres').fill(await freshDevTotp(email));
-    await page.getByRole('button', { name: 'Vérifier' }).click();
+    for (let attempt = 0; ; attempt += 1) {
+      await page.getByLabel('Code à 6 chiffres').fill(await freshDevTotp(email));
+      await page.getByRole('button', { name: 'Vérifier' }).click();
+      try {
+        await page.waitForURL(/\/missions$/, { timeout: 8_000 });
+        break;
+      } catch (error) {
+        // Refus du limiteur de débit : on attend la fin de la fenêtre puis un code neuf.
+        if (attempt >= 3) throw error;
+        await page.waitForTimeout(RATE_LIMIT_PAUSE_MS);
+      }
+    }
   }
   await expect(page).toHaveURL(/\/missions$/);
 }
