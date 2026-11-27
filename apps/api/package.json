@@ -29,6 +29,7 @@
     "@processia/model": "workspace:*",
     "@processia/policy": "workspace:*",
     "drizzle-orm": "0.45.4",
+    "jose": "6.2.18",
     "nodemailer": "10.6.1",
     "otplib": "13.6.0",
     "pg": "8.23.1",
@@ -40,12 +41,16 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@hocuspocus/provider": "3.4.4",
     "@nestjs/testing": "11.2.12",
+    "@processia/collab": "workspace:*",
     "@processia/test-fixtures": "workspace:*",
     "@types/express": "5.0.6",
     "@types/nodemailer": "8.0.2",
     "@types/pg": "8.23.1",
     "@types/qrcode": "1.5.6",
-    "tsc-watch": "7.2.1"
+    "@types/ws": "8.18.2",
+    "tsc-watch": "7.2.1",
+    "ws": "8.23.0"
   }
 }

@@ -12,9 +12,26 @@
   },
   "dependencies": {
     "@hocuspocus/server": "3.4.4",
-    "@processia/config": "workspace:*"
+    "@processia/config": "workspace:*",
+    "@processia/contracts": "workspace:*",
+    "@processia/db": "workspace:*",
+    "@processia/model": "workspace:*",
+    "@processia/policy": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "jose": "6.2.18",
+    "pg": "8.23.1",
+    "yjs": "13.6.33"
   },
   "devDependencies": {
+    "@types/pg": "8.23.1",
     "tsc-watch": "7.2.1"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js"
 }

@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 const alias = [
   // Sous-chemins explicites d'abord (l'ordre compte).
   { find: /^@processia\/config\/env$/, replacement: `${root}packages/config/src/env.ts` },
+  { find: /^@processia\/collab$/, replacement: `${root}apps/collab/src/index.ts` },
   ...readdirSync(new URL('./packages', import.meta.url)).map((name) => ({
     find: new RegExp(`^@processia/${name}$`),
     replacement: `${root}packages/${name}/src/index.ts`,

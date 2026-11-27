@@ -46,6 +46,16 @@ export default defineConfig({
           timeout: 60_000,
         },
         {
+          // Serveur de coédition (WP-10) sur la même base de test.
+          command:
+            'node --env-file=.env.example --env-file-if-exists=.env apps/collab/dist/main.js',
+          cwd: root,
+          env: { ...testDbEnv, NODE_ENV: 'development' },
+          url: 'http://localhost:3002',
+          reuseExistingServer: false,
+          timeout: 60_000,
+        },
+        {
           command: 'pnpm --filter @processia/web start',
           cwd: root,
           url: baseURL,

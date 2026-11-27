@@ -17,7 +17,7 @@
     "test:watch": "vitest",
     "coverage:model": "vitest run packages/model --coverage --coverage.provider=v8 --coverage.include=packages/model/src/schema/** --coverage.exclude=**/*.test.ts --coverage.exclude=**/index.ts --coverage.thresholds.lines=90 --coverage.thresholds.statements=90 --coverage.thresholds.branches=90 --coverage.thresholds.functions=90",
     "test:int": "vitest run --config vitest.int.config.ts",
-    "e2e": "turbo run build --filter=@processia/web --filter=@processia/api && pnpm --filter @processia/e2e test",
+    "e2e": "turbo run build --filter=@processia/web --filter=@processia/api --filter=@processia/collab && pnpm --filter @processia/e2e test",
     "ai:smoke": "pnpm --filter @processia/ai build && node --env-file-if-exists=.env packages/ai/dist/smoke.js",
     "db:migrate": "pnpm --filter @processia/db db:migrate",
     "db:reset": "docker compose down -v && docker compose up -d --wait && pnpm db:migrate && pnpm db:seed",

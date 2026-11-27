@@ -3,6 +3,7 @@ import { AiModule } from './ai/ai.module.js';
 import { AnalysisModule } from './analysis/analysis.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ClientsModule } from './clients/clients.module.js';
+import { CollabModule } from './collab/collab.module.js';
 import { DbModule } from './db/db.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { HealthModule } from './health/health.module.js';
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module.js';
     ClientsModule,
     MissionsModule,
     ModelModule,
+    CollabModule,
     AiModule,
     JobsModule,
     SourcesModule,
