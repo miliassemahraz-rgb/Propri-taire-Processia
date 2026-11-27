@@ -21,6 +21,7 @@ export const GUIDED_KINDS: readonly GuidedRunKind[] = [
   'hypotheses',
   'summary',
   'answer',
+  'process_flow',
 ];
 
 export interface GuidedRunState {

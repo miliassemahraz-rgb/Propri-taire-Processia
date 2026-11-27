@@ -9,6 +9,7 @@ export const JOB_QUEUES = {
   ingestDocument: 'ingest.document',
   analysisExtraction: 'analysis.extraction',
   analysisGuided: 'analysis.guided',
+  analysisFlow: 'analysis.flow',
   exportCreate: 'export.create',
 } as const;
 export type JobQueue = (typeof JOB_QUEUES)[keyof typeof JOB_QUEUES];

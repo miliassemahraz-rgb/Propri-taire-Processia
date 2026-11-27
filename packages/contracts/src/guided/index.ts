@@ -42,7 +42,14 @@ export interface StopQuestionsResult {
   skipped: number;
 }
 
-export const GUIDED_RUN_KINDS = ['questions', 'hypotheses', 'summary', 'answer'] as const;
+export const GUIDED_RUN_KINDS = [
+  'questions',
+  'hypotheses',
+  'summary',
+  'answer',
+  /** Lot d'enchaînements des processus (WP-17) : suivi comme les autres exécutions guidées. */
+  'process_flow',
+] as const;
 export type GuidedRunKind = (typeof GUIDED_RUN_KINDS)[number];
 
 /** Attributs textuels d'un élément d'analyse que le consultant peut corriger par formulaire [PO-5]. */

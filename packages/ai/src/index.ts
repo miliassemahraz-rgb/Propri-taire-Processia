@@ -19,3 +19,6 @@ export * from './extraction/changeset.js';
 export * from './extraction/plan.js';
 export * from './pipelines/guided.js';
 export * from './guided/plan.js';
+export * from './pipelines/process-flow.js';
+export * from './flow/plan.js';
+export * from './flow/scope.js';

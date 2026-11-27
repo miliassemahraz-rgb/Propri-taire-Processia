@@ -92,6 +92,13 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Les courriels (soumission, validation, signalement après validation) partent du **worker** (boîte d'envoi relevée chaque seconde) : sans worker, ils restent en attente. Mailpit : http://localhost:8025.
 - Tests d'intégration : `apps/api/src/validation/validation.int.test.ts` (worker dans le processus, Chromium, MinIO, Mailpit). Pour ne pas se heurter à d'autres sessions qui partagent PostgreSQL, créer une base dédiée (`CREATE DATABASE processia_x OWNER processia` et `GRANT CONNECT, TEMP ON DATABASE processia_x TO processia_owner, processia_app`) et pointer `DATABASE_TEST_URL` vers elle dans `.env` ; les E2E, eux, visent toujours `processia_test` (`e2e/test-env.ts`).
 
+## Cartographie : enchaînements des processus (WP-17)
+
+- Page `/missions/<id>/cartographie` (onglet « Cartographie ») : tant que le dossier d'analyse n'est pas validé (phase `analysis`), elle indique que la cartographie est verrouillée ; ensuite elle liste les 45 processus du pilote par macroprocessus, avec « Construire », « Détailler » (niveau 3 d'une tâche), « Tout confirmer » et « Tout écarter ».
+- Routes (sous `/missions/:id/mapping`, toutes en `@RequiresPhase('mapping')` : 409 `PHASE_LOCKED` avant la validation, 403 pour le validateur) : `GET processes` (processus, état, dernier lot) ; `POST flows` (corps `{}` : tous les processus sans enchaînement ; `{ "processIds": [...] }` ; ou `{ "detailTaskIds": [...] }` pour le niveau 3) ; `POST processes/:processId/decision` (corps `{ "decision": "accept" | "reject", "taskId"? }`). Le lot est le job `analysis.flow` du worker (genre `process_flow`), suivi par `GET /missions/:id/runs/:runId` ou `run.progress` ; 409 `FLOW_IN_PROGRESS` (un lot à la fois) et `NOTHING_TO_BUILD`.
+- Pour tester à la main : analyser `PILOT_DESCRIPTION`, soumettre le dossier (`POST submissions`, `{ "kind": "analysis_dossier" }`), le faire valider par `validateur@processia.local` (`POST submissions/:sid/validate`), puis `POST mapping/flows`. Le fournisseur factice répond avec `packages/test-fixtures/src/pilot-flow.ts` : environ 430 hypothèses pour les 45 processus ; « Relance des pièces manquantes » (processus « Relances clients », P04) se détaille avec `detailTaskIds`.
+- Tests : `packages/ai/src/flow/flow.test.ts` (unitaire), `apps/api/src/mapping/flow.int.test.ts` (intégration : worker dans le processus, Chromium pour les exports joints à la soumission, MinIO, Mailpit), `e2e/tests/z-cartographie.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-17-cartographie.png`).
+
 ## Réinitialiser
 
 ```bash

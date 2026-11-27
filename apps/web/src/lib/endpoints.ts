@@ -28,11 +28,16 @@ import {
   type DecisionResult,
   type DeliverablesPreviewDto,
   type ExportArtifactDto,
+  type FlowDecisionRequest,
+  type FlowDecisionResult,
+  type FlowOverviewDto,
   type ExportFormat,
   type NoticeDto,
   type NotificationDto,
   type PresignedUrlDto,
   type StartExportResult,
+  type StartFlowRequest,
+  type StartFlowResult,
   type SubmissionDto,
   type SubmissionElementDto,
   type SubmissionKind,
@@ -241,6 +246,22 @@ export const endpoints = {
       method: 'POST',
       body: { toVersion },
       schema: typed<CommitResult>(),
+    }),
+
+  // Cartographie : enchaînements des processus, niveaux 2 et 3 (WP-17)
+  flowOverview: (id: string) =>
+    apiRequest(`/missions/${id}/mapping/processes`, { schema: typed<FlowOverviewDto>() }),
+  startFlows: (id: string, request: StartFlowRequest) =>
+    apiRequest(`/missions/${id}/mapping/flows`, {
+      method: 'POST',
+      body: request,
+      schema: typed<StartFlowResult>(),
+    }),
+  decideFlow: (id: string, processId: string, decision: FlowDecisionRequest) =>
+    apiRequest(`/missions/${id}/mapping/processes/${processId}/decision`, {
+      method: 'POST',
+      body: decision,
+      schema: typed<FlowDecisionResult>(),
     }),
 
   // Livrables de l'étape 1 et exports du dossier d'analyse (WP-15)
