@@ -4,7 +4,7 @@
 
 - **Code** (identifiants, énumérations, noms de fichiers) : anglais, selon le glossaire de la spécification 0.4.
 - **Interface, documentation, commentaires, messages de commit** : français.
-- Aucun texte d'interface en dur : `import { t } from '@processia/i18n'` puis `t('home.title')`. Les messages vivent dans `packages/i18n/src/messages/fr.json` ; le type `MessageKey` interdit une clé inconnue. Les paramètres s'écrivent `{nom}`.
+- Aucun texte d'interface en dur : `import { t } from '@processia/i18n'` puis `t('home.title')`. Les messages vivent dans `packages/i18n/src/messages/fr.json` ; le type `MessageKey` interdit une clé inconnue. Les paramètres s'écrivent `{nom}`. Une clé du catalogue ne contient jamais de point (`t` découpe le chemin sur les points : `submission.submitted` doit s'écrire `submission` puis `submitted` ; un test le vérifie).
 
 ## TypeScript
 

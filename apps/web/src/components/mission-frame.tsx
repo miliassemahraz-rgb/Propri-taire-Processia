@@ -65,12 +65,20 @@ export function MissionFrame({ children }: { children: ReactNode }) {
   const { mission, simulated } = loaded;
   if (session.status !== 'ready') return <p role="status">{t('ui.loading')}</p>;
   const base = `/missions/${missionId}`;
-  const links = [
-    { href: base, label: t('shell.nav.dashboard') },
-    { href: `${base}/analyse`, label: t('shell.nav.analysis') },
-    { href: `${base}/livrables`, label: t('shell.nav.deliverables') },
-    { href: `${base}/equipe`, label: t('shell.nav.team') },
-  ];
+  // Le validateur n'a que le tableau de bord et le portail de validation (spécification 3.5).
+  const links =
+    mission.myRole === 'validator'
+      ? [
+          { href: base, label: t('shell.nav.dashboard') },
+          { href: `${base}/validation`, label: t('shell.nav.validation') },
+        ]
+      : [
+          { href: base, label: t('shell.nav.dashboard') },
+          { href: `${base}/analyse`, label: t('shell.nav.analysis') },
+          { href: `${base}/livrables`, label: t('shell.nav.deliverables') },
+          { href: `${base}/validation`, label: t('shell.nav.validation') },
+          { href: `${base}/equipe`, label: t('shell.nav.team') },
+        ];
 
   return (
     <MissionContext.Provider value={mission}>

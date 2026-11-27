@@ -131,7 +131,7 @@ describe('migrations et rôles', () => {
     await migrateDatabase(urls);
     await migrateDatabase(urls);
     expect(await applied()).toBe(before);
-    expect(before).toBe(4);
+    expect(before).toBe(5);
   });
 
   it("l'application utilise un rôle non propriétaire, sans SUPERUSER ni BYPASSRLS", async () => {

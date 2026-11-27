@@ -20,14 +20,24 @@ import {
   type AnswerQuestionResult,
   type ChunkDto,
   type ChunkViewDto,
+  type CommentDto,
   type CommitResult,
+  type CreateCommentRequest,
+  type CreateSubmissionRequest,
   type DecisionRequest,
   type DecisionResult,
   type DeliverablesPreviewDto,
   type ExportArtifactDto,
   type ExportFormat,
+  type NoticeDto,
+  type NotificationDto,
   type PresignedUrlDto,
   type StartExportResult,
+  type SubmissionDto,
+  type SubmissionElementDto,
+  type SubmissionKind,
+  type SubmissionPreviewDto,
+  type ValidateSubmissionResult,
   type QuestionDto,
   type RunDto,
   type SourceDto,
@@ -247,5 +257,79 @@ export const endpoints = {
   exportDownloadUrl: (id: string, artifactId: string) =>
     apiRequest(`/missions/${id}/exports/${artifactId}/download-url`, {
       schema: typed<PresignedUrlDto>(),
+    }),
+  // Circuit de validation, commentaires et signalements (WP-16)
+  listSubmissions: (id: string) =>
+    apiRequest(`/missions/${id}/submissions`, { schema: typed<SubmissionDto[]>() }),
+  submissionPreview: (id: string, kind: SubmissionKind) =>
+    apiRequest(`/missions/${id}/submissions/preview?kind=${kind}`, {
+      schema: typed<SubmissionPreviewDto>(),
+    }),
+  submit: (id: string, body: CreateSubmissionRequest) =>
+    apiRequest(`/missions/${id}/submissions`, {
+      method: 'POST',
+      body,
+      schema: typed<SubmissionDto>(),
+    }),
+  withdrawSubmission: (id: string, submissionId: string) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/withdraw`, {
+      method: 'POST',
+      body: {},
+      schema: typed<SubmissionDto>(),
+    }),
+  validateSubmission: (id: string, submissionId: string, comment?: string) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/validate`, {
+      method: 'POST',
+      body: comment === undefined || comment === '' ? {} : { comment },
+      schema: typed<ValidateSubmissionResult>(),
+    }),
+  submissionDocument: (id: string, submissionId: string) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/document`, {
+      schema: typed<DeliverablesPreviewDto>(),
+    }),
+  submissionElements: (id: string, submissionId: string) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/elements`, {
+      schema: typed<SubmissionElementDto[]>(),
+    }),
+  submissionDownloadUrl: (id: string, submissionId: string, artifactId: string) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/exports/${artifactId}/download-url`, {
+      schema: typed<PresignedUrlDto>(),
+    }),
+  startSubmissionExport: (id: string, submissionId: string, format: ExportFormat) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/exports`, {
+      method: 'POST',
+      body: { format },
+      schema: typed<StartExportResult>(),
+    }),
+  listComments: (id: string) =>
+    apiRequest(`/missions/${id}/comments`, { schema: typed<CommentDto[]>() }),
+  createComment: (id: string, body: CreateCommentRequest) =>
+    apiRequest(`/missions/${id}/comments`, {
+      method: 'POST',
+      body,
+      schema: typed<CommentDto>(),
+    }),
+  resolveComment: (id: string, commentId: string, resolved: boolean) =>
+    apiRequest(`/missions/${id}/comments/${commentId}/resolve`, {
+      method: 'POST',
+      body: { resolved },
+      schema: typed<CommentDto>(),
+    }),
+  listNotices: (id: string) =>
+    apiRequest(`/missions/${id}/notices`, { schema: typed<NoticeDto[]>() }),
+  markNoticesSeen: (id: string, noticeIds: string[]) =>
+    apiRequest(`/missions/${id}/notices/seen`, {
+      method: 'POST',
+      body: { noticeIds },
+      schema: typed<{ updated: number }>(),
+    }),
+
+  // Notifications du compte
+  listNotifications: () => apiRequest('/notifications', { schema: typed<NotificationDto[]>() }),
+  readNotifications: (ids?: string[]) =>
+    apiRequest('/notifications/read', {
+      method: 'POST',
+      body: ids === undefined ? {} : { ids },
+      schema: typed<{ updated: number }>(),
     }),
 };

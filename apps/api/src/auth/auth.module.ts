@@ -26,6 +26,6 @@ import { SessionsService } from './sessions.service.js';
     // vérifiée, sauf `@Public()` et `@SessionOnly()`.
     { provide: APP_GUARD, useClass: SessionGuard },
   ],
-  exports: [SessionsService, AuditService, CLOCK],
+  exports: [SessionsService, AuditService, MailService, CLOCK],
 })
 export class AuthModule {}

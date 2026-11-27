@@ -2,11 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import type { NotificationDto } from '@processia/contracts';
 import { t, type MessageKey } from '@processia/i18n';
 import { Button, DialogTrigger, PopoverPanel, SegmentedControl } from '@processia/ui';
+import { endpoints } from '../lib/endpoints';
 import { useMode, type DisplayMode } from '../lib/mode';
 import { useRequireSession, useSession } from '../lib/session';
+import { notificationHref, payloadCount, payloadText, unreadCount } from '../lib/validation';
 
 const PAGE = 'page';
 
@@ -38,13 +41,113 @@ function NavLink({ href, label }: { href: string; label: MessageKey }) {
   );
 }
 
-/** Centre de notifications : vide à l'incrément 1, il existe pour fixer la place dans la mise en page. */
+const NOTIFICATIONS_POLL_MS = 15_000;
+
+/** Texte d'une notification (les messages sont dans le catalogue i18n, jamais dans la base). */
+function notificationText(item: NotificationDto): string {
+  const text = (key: string): string => payloadText(item.payload, key);
+  switch (item.kind) {
+    case 'submission.submitted':
+      return t('shell.notifications.kinds.submission.submitted', {
+        kind: text('kindLabel'),
+        round: text('round'),
+        version: text('version'),
+      });
+    case 'submission.validated':
+      return t('shell.notifications.kinds.submission.validated', {
+        kind: text('kindLabel'),
+        name: text('validatorName'),
+      });
+    case 'submission.withdrawn':
+      return t('shell.notifications.kinds.submission.withdrawn', {
+        kind: text('kindLabel'),
+        round: text('round'),
+      });
+    case 'comment.created':
+      return t('shell.notifications.kinds.comment.created', {
+        name: text('authorName'),
+        excerpt: text('excerpt'),
+      });
+    case 'post_validation_notice':
+      return t('shell.notifications.kinds.post_validation_notice', {
+        version: text('version'),
+        count: payloadCount(item.payload, 'elementIds'),
+      });
+    case 'export.done':
+      return t('shell.notifications.kinds.export.done', {
+        format: text('format'),
+        version: text('version'),
+      });
+    case 'export.failed':
+      return t('shell.notifications.kinds.export.failed');
+    default:
+      return t('shell.notifications.kinds.other');
+  }
+}
+
+/** Centre de notifications : relève régulière, nombre de non lues, marquage « lu » (WP-16). */
 function NotificationCenter() {
+  const [items, setItems] = useState<NotificationDto[]>([]);
+
+  const refresh = useCallback(async () => {
+    try {
+      setItems(await endpoints.listNotifications());
+    } catch {
+      // Hors session ou réseau coupé : la liste reste telle quelle.
+    }
+  }, []);
+
+  useEffect(() => {
+    void refresh();
+    const timer = setInterval(() => void refresh(), NOTIFICATIONS_POLL_MS);
+    return () => clearInterval(timer);
+  }, [refresh]);
+
+  const unread = unreadCount(items);
+
+  async function markAll(): Promise<void> {
+    try {
+      await endpoints.readNotifications();
+      await refresh();
+    } catch {
+      // Sans effet : la liste est relue à la prochaine relève.
+    }
+  }
+
   return (
     <DialogTrigger>
-      <Button variant="secondary">{t('shell.notifications.button')}</Button>
+      <Button variant="secondary" data-testid="notifications-button" onPress={() => void refresh()}>
+        {unread > 0
+          ? t('shell.notifications.buttonUnread', { count: unread })
+          : t('shell.notifications.button')}
+      </Button>
       <PopoverPanel title={t('shell.notifications.title')}>
-        <p className="muted">{t('shell.notifications.empty')}</p>
+        {items.length === 0 ? (
+          <p className="muted">{t('shell.notifications.empty')}</p>
+        ) : (
+          <div className="stack-sm">
+            {unread > 0 ? (
+              <Button variant="quiet" onPress={() => void markAll()}>
+                {t('shell.notifications.markAll')}
+              </Button>
+            ) : null}
+            <ul className="plain" data-testid="notifications-list">
+              {items.map((item) => {
+                const href = notificationHref(item);
+                return (
+                  <li key={item.id} className="notification-item">
+                    <span className={item.readAt === null ? 'strong' : 'muted'}>
+                      {notificationText(item)}
+                    </span>{' '}
+                    {href === null ? null : (
+                      <Link href={href}>{t('shell.notifications.openLink')}</Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </PopoverPanel>
     </DialogTrigger>
   );

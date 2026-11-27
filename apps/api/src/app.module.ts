@@ -10,9 +10,11 @@ import { JobsModule } from './jobs/jobs.module.js';
 import { HealthModule } from './health/health.module.js';
 import { MissionsModule } from './missions/missions.module.js';
 import { ModelModule } from './model/model.module.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
 import { PolicyModule } from './policy/policy.module.js';
 import { SourcesModule } from './sources/sources.module.js';
 import { UsersModule } from './users/users.module.js';
+import { ValidationModule } from './validation/validation.module.js';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { UsersModule } from './users/users.module.js';
     SourcesModule,
     AnalysisModule,
     ExportsModule,
+    NotificationsModule,
+    ValidationModule,
     HealthModule,
   ],
 })

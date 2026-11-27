@@ -85,6 +85,13 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Le PDF est rendu par Chromium dans le **worker** : définir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` (ex. `/opt/pw-browsers/chromium`) ou installer le navigateur Playwright ; l'image `apps/api/Dockerfile.worker` l'embarque.
 - Tests : `packages/exports/src/exports.test.ts` (unitaire : DOCX relu avec mammoth, XLSX avec exceljs), `packages/exports/src/pdf.int.test.ts` et `apps/api/src/exports/exports.int.test.ts` (Chromium et `pnpm services:up` requis), `e2e/tests/z-livrables.spec.ts`. `WP15_SAMPLES_DIR=<dossier>` écrit les échantillons ; `E2E_SCREENSHOT=1` régénère `docs/wp/WP-15-livrables.png`.
 
+## Validation, commentaires et courriels (WP-16)
+
+- Routes (sous `/missions/:id`) : `GET submissions`, `GET submissions/preview?kind=`, `POST submissions` (corps `{ "kind": "analysis_dossier", "comment": "…" }`), `GET submissions/:sid[/document|/elements]`, `POST submissions/:sid/{withdraw|replace|validate|exports}`, `GET submissions/:sid/exports/:artifactId/download-url`, `GET|POST comments`, `POST comments/:cid/resolve`, `GET notices`, `POST notices/seen` ; hors mission : `GET /notifications`, `POST /notifications/read`. Le validateur ne lit que la version figée de ses soumissions.
+- `GET /missions/:id/mapping` répond `409 PHASE_LOCKED` tant que le dossier d'analyse n'est pas validé (`@RequiresPhase('mapping')`).
+- Les courriels (soumission, validation, signalement après validation) partent du **worker** (boîte d'envoi relevée chaque seconde) : sans worker, ils restent en attente. Mailpit : http://localhost:8025.
+- Tests d'intégration : `apps/api/src/validation/validation.int.test.ts` (worker dans le processus, Chromium, MinIO, Mailpit). Pour ne pas se heurter à d'autres sessions qui partagent PostgreSQL, créer une base dédiée (`CREATE DATABASE processia_x OWNER processia` et `GRANT CONNECT, TEMP ON DATABASE processia_x TO processia_owner, processia_app`) et pointer `DATABASE_TEST_URL` vers elle dans `.env` ; les E2E, eux, visent toujours `processia_test` (`e2e/test-env.ts`).
+
 ## Réinitialiser
 
 ```bash

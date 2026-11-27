@@ -604,3 +604,74 @@ p {
   overflow-wrap: anywhere;
   word-break: break-all;
 }
+
+/* Circuit de validation et portail du validateur (WP-16) */
+.h5 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.portal-kicker {
+  margin: 0;
+  font-family: var(--pr-font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pr-muted);
+}
+.validation-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+}
+.validation-step {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: var(--pr-track);
+  color: var(--pr-text);
+}
+.validation-step.step--done {
+  background: var(--pr-success-bg);
+  color: #1e4d2b;
+}
+.validation-step.step--current {
+  background: var(--pr-accent-bg);
+  color: var(--pr-accent-dark);
+}
+.comment-body {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.comment-replies {
+  margin-left: 16px;
+  padding-left: 12px;
+  border-left: 2px solid var(--pr-border);
+}
+.comment-details > summary {
+  min-height: var(--pr-target);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--pr-accent);
+}
+.comment-thread {
+  padding-top: 8px;
+}
+.notice-group + .notice-group {
+  margin-top: 8px;
+}
+.notification-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--pr-border-soft);
+}

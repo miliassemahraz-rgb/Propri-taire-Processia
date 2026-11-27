@@ -7,6 +7,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { JobsService } from './jobs/jobs.service.js';
+import { NotificationsService } from './notifications/notifications.service.js';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.createApplicationContext(AppModule, {
@@ -14,6 +15,8 @@ async function bootstrap(): Promise<void> {
   });
   app.enableShutdownHooks();
   await app.get(JobsService).startConsuming();
+  // Courriels de la boîte d'envoi (PO-19) : envoyés après la validation des transactions.
+  app.get(NotificationsService).startDispatching();
   console.info('Worker Processia démarré : tâches pg-boss en cours de consommation.');
 }
 

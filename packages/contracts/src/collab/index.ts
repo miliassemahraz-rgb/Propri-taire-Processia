@@ -1,5 +1,10 @@
 import { z } from 'zod';
 import type { QuestionUpdatedMessage } from '../guided/index.js';
+import type {
+  CommentCreatedMessage,
+  NoticeCreatedMessage,
+  SubmissionUpdatedMessage,
+} from '../validation/index.js';
 import type { RunProgressMessage } from '../sources/index.js';
 
 /** Contrats de la coédition (WP-10, spécification 5). */
@@ -54,7 +59,12 @@ export interface ModelVersionMessage {
 
 /** Messages sans état diffusés sur le document `model` (les autres types arriveront avec leurs WP). */
 export type CollabStatelessMessage =
-  ModelVersionMessage | RunProgressMessage | QuestionUpdatedMessage;
+  | ModelVersionMessage
+  | RunProgressMessage
+  | QuestionUpdatedMessage
+  | CommentCreatedMessage
+  | SubmissionUpdatedMessage
+  | NoticeCreatedMessage;
 
 /**
  * Messages sans état du document `workspace` : « enregistrer maintenant ». Le texte est regroupé

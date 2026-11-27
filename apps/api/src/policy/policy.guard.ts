@@ -12,7 +12,8 @@ import { and, eq } from 'drizzle-orm';
 import { AuthError } from '../auth/errors.js';
 import type { AuthedRequest } from '../auth/http.js';
 import { DB } from '../db/db.module.js';
-import { CAN_KEY, type MissionRequest } from './decorators.js';
+import { MISSION_PHASES, type MissionPhase } from '@processia/contracts';
+import { CAN_KEY, PHASE_KEY, type MissionRequest } from './decorators.js';
 import { MissionContext } from './mission-context.js';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -75,6 +76,16 @@ export class PolicyGuard implements CanActivate {
     // Un validateur membre d'une mission n'a affaire qu'à ses propres soumissions.
     if (action !== undefined && !can(subject, action, { own: found.role === 'validator' })) {
       throw new AuthError('FORBIDDEN');
+    }
+    const required = this.reflector.getAllAndOverride<MissionPhase | undefined>(PHASE_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (
+      required !== undefined &&
+      MISSION_PHASES.indexOf(found.mission.phase as MissionPhase) < MISSION_PHASES.indexOf(required)
+    ) {
+      throw new AuthError('PHASE_LOCKED', { requiredPhase: required, phase: found.mission.phase });
     }
     request.missionContext = new MissionContext(
       found.mission.id,
