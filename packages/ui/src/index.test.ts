@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { PACKAGE_NAME } from './index.js';
 
 describe('@processia/ui', () => {
-  it('expose le squelette du paquet', () => {
+  it('expose le nom du paquet', () => {
     expect(PACKAGE_NAME).toBe('@processia/ui');
   });
 });

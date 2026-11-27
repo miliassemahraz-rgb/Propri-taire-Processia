@@ -11,6 +11,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.14.1",
     "@playwright/test": "1.65.1",
-    "@processia/config": "workspace:*"
+    "@processia/config": "workspace:*",
+    "otplib": "13.6.0"
   }
 }

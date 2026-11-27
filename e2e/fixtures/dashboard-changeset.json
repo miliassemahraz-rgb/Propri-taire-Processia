@@ -1,0 +1,825 @@
+{
+  "baseVersion": 0,
+  "cause": "extraction",
+  "summary": "Modèle de démonstration pour la capture du tableau de bord",
+  "ops": [
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000001",
+        "code": "TRT-01",
+        "label": "sector",
+        "provenance": {
+          "origin": "ai_knowledge",
+          "refs": [],
+          "author": {
+            "type": "ai"
+          },
+          "at": "2026-01-15T09:00:00.000Z",
+          "rationale": "Déduit du secteur d’activité"
+        },
+        "status": {
+          "value": "hypothesis"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "business_trait",
+        "facet": "sector",
+        "text": "Texte sector"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000002",
+        "code": "TRT-02",
+        "label": "environment",
+        "provenance": {
+          "origin": "ai_knowledge",
+          "refs": [],
+          "author": {
+            "type": "ai"
+          },
+          "at": "2026-01-15T09:00:00.000Z",
+          "rationale": "Déduit du secteur d’activité"
+        },
+        "status": {
+          "value": "hypothesis"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "business_trait",
+        "facet": "environment",
+        "text": "Texte environment"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000003",
+        "code": "TRT-03",
+        "label": "specificity",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "business_trait",
+        "facet": "specificity",
+        "text": "Texte specificity"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000004",
+        "code": "TRT-04",
+        "label": "summary",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "business_trait",
+        "facet": "summary",
+        "text": "Texte summary"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000005",
+        "code": "TRM-05",
+        "label": "Liasse",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "glossary_term",
+        "term": "Liasse",
+        "definition": "Ensemble des documents fiscaux de fin d’exercice",
+        "synonyms": []
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000006",
+        "code": "ACT-06",
+        "label": "Comptable",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "actor",
+        "category": "internal",
+        "responsibilities": ["Saisir les pièces"]
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000007",
+        "code": "ACT-07",
+        "label": "Client",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "actor",
+        "category": "external",
+        "responsibilities": [],
+        "stakeholder": true
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000008",
+        "code": "OUT-08",
+        "label": "Logiciel comptable",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "tool",
+        "nature": "software"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000000a",
+        "code": "DON-09",
+        "label": "Dossier client",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "data_object",
+        "nature": "document",
+        "fields": [
+          {
+            "id": "01900000-0000-7000-8000-000000000009",
+            "name": "Montant TTC",
+            "type": "amount",
+            "provenance": {
+              "origin": "consultant",
+              "refs": [],
+              "author": {
+                "type": "user",
+                "userId": "user-1"
+              },
+              "at": "2026-01-15T09:00:00.000Z"
+            },
+            "status": {
+              "value": "confirmed",
+              "decidedBy": "user-1",
+              "decidedAt": "2026-01-15T09:00:00.000Z"
+            }
+          }
+        ],
+        "toolIds": ["01900000-0000-7000-8000-000000000008"]
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000000c",
+        "code": "DON-10",
+        "label": "Pièce justificative",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "data_object",
+        "nature": "form",
+        "fields": [
+          {
+            "id": "01900000-0000-7000-8000-00000000000b",
+            "name": "Référence",
+            "type": "text",
+            "provenance": {
+              "origin": "consultant",
+              "refs": [],
+              "author": {
+                "type": "user",
+                "userId": "user-1"
+              },
+              "at": "2026-01-15T09:00:00.000Z"
+            },
+            "status": {
+              "value": "confirmed",
+              "decidedBy": "user-1",
+              "decidedAt": "2026-01-15T09:00:00.000Z"
+            }
+          }
+        ],
+        "toolIds": []
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000000d",
+        "code": "P-11",
+        "label": "Tenue comptable",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "activity",
+        "level": "macro",
+        "raci": [],
+        "inputs": [],
+        "outputs": [],
+        "toolIds": [],
+        "ruleIds": [],
+        "execution": "manual",
+        "macroCategory": "core"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000000e",
+        "code": "P-12",
+        "label": "Relance des pièces manquantes",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "activity",
+        "level": "process",
+        "raci": [
+          {
+            "actorId": "01900000-0000-7000-8000-000000000006",
+            "role": "R"
+          },
+          {
+            "actorId": "01900000-0000-7000-8000-000000000007",
+            "role": "I"
+          }
+        ],
+        "inputs": ["01900000-0000-7000-8000-00000000000a"],
+        "outputs": [],
+        "toolIds": ["01900000-0000-7000-8000-000000000008"],
+        "ruleIds": [],
+        "execution": "manual",
+        "parentId": "01900000-0000-7000-8000-00000000000d",
+        "responsibleActorId": "01900000-0000-7000-8000-000000000006"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000000f",
+        "code": "P-13",
+        "label": "Envoyer la relance",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "activity",
+        "level": "task",
+        "raci": [],
+        "inputs": [],
+        "outputs": ["01900000-0000-7000-8000-00000000000c"],
+        "toolIds": [],
+        "ruleIds": [],
+        "execution": "manual",
+        "parentId": "01900000-0000-7000-8000-00000000000e",
+        "responsibleActorId": "01900000-0000-7000-8000-000000000006"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000010",
+        "code": "RG-14",
+        "label": "Relance à 7 jours",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "rule",
+        "type": "decision",
+        "statement": {
+          "text": "Relancer si la pièce manque",
+          "when": "absente après 7 jours"
+        },
+        "appliesTo": ["01900000-0000-7000-8000-000000000018"]
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000011",
+        "code": "RG-15",
+        "label": "Client injoignable",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "rule",
+        "type": "exception",
+        "statement": {
+          "text": "Une pièce manquante est relancée sous 7 jours"
+        },
+        "appliesTo": ["01900000-0000-7000-8000-00000000000f"],
+        "exceptionHandling": {
+          "circuit": "escalation",
+          "description": "Escalade au responsable",
+          "activityIds": ["01900000-0000-7000-8000-00000000000f"]
+        }
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000012",
+        "code": "EVT-16",
+        "label": "Début",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "event",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "position": "start",
+        "trigger": "none"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000014",
+        "code": "EVT-17",
+        "label": "Fin",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "event",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "position": "end",
+        "trigger": "none"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000016",
+        "code": "EVT-18",
+        "label": "Délai dépassé",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "event",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "position": "boundary",
+        "trigger": "timer",
+        "attachedToId": "01900000-0000-7000-8000-00000000000f"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000018",
+        "code": "GW-19",
+        "label": "Pièce reçue ?",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "gateway",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "type": "exclusive",
+        "ruleId": "01900000-0000-7000-8000-000000000010"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000001a",
+        "code": "SEQ-20",
+        "label": "Début vers tâche",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "sequence_flow",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "fromId": "01900000-0000-7000-8000-000000000012",
+        "toId": "01900000-0000-7000-8000-00000000000f"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000001e",
+        "code": "SEQ-21",
+        "label": "Tâche vers passerelle",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "sequence_flow",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "fromId": "01900000-0000-7000-8000-00000000000f",
+        "toId": "01900000-0000-7000-8000-000000000018"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000022",
+        "code": "SEQ-22",
+        "label": "Passerelle vers fin",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "sequence_flow",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "fromId": "01900000-0000-7000-8000-000000000018",
+        "toId": "01900000-0000-7000-8000-000000000014"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-000000000026",
+        "code": "SEQ-23",
+        "label": "Passerelle vers tâche",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "sequence_flow",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "fromId": "01900000-0000-7000-8000-000000000018",
+        "toId": "01900000-0000-7000-8000-00000000000f"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000002a",
+        "code": "SEQ-24",
+        "label": "Délai vers fin",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "sequence_flow",
+        "containerId": "01900000-0000-7000-8000-00000000000e",
+        "fromId": "01900000-0000-7000-8000-000000000016",
+        "toId": "01900000-0000-7000-8000-000000000014"
+      }
+    },
+    {
+      "op": "add",
+      "element": {
+        "id": "01900000-0000-7000-8000-00000000002e",
+        "code": "FLX-25",
+        "label": "Relance par courriel",
+        "provenance": {
+          "origin": "consultant",
+          "refs": [],
+          "author": {
+            "type": "user",
+            "userId": "user-1"
+          },
+          "at": "2026-01-15T09:00:00.000Z"
+        },
+        "status": {
+          "value": "confirmed",
+          "decidedBy": "user-1",
+          "decidedAt": "2026-01-15T09:00:00.000Z"
+        },
+        "meta": {
+          "createdInVersion": 1,
+          "updatedInVersion": 1
+        },
+        "kind": "information_flow",
+        "fromActorId": "01900000-0000-7000-8000-000000000006",
+        "toActorId": "01900000-0000-7000-8000-000000000007",
+        "dataObjectIds": ["01900000-0000-7000-8000-00000000000a"],
+        "channel": "email",
+        "activityId": "01900000-0000-7000-8000-00000000000f"
+      }
+    }
+  ]
+}

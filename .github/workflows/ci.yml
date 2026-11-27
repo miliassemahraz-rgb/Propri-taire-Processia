@@ -70,7 +70,7 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: E2E de fumée
+      - name: E2E (parcours, axe-core)
         run: pnpm --filter @processia/e2e test
 
       - name: Rapport Playwright

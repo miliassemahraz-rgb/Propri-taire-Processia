@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate --config=drizzle.config.mjs",
     "db:migrate": "tsc -p tsconfig.build.json && node scripts/migrate.mjs",
-    "db:seed": "tsc -p tsconfig.build.json && node scripts/seed.mjs"
+    "db:seed": "tsc -p tsconfig.build.json && node scripts/seed.mjs",
+    "e2e:prepare": "tsc -p tsconfig.build.json && node scripts/e2e-prepare.mjs"
   },
   "dependencies": {
     "@processia/config": "workspace:*",

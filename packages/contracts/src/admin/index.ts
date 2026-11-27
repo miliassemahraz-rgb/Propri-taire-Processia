@@ -197,3 +197,17 @@ export const createMissionResponseSchema = z.object({
   warnings: z.array(capabilityWarningSchema),
 });
 export type CreateMissionResponse = z.infer<typeof createMissionResponseSchema>;
+
+/** État de l'IA d'une mission : `simulated` affiche le bandeau « IA simulée » (WP-07). */
+export const aiStatusSchema = z.object({ simulated: z.boolean() });
+export type AiStatus = z.infer<typeof aiStatusSchema>;
+
+/** Compte que le responsable peut affecter à une mission, avec les rôles de mission compatibles. */
+export const assignableUserSchema = z.object({
+  id: uuid,
+  displayName: z.string(),
+  email: z.string(),
+  globalRole: globalRoleSchema,
+  assignableRoles: z.array(missionRoleSchema),
+});
+export type AssignableUser = z.infer<typeof assignableUserSchema>;

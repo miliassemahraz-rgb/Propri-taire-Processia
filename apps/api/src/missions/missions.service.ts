@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   capabilityWarnings,
+  type AssignableUser,
   type AssignMemberRequest,
   type CreateMissionRequest,
   type CreateMissionResponse,
@@ -291,6 +292,28 @@ export class MissionsService {
       .where(eq(missionMembers.missionId, ctx.missionId))
       .orderBy(asc(users.displayName));
     return rows.map((r) => ({ ...r, missionRole: r.missionRole as MissionRole }));
+  }
+
+  /** Comptes actifs affectables (le responsable ne peut pas lister les utilisateurs : `users.manage`). */
+  async assignableUsers(): Promise<AssignableUser[]> {
+    const rows = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.status, 'active'))
+      .orderBy(asc(users.displayName));
+    return rows.flatMap((row) => {
+      const roles = ASSIGNABLE[row.globalRole as Exclude<GlobalRole, 'admin'>];
+      if (roles === undefined) return [];
+      return [
+        {
+          id: row.id,
+          displayName: row.displayName,
+          email: row.email,
+          globalRole: row.globalRole as GlobalRole,
+          assignableRoles: [...roles],
+        },
+      ];
+    });
   }
 
   async assign(

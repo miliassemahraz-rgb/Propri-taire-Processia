@@ -125,6 +125,37 @@ afterAll(async () => {
 
 const MISSION = SEED_IDS.mission;
 
+describe('WP-07 : routes d’appui de la coquille web', () => {
+  it('ai-status : l’IA est simulée sans configuration réelle, pour tout membre', async () => {
+    for (const client of [managerC, consultantB, validatorC]) {
+      const res = await client.call('GET', `/missions/${MISSION}/ai-status`);
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ simulated: true });
+    }
+    const absent = await consultantB.call(
+      'GET',
+      '/missions/00000000-0000-7000-8000-00000000ffff/ai-status',
+    );
+    expect(absent.status).toBe(404);
+  });
+
+  it('assignable-users : le responsable liste les comptes affectables avec leurs rôles de mission', async () => {
+    const res = await managerC.call('GET', `/missions/${MISSION}/assignable-users`);
+    expect(res.status).toBe(200);
+    const users = res.body as { email: string; assignableRoles: string[] }[];
+    const byEmail = Object.fromEntries(users.map((u) => [u.email, u.assignableRoles]));
+    expect(byEmail['consultante1@processia.local']).toEqual(['consultant']);
+    expect(byEmail['validateur@processia.local']).toEqual(['validator']);
+    expect(byEmail['responsable@processia.local']).toEqual(['manager', 'consultant']);
+    expect(byEmail['admin@processia.local']).toBeUndefined();
+    // Réservé à qui peut affecter.
+    const asConsultant = await consultantB.call('GET', `/missions/${MISSION}/assignable-users`);
+    expect(asConsultant.status).toBe(403);
+    const asValidator = await validatorC.call('GET', `/missions/${MISSION}/assignable-users`);
+    expect(asValidator.status).toBe(403);
+  });
+});
+
 describe('WP-06 : droits, missions, affectations', () => {
   it('l’administrateur crée une mission que seuls les responsables et lui voient (PO-22)', async () => {
     const created = await adminC.call('POST', '/missions', {

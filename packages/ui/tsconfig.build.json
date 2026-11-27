@@ -1,5 +1,5 @@
 {
-  "extends": "@processia/config/tsconfig/library.json",
+  "extends": "@processia/config/tsconfig/react-library.json",
   "compilerOptions": { "rootDir": "src", "outDir": "dist" },
   "include": ["src"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]

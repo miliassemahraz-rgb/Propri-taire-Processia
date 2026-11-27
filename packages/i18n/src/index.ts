@@ -8,7 +8,7 @@ type Flatten<T, Prefix extends string = ''> = {
   [K in keyof T & string]: T[K] extends string ? `${Prefix}${K}` : Flatten<T[K], `${Prefix}${K}.`>;
 }[keyof T & string];
 
-/** Union des clés de traduction valides, par exemple `home.title`. */
+/** Union des clés de traduction valides, par exemple `app.name`. */
 export type MessageKey = Flatten<Messages>;
 
 export type Translate = (key: MessageKey, values?: Record<string, string | number>) => string;
