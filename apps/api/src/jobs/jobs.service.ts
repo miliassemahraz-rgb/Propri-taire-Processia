@@ -8,6 +8,7 @@ import { ENV } from '../env.js';
 export const JOB_QUEUES = {
   ingestDocument: 'ingest.document',
   analysisExtraction: 'analysis.extraction',
+  analysisGuided: 'analysis.guided',
 } as const;
 export type JobQueue = (typeof JOB_QUEUES)[keyof typeof JOB_QUEUES];
 

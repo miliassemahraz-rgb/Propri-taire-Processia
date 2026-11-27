@@ -5,3 +5,4 @@ export * from './admin/index.js';
 export * from './model/index.js';
 export * from './sources/index.js';
 export * from './collab/index.js';
+export * from './guided/index.js';

@@ -8,6 +8,11 @@ import { eq, sql } from 'drizzle-orm';
 
 export const INGEST_RUN_KIND = 'ingest';
 export const EXTRACTION_RUN_KIND = 'extraction';
+/** Exécutions du questionnement guidé (WP-14) : voir `GUIDED_RUN_KINDS` des contrats. */
+export const QUESTIONS_RUN_KIND = 'questions';
+export const HYPOTHESES_RUN_KIND = 'hypotheses';
+export const SUMMARY_RUN_KIND = 'summary';
+export const ANSWER_RUN_KIND = 'answer';
 
 export interface RunPatch {
   status?: RunStatus;
