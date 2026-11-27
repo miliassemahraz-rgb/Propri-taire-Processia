@@ -14,4 +14,17 @@ describe('@processia/i18n', () => {
   it('refuse une clé inconnue au runtime', () => {
     expect(() => t('app.inconnue' as never)).toThrow(/inconnue/);
   });
+
+  it('aucune clé du catalogue ne contient de point : `t` les résoudrait mal au runtime', () => {
+    const offenders: string[] = [];
+    const walk = (node: unknown, path: string): void => {
+      if (typeof node !== 'object' || node === null) return;
+      for (const [key, value] of Object.entries(node)) {
+        if (key.includes('.')) offenders.push(`${path}${key}`);
+        walk(value, `${path}${key}.`);
+      }
+    };
+    walk(messages, '');
+    expect(offenders).toEqual([]);
+  });
 });

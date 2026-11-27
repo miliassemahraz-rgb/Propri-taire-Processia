@@ -56,6 +56,11 @@ export class MailService {
     });
   }
 
+  /** Courriel texte brut (notifications, WP-16). */
+  async send(to: string, subject: string, text: string): Promise<void> {
+    await this.transport.sendMail({ from: this.env.SMTP_FROM, to, subject, text });
+  }
+
   async sendInvitation(to: string, link: string, validityHours: number): Promise<void> {
     await this.transport.sendMail({
       from: this.env.SMTP_FROM,

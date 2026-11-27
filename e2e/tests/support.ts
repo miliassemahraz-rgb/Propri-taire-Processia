@@ -134,21 +134,26 @@ export async function loginAnyState(
     // Le limiteur de débit de l'API (30 appels par minute et par adresse) peut refuser l'appel
     // d'enrôlement après de nombreuses connexions : on attend la fin de la fenêtre et on recharge.
     const manualKey = page.getByTestId('manual-key');
-    for (let attempt = 0; attempt < 3; attempt += 1) {
+    const saved = page.getByRole('button', { name: 'J’ai conservé mes codes, continuer' });
+    for (let attempt = 0; ; attempt += 1) {
       try {
         await manualKey.waitFor({ timeout: 8_000 });
+        const key = (await manualKey.textContent()) ?? '';
+        const code = totpFromKey(key);
+        lastCodeByEmail.set(email, code);
+        await page.getByLabel('Code à 6 chiffres').fill(code);
+        await page.getByRole('button', { name: 'Activer' }).click();
+        await saved.waitFor({ timeout: 8_000 });
         break;
-      } catch {
-        await page.waitForTimeout(25_000);
+      } catch (error) {
+        // Refus du limiteur de débit à l'affichage de la clé ou à l'activation : on attend la
+        // fin de la fenêtre, puis on recharge (une nouvelle clé est délivrée).
+        if (attempt >= 3) throw error;
+        await page.waitForTimeout(RATE_LIMIT_PAUSE_MS);
         await page.reload();
       }
     }
-    const key = (await manualKey.textContent()) ?? '';
-    const code = totpFromKey(key);
-    lastCodeByEmail.set(email, code);
-    await page.getByLabel('Code à 6 chiffres').fill(code);
-    await page.getByRole('button', { name: 'Activer' }).click();
-    await page.getByRole('button', { name: 'J’ai conservé mes codes, continuer' }).click();
+    await saved.click();
   } else {
     for (let attempt = 0; ; attempt += 1) {
       await page.getByLabel('Code à 6 chiffres').fill(await freshDevTotp(email));

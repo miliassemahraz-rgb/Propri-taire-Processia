@@ -29,6 +29,13 @@
       "when": 1795718642538,
       "tag": "0003_auth_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795814316924,
+      "tag": "0004_validation_circuit",
+      "breakpoints": true
     }
   ]
 }

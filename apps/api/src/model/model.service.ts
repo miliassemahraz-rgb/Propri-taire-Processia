@@ -6,8 +6,10 @@ import type {
   ElementChange,
   ElementHistoryEntry,
   ModelAtVersion,
+  NoticeCreatedMessage,
   VersionSummary,
 } from '@processia/contracts';
+import { MISSION_MESSAGES_CHANNEL } from '@processia/contracts';
 import {
   changeProposals,
   missionMembers,
@@ -464,6 +466,8 @@ export class ModelService {
           userId: v.userId,
           missionId,
           kind: 'post_validation_notice',
+          // Courriel immédiat, regroupé par version : une notification = un courriel [PO-19].
+          emailPending: true,
           payload: {
             version: next.version,
             noticeIds: inserted.map((i) => i.id),
@@ -473,6 +477,14 @@ export class ModelService {
         })),
       );
     }
+    const message: NoticeCreatedMessage = {
+      type: 'notice.created',
+      missionId,
+      version: next.version,
+    };
+    await tx.execute(
+      sql`select pg_notify(${MISSION_MESSAGES_CHANNEL}, ${JSON.stringify(message)})`,
+    );
     return rows.map((r) => r.elementId);
   }
 

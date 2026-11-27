@@ -4,9 +4,8 @@ import {
   MISSION_MESSAGES_CHANNEL,
   modelDocName,
   parseDocName,
+  type CollabStatelessMessage,
   type ModelVersionMessage,
-  type QuestionUpdatedMessage,
-  type RunProgressMessage,
   type WorkspaceFlushedMessage,
 } from '@processia/contracts';
 import type { Database } from '@processia/db';
@@ -30,6 +29,15 @@ export interface CollabOptions {
   debounceMs?: number;
   maxDebounceMs?: number;
 }
+
+/** Messages de `mission_messages` relayés aux consultants connectés (le validateur n'a pas de Yjs). */
+const RELAYED_TYPES = new Set([
+  'run.progress',
+  'question.updated',
+  'comment.created',
+  'submission.updated',
+  'notice.created',
+]);
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -154,7 +162,7 @@ export function createCollabServer(options: CollabOptions) {
     }
   }
 
-  function relayProgress(message: RunProgressMessage | QuestionUpdatedMessage): void {
+  function relayProgress(message: CollabStatelessMessage & { missionId: string }): void {
     hocuspocus.documents
       .get(modelDocName(message.missionId))
       ?.broadcastStateless(JSON.stringify(message));
@@ -173,11 +181,8 @@ export function createCollabServer(options: CollabOptions) {
     if (typeof missionId !== 'string' || !UUID.test(missionId)) return;
     if (channel === MISSION_EVENTS_CHANNEL) {
       enqueue(missionId.toLowerCase(), () => syncModel(missionId.toLowerCase()));
-    } else if (
-      channel === MISSION_MESSAGES_CHANNEL &&
-      (record['type'] === 'run.progress' || record['type'] === 'question.updated')
-    ) {
-      relayProgress(data as RunProgressMessage | QuestionUpdatedMessage);
+    } else if (channel === MISSION_MESSAGES_CHANNEL && RELAYED_TYPES.has(String(record['type']))) {
+      relayProgress(data as CollabStatelessMessage & { missionId: string });
     }
   }
 

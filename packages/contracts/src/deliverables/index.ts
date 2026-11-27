@@ -7,6 +7,8 @@ export type ExportFormat = (typeof EXPORT_FORMATS)[number];
 
 /** Finalité (`artifacts.purpose`) des exports du dossier d'analyse ; `kind` est le format. */
 export const DOSSIER_PURPOSE = 'analysis_dossier';
+/** Finalité des exports joints à une soumission de validation : version figée (WP-16). */
+export const SUBMISSION_PURPOSE = 'submission';
 /** Type d'exécution (`analysis_runs.kind`) d'un export. */
 export const EXPORT_RUN_KIND = 'export';
 

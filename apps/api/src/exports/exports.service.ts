@@ -6,6 +6,7 @@ import {
   EXPORT_FORMATS,
   EXPORT_RUN_KIND,
   PRESIGNED_URL_TTL_SECONDS,
+  SUBMISSION_PURPOSE,
   type DeliverablesPreviewDto,
   type ExportArtifactDto,
   type ExportFormat,
@@ -20,6 +21,7 @@ import {
   modelVersions,
   notifications,
   sources,
+  validationSubmissions,
   withMission,
   type Database,
   type MissionTx,
@@ -33,7 +35,7 @@ import {
   sha256Hex,
   type DossierInput,
 } from '@processia/exports';
-import { and, asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { AuthError } from '../auth/errors.js';
 import { DB } from '../db/db.module.js';
@@ -50,6 +52,8 @@ const jobDataSchema = z.object({
   userId: z.string().uuid(),
   format: z.enum(EXPORT_FORMATS),
   modelVersion: z.number().int().nonnegative(),
+  /** Export joint à une soumission : version figée, artefact lié à la soumission (WP-16). */
+  submissionId: z.string().uuid().optional(),
 });
 export type ExportJobData = z.infer<typeof jobDataSchema>;
 
@@ -73,7 +77,7 @@ export function exportFilename(missionName: string, version: number, format: Exp
 
 type ArtifactRow = typeof artifacts.$inferSelect;
 
-function toDto(row: ArtifactRow): ExportArtifactDto {
+export function toExportDto(row: ArtifactRow): ExportArtifactDto {
   return {
     id: row.id,
     format: row.kind as ExportFormat,
@@ -165,13 +169,13 @@ export class ExportsService implements OnModuleInit {
       .from(artifacts)
       .where(eq(artifacts.purpose, DOSSIER_PURPOSE))
       .orderBy(desc(artifacts.createdAt), desc(artifacts.id));
-    return rows.map(toDto);
+    return rows.map(toExportDto);
   }
 
   async downloadUrl(tx: MissionTx, artifactId: string): Promise<PresignedUrlDto> {
     const [row] = await tx.select().from(artifacts).where(eq(artifacts.id, artifactId)).limit(1);
     if (row === undefined) throw new AuthError('NOT_FOUND');
-    const dto = toDto(row);
+    const dto = toExportDto(row);
     return {
       url: await this.storage.presignArtifactDownload(
         row.storageKey,
@@ -190,9 +194,12 @@ export class ExportsService implements OnModuleInit {
     ctx: MissionContext,
     userId: string,
     format: ExportFormat,
+    /** Export d'une version figée jointe à une soumission (WP-16), au lieu de la tête. */
+    frozen?: { submissionId: string; modelVersion: number },
   ): Promise<StartExportResult> {
     const created = await ctx.run(async (tx) => {
-      const modelVersion = await this.models.headVersion(tx, ctx.missionId);
+      const modelVersion =
+        frozen?.modelVersion ?? (await this.models.headVersion(tx, ctx.missionId));
       const [run] = await tx
         .insert(analysisRuns)
         .values({
@@ -213,6 +220,7 @@ export class ExportsService implements OnModuleInit {
       userId,
       format,
       modelVersion: created.modelVersion,
+      ...(frozen === undefined ? {} : { submissionId: frozen.submissionId }),
     };
     try {
       const jobId = await this.jobs.send(JOB_QUEUES.exportCreate, data);
@@ -258,23 +266,34 @@ export class ExportsService implements OnModuleInit {
           id: artifactId,
           missionId,
           kind: data.format,
-          purpose: DOSSIER_PURPOSE,
+          purpose: data.submissionId === undefined ? DOSSIER_PURPOSE : SUBMISSION_PURPOSE,
           modelVersion: loaded.version,
           storageKey,
           sha256: sha256Hex(bytes),
           createdBy: data.userId,
         });
+        if (data.submissionId !== undefined) {
+          // Ajout atomique : trois exports d'une même soumission peuvent finir en même temps.
+          await tx
+            .update(validationSubmissions)
+            .set({
+              artifactIds: sql`${validationSubmissions.artifactIds} || ${JSON.stringify([artifactId])}::jsonb`,
+            })
+            .where(eq(validationSubmissions.id, data.submissionId));
+        }
         await updateRun(tx, missionId, runId, null, {
           status: 'succeeded',
           progress: 100,
           resultVersion: loaded.version,
         });
-        await tx.insert(notifications).values({
-          userId: data.userId,
-          missionId,
-          kind: 'export.done',
-          payload: { runId, artifactId, format: data.format, version: loaded.version },
-        });
+        if (data.submissionId === undefined) {
+          await tx.insert(notifications).values({
+            userId: data.userId,
+            missionId,
+            kind: 'export.done',
+            payload: { runId, artifactId, format: data.format, version: loaded.version },
+          });
+        }
       });
     } catch (error) {
       this.logger.error(`Export ${data.format} ${runId} en échec : ${(error as Error).message}`);

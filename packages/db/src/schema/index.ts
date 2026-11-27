@@ -202,8 +202,17 @@ export const notifications = pgTable(
     payload: jsonb('payload').$type<Json>().notNull().default({}),
     createdAt: createdAt(),
     readAt: tstz('read_at'),
+    /** Envoi du courriel (WP-16, PO-19) : `null` tant qu'il est à envoyer (boîte d'envoi). */
+    emailedAt: tstz('emailed_at'),
+    /** Courriel à envoyer pour cette notification (sinon `emailedAt` reste vide sans objet). */
+    emailPending: boolean('email_pending').notNull().default(false),
   },
-  (t) => [index('notifications_user_idx').on(t.userId, t.readAt)],
+  (t) => [
+    index('notifications_user_idx').on(t.userId, t.readAt),
+    index('notifications_email_idx')
+      .on(t.createdAt)
+      .where(sql`${t.emailPending}`),
+  ],
 );
 
 /** Ajout seulement : le rôle applicatif n'a que INSERT et SELECT. */
@@ -475,6 +484,13 @@ export const comments = pgTable(
     targetId: text('target_id').notNull(),
     modelVersion: integer('model_version'),
     parentId: uuid('parent_id'),
+    /**
+     * Fil partagé avec le validateur (WP-16) : la soumission dont la version figée est commentée.
+     * Vide : commentaire interne de l'équipe, jamais visible du validateur.
+     */
+    submissionId: uuid('submission_id').references(() => validationSubmissions.id, {
+      onDelete: 'cascade',
+    }),
     authorId: uuid('author_id')
       .notNull()
       .references(() => users.id),
@@ -485,6 +501,7 @@ export const comments = pgTable(
   (t) => [
     foreignKey({ columns: [t.parentId], foreignColumns: [t.id] }).onDelete('cascade'),
     index('comments_target_idx').on(t.missionId, t.targetKind, t.targetId),
+    index('comments_submission_idx').on(t.submissionId),
   ],
 );
 

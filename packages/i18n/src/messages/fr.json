@@ -7,6 +7,23 @@
     "invitation": {
       "subject": "Invitation à rejoindre Processia",
       "body": "Bonjour,\n\nVous êtes invité(e) à rejoindre Processia. Ouvrez le lien suivant pour choisir votre mot de passe (valable {hours} heures, utilisable une seule fois) :\n\n{link}\n\nÀ votre première connexion, vous configurerez la double authentification.\n"
+    },
+    "footer": "Ce message est envoyé automatiquement par Processia.",
+    "submitted": {
+      "subject": "Processia : {kind} à valider ({mission})",
+      "body": "Bonjour,\n\nLe dossier « {kind} » de la mission « {mission} » est prêt pour votre validation (version {version}, soumission n°{round}).\n\nOuvrez le portail du validateur :\n{link}\n"
+    },
+    "validated": {
+      "subject": "Processia : {kind} validé ({mission})",
+      "body": "Bonjour,\n\n{validator} a validé le dossier « {kind} » de la mission « {mission} » (version {version}). La mission passe à l’étape suivante.\n\nOuvrir la mission :\n{link}\n"
+    },
+    "postValidation": {
+      "subject": "Processia : modification après validation ({mission}, version {version})",
+      "body": "Bonjour,\n\nDes éléments que vous aviez validés ont été modifiés dans la mission « {mission} » (version {version}) :\n\n{summaries}\n\nCes modifications vous sont signalées sans nouvelle validation formelle. Consultez-les depuis le portail :\n{link}\n"
+    },
+    "comment": {
+      "subject": "Processia : nouveau commentaire ({mission})",
+      "body": "Bonjour,\n\n{author} a commenté dans la mission « {mission} » :\n\n« {excerpt} »\n\nRépondre :\n{link}\n"
     }
   },
   "aiProviders": {
@@ -62,7 +79,8 @@
     "ANALYSIS_IN_PROGRESS": "Une analyse est déjà en cours pour cette mission. Patientez jusqu’à sa fin.",
     "ALREADY_DECIDED": "Cet élément a déjà été décidé par un autre consultant.",
     "QUESTION_NOT_OPEN": "Cette question a déjà reçu une réponse ou a été passée.",
-    "GUIDED_IN_PROGRESS": "Cette opération est déjà en cours pour la mission. Patientez jusqu’à sa fin."
+    "GUIDED_IN_PROGRESS": "Cette opération est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
+    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation du dossier d’analyse par le client."
   },
   "warnings": {
     "CAPABILITY_MISSING": {
@@ -151,7 +169,8 @@
       "adminClients": "Clients",
       "adminAi": "Fournisseur IA",
       "analysis": "Analyse",
-      "deliverables": "Livrables"
+      "deliverables": "Livrables",
+      "validation": "Validation"
     },
     "mode": {
       "label": "Mode d’affichage",
@@ -161,7 +180,27 @@
     "notifications": {
       "button": "Notifications",
       "title": "Notifications",
-      "empty": "Aucune notification pour le moment."
+      "empty": "Aucune notification pour le moment.",
+      "unread": "{count} non lue(s)",
+      "markAll": "Tout marquer comme lu",
+      "buttonUnread": "Notifications ({count})",
+      "openLink": "Ouvrir",
+      "kinds": {
+        "submission": {
+          "submitted": "Dossier à valider : {kind}, soumission n°{round} (version {version}).",
+          "validated": "{kind} validé par {name}.",
+          "withdrawn": "Soumission retirée : {kind}, n°{round}."
+        },
+        "comment": {
+          "created": "{name} a commenté : « {excerpt} »."
+        },
+        "post_validation_notice": "Modification après validation (version {version}) : {count} élément(s).",
+        "export": {
+          "done": "Export {format} prêt (version {version}).",
+          "failed": "Un export a échoué."
+        },
+        "other": "Nouvelle notification."
+      }
     },
     "simulatedAi": {
       "banner": "IA simulée",
@@ -179,7 +218,8 @@
     "adminAi": "Fournisseur IA",
     "notFound": "Page introuvable",
     "missionAnalysis": "Analyse de la mission",
-    "missionDeliverables": "Livrables de la mission"
+    "missionDeliverables": "Livrables de la mission",
+    "missionValidation": "Validation de la mission"
   },
   "notFound": {
     "heading": "Page introuvable",
@@ -1033,6 +1073,176 @@
       "download": "Télécharger",
       "downloadLabel": "Télécharger le fichier {filename}",
       "downloadFailed": "Le téléchargement n’a pas pu démarrer."
+    }
+  },
+  "validation": {
+    "kind": {
+      "analysis_dossier": "Dossier d’analyse",
+      "as_is": "AS-IS",
+      "to_be": "TO-BE"
+    },
+    "changeSetSummary": "Validation : {kind}, soumission n°{round} ({count} éléments)",
+    "heading": "Validation",
+    "portalHeading": "Portail du validateur",
+    "portalBrand": "Processia · Portail du validateur",
+    "validatorHeading": "Validez le dossier d’analyse",
+    "introValidator": "Lisez la version du dossier d’analyse qui vous est soumise, commentez-la, puis validez-la. Vous ne voyez que cette version figée : jamais le travail en cours des consultants.",
+    "introTeam": "Soumissions au validateur du client, discussion et signalements après validation.",
+    "loading": "Chargement de la validation…",
+    "stepper": {
+      "label": "Étapes de validation",
+      "item": "{index}. {kind} : {state}",
+      "state": {
+        "validated": "validé",
+        "pending": "en cours de validation",
+        "toSubmit": "à soumettre",
+        "soon": "à venir"
+      }
+    },
+    "noSubmission": {
+      "validator": "Aucun dossier ne vous a encore été soumis. Vous serez prévenu(e) par courriel dès qu’une version sera prête.",
+      "team": "Aucune soumission pour l’instant. Soumettez le dossier depuis l’espace Analyse."
+    },
+    "submissions": {
+      "heading": "Soumissions",
+      "select": "Soumission affichée",
+      "option": "Soumission n°{round}, version {version} : {status}",
+      "round": "Soumission n°{round}",
+      "summary": "Version {version} · soumise le {date} par {name}",
+      "note": "Note du consultant : {note}"
+    },
+    "status": {
+      "submitted": "En attente de validation",
+      "validated": "Validée",
+      "superseded": "Remplacée",
+      "withdrawn": "Retirée",
+      "closed": "Close"
+    },
+    "frozenNotice": "Vous lisez la version {version}, figée au moment de la soumission. Le travail en cours des consultants n’y apparaît pas.",
+    "validatedBanner": "Dossier validé le {date} par {name}. La cartographie des processus est ouverte.",
+    "validatedComment": "Commentaire de validation : {comment}",
+    "supersededBanner": "Cette soumission a été remplacée par une soumission plus récente.",
+    "supersededLink": "Voir la soumission en cours",
+    "tabs": {
+      "label": "Contenu de la soumission",
+      "document": "Dossier",
+      "elements": "Éléments",
+      "exports": "Fichiers",
+      "discussion": "Discussion"
+    },
+    "panel": {
+      "soon": "La validation de ce livrable arrivera avec les étapes suivantes du produit.",
+      "asIs": "La validation de l’AS-IS (processus tels qu’ils existent) s’ouvre après la cartographie.",
+      "toBe": "La validation du TO-BE, optimisation par optimisation, s’ouvre après le diagnostic."
+    },
+    "elements": {
+      "intro": "Éléments de la version figée. Vous pouvez commenter chacun d’eux.",
+      "caption": "Éléments de la version soumise",
+      "columns": {
+        "code": "Code",
+        "label": "Libellé",
+        "kind": "Type",
+        "status": "Statut",
+        "comments": "Commentaires"
+      },
+      "empty": "Aucun élément dans cette version."
+    },
+    "exports": {
+      "heading": "Fichiers joints à la soumission",
+      "help": "Word, PDF et Excel de la version figée, avec leur empreinte (sha256).",
+      "empty": "Les fichiers sont en cours de production.",
+      "download": "Télécharger",
+      "downloadLabel": "Télécharger le fichier {filename}",
+      "downloadFailed": "Le téléchargement n’a pas pu démarrer.",
+      "columns": {
+        "format": "Format",
+        "file": "Fichier",
+        "sha": "Empreinte (sha256)",
+        "action": "Action"
+      }
+    },
+    "validate": {
+      "button": "Valider le dossier",
+      "title": "Valider le dossier d’analyse ?",
+      "body": "En validant, vous confirmez la version {version} du dossier. Les éléments livrés passent au statut « validé » et la mission passe à l’étape suivante : la cartographie des processus. Cette décision est enregistrée et ne peut pas être annulée.",
+      "comment": "Commentaire de validation (facultatif)",
+      "confirm": "Confirmer la validation",
+      "done": "Dossier validé : {count} éléments validés.",
+      "skipped": "{count} élément(s) modifié(s) depuis la soumission n’ont pas été validés.",
+      "noRefuse": "Il n’y a pas de bouton « Refuser » : si quelque chose manque ou doit changer, commentez-le. Le consultant soumettra une nouvelle version.",
+      "onlyCurrent": "Seule la soumission en attente peut être validée."
+    },
+    "comments": {
+      "heading": "Commentaires",
+      "label": "Votre commentaire",
+      "send": "Envoyer",
+      "sent": "Commentaire envoyé.",
+      "reply": "Répondre",
+      "replyLabel": "Votre réponse",
+      "resolve": "Marquer comme résolu",
+      "reopen": "Rouvrir",
+      "resolved": "Résolu",
+      "empty": "Aucun commentaire pour le moment.",
+      "byValidator": "Validateur",
+      "byTeam": "Équipe Processia",
+      "authorLine": "{name} ({role}), le {date}",
+      "closed": "Cette soumission n’accepte plus de commentaires.",
+      "forElement": "Commentaires sur {code}",
+      "toggle": "Commentaires ({count})",
+      "toggleLabel": "Commentaires sur {name} ({count})",
+      "forDeliverable": "Commentaires sur « {title} »",
+      "forSubmission": "Discussion générale sur la soumission",
+      "thread": "Fil de discussion",
+      "loadFailed": "Les commentaires n’ont pas pu être chargés."
+    },
+    "notices": {
+      "heading": "Modifications après validation",
+      "intro": "Ces éléments, validés par le client, ont été modifiés ensuite. Ils sont signalés sans nouvelle validation formelle.",
+      "empty": "Aucune modification depuis la validation.",
+      "version": "Version {version}",
+      "new": "Nouveau",
+      "seen": "Vu",
+      "markSeen": "Marquer comme vus",
+      "markedSeen": "Signalements marqués comme vus.",
+      "listLabel": "Signalements après validation",
+      "count": "{count} signalement(s) non vu(s)"
+    },
+    "team": {
+      "excludedHeading": "Hypothèses exclues de la soumission",
+      "excludedIntro": "Ces hypothèses n’ont pas été décidées : elles ne figurent ni dans les livrables ni dans les exports, et le validateur ne les voit pas.",
+      "excludedNone": "Aucune hypothèse en attente : tout le contenu a été soumis.",
+      "withdraw": "Retirer la soumission",
+      "withdrawn": "Soumission retirée.",
+      "withdrawHelp": "Retirez-la tant que le validateur n’a pas décidé, par exemple pour corriger le dossier avant de la soumettre de nouveau.",
+      "resubmit": "Soumettre de nouveau",
+      "resubmitHelp": "Une nouvelle soumission remplace celle-ci : elle passe à « Remplacée ».",
+      "goAnalysis": "Ouvrir l’espace Analyse",
+      "retryExport": "Relancer l’export {format}",
+      "exportStarted": "Export {format} lancé."
+    },
+    "submit": {
+      "button": "Soumettre au validateur",
+      "title": "Soumettre au validateur",
+      "loading": "Préparation de la soumission…",
+      "intro": "Vous allez figer la version {version} et la soumettre au validateur du client. Il la lira en lecture seule, sans voir votre travail en cours.",
+      "included": "{count} éléments seront soumis.",
+      "excludedHeading": "Hypothèses exclues : {count}",
+      "excludedNone": "Aucune hypothèse en attente : tout le contenu est soumis.",
+      "excludedHelp": "Ces hypothèses ne figureront ni dans les livrables ni dans les exports. Vous pouvez les décider avant de soumettre.",
+      "excludedList": "Hypothèses exclues de la soumission",
+      "replaces": "Cette soumission remplace la soumission n°{round}, encore en attente.",
+      "note": "Note pour le validateur (facultatif)",
+      "confirm": "Soumettre la version {version}",
+      "done": "Soumission n°{round} envoyée au validateur.",
+      "goTo": "Voir la soumission",
+      "blocker": {
+        "EMPTY_MODEL": "Le modèle ne contient encore rien à soumettre. Lancez d’abord l’analyse.",
+        "WRONG_PHASE": "Cette étape n’est pas encore ouverte.",
+        "ALREADY_VALIDATED": "Le dossier d’analyse est déjà validé. Les modifications ultérieures sont signalées au validateur."
+      }
+    },
+    "gate": {
+      "locked": "La cartographie s’ouvre après la validation du dossier d’analyse."
     }
   }
 }

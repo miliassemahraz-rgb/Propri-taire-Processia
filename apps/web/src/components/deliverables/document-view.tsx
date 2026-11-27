@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import type { DocBlock, DocSection, DocTable, DossierDocument } from '@processia/contracts';
 import { DataTable } from '@processia/ui';
 import { deliverableAnchor } from '../../lib/deliverables';
@@ -62,7 +63,13 @@ function Block({ block, headingId }: { block: DocBlock; headingId: string }) {
   );
 }
 
-function Section({ section }: { section: DocSection }) {
+function Section({
+  section,
+  extra,
+}: {
+  section: DocSection;
+  extra?: ((section: DocSection) => ReactNode) | undefined;
+}) {
   const anchor = deliverableAnchor(section.id);
   return (
     <section
@@ -77,18 +84,28 @@ function Section({ section }: { section: DocSection }) {
       {section.blocks.map((block, index) => (
         <Block key={index} block={block} headingId={`${anchor}-t${index}`} />
       ))}
+      {extra?.(section)}
     </section>
   );
 }
 
-/** Aperçu HTML du dossier d'analyse : les quatre livrables, puis l'annexe des sources. */
-export function DocumentView({ document }: { document: DossierDocument }) {
+/**
+ * Aperçu HTML du dossier d'analyse : les quatre livrables, puis l'annexe des sources. `sectionExtra`
+ * ajoute un contenu sous chaque section (le portail du validateur y place les commentaires).
+ */
+export function DocumentView({
+  document,
+  sectionExtra,
+}: {
+  document: DossierDocument;
+  sectionExtra?: (section: DocSection) => ReactNode;
+}) {
   return (
     <div className="stack-lg">
       {document.deliverables.map((section) => (
-        <Section key={section.id} section={section} />
+        <Section key={section.id} section={section} extra={sectionExtra} />
       ))}
-      <Section section={document.annex} />
+      <Section section={document.annex} extra={sectionExtra} />
     </div>
   );
 }

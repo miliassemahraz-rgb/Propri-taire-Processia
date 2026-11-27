@@ -26,6 +26,7 @@ import { SourceViewer, type ViewerTarget } from './analysis/source-viewer';
 import { SourcesSection, sourceTitle } from './analysis/sources-section';
 import { DescriptionEditor } from './description-editor';
 import { useMission } from './mission-frame';
+import { SubmitToValidator } from './validation/submit-dialog';
 
 const POLL_MS = 1500;
 const DISCREPANCIES: AnalysisTab = 'discrepancies';
@@ -56,6 +57,8 @@ export function AnalysisPage() {
   const conceptsRef = useRef<HTMLDivElement>(null);
 
   const isValidator = mission.myRole === 'validator';
+  // `submission.create` : responsable et consultants membres (matrice 3.5) ; pas l'administrateur.
+  const canSubmit = canEdit;
 
   const refreshSources = useCallback(async () => {
     try {
@@ -275,6 +278,7 @@ export function AnalysisPage() {
           >
             {t('analysis.deliverablesLink')}
           </Link>
+          {canSubmit ? <SubmitToValidator missionId={missionId} /> : null}
         </div>
       </div>
 
