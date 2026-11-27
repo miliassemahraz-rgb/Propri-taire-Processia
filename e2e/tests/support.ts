@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page } from '@playwright/test';
 import { generateSync } from 'otplib';
+import { testDbEnv } from '../test-env.js';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
 
@@ -18,13 +19,6 @@ export const ACCOUNTS = {
 } as const;
 
 const TOTP_STEP_MS = 30_000;
-
-/** Même base que celle de l'API démarrée par Playwright (voir `playwright.config.ts`). */
-const testDbEnv = {
-  DATABASE_URL: 'postgres://processia:processia@localhost:5432/processia_test',
-  DATABASE_OWNER_URL: 'postgres://processia_owner:processia_owner@localhost:5432/processia_test',
-  DATABASE_APP_URL: 'postgres://processia_app:processia_app@localhost:5432/processia_test',
-};
 
 /**
  * Code TOTP courant d'un compte déjà enrôlé, par l'outil de développement

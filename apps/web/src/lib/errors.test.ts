@@ -24,6 +24,12 @@ describe('traduction des codes d’erreur de l’API', () => {
     expect(errorMessage(new Error('boom'))).toBe(t('errors.UNKNOWN'));
   });
 
+  it('distingue le conflit « analyse déjà en cours » du conflit générique', () => {
+    const busy = new ApiRequestError('CONFLICT', 409, { reason: 'ANALYSIS_IN_PROGRESS' });
+    expect(errorMessage(busy)).toBe(t('errors.ANALYSIS_IN_PROGRESS'));
+    expect(errorMessage(new ApiRequestError('CONFLICT', 409))).toBe(t('errors.CONFLICT'));
+  });
+
   it('le message de chaque avertissement de capacité existe', () => {
     expect(t('warnings.CAPABILITY_MISSING.documents')).toMatch(/documents/);
     expect(t('warnings.CAPABILITY_MISSING.text')).toMatch(/texte/);

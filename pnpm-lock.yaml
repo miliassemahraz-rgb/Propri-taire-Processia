@@ -254,6 +254,9 @@ importers:
       '@processia/config':
         specifier: workspace:*
         version: link:../packages/config
+      '@processia/test-fixtures':
+        specifier: workspace:*
+        version: link:../packages/test-fixtures
       otplib:
         specifier: 13.6.0
         version: 13.6.0

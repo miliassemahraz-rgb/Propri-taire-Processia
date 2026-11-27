@@ -263,7 +263,7 @@ export class SourcesService {
     const rows = await tx
       .select({
         source: sources,
-        chunkCount: sql<number>`(select count(*)::int from source_chunks c where c.source_id = ${sources.id})`,
+        chunkCount: sql<number>`(select count(*)::int from source_chunks c where c.source_id = sources.id)`,
       })
       .from(sources)
       .orderBy(desc(sources.createdAt));

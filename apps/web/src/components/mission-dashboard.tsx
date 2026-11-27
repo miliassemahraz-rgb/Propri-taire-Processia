@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { MissionPhase } from '@processia/contracts';
 import { t, type MessageKey } from '@processia/i18n';
@@ -11,6 +12,7 @@ import {
   type Concept,
 } from '@processia/model';
 import { Notice, ProgressMeter } from '@processia/ui';
+import { openDiscrepancies } from '../lib/analysis';
 import { endpoints } from '../lib/endpoints';
 import { ApiRequestError } from '../lib/api';
 import { errorMessage } from '../lib/errors';
@@ -41,7 +43,7 @@ type ModelState =
   | { status: 'none' }
   | { status: 'unavailable' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; report: CompletenessByConcept };
+  | { status: 'ready'; report: CompletenessByConcept; discrepancies: number };
 
 function stepState(index: number, current: number): 'done' | 'current' | 'upcoming' {
   if (index < current) return 'done';
@@ -132,7 +134,11 @@ export function MissionDashboard() {
           return;
         }
         const parsed = BusinessModelSchema.parse(head.model);
-        setModel({ status: 'ready', report: completeness(parsed) });
+        setModel({
+          status: 'ready',
+          report: completeness(parsed),
+          discrepancies: openDiscrepancies(parsed).length,
+        });
       } catch (error) {
         if (cancelled) return;
         if (error instanceof ApiRequestError && error.code === 'FORBIDDEN') {
@@ -151,10 +157,36 @@ export function MissionDashboard() {
   const hypotheses = report ? CONCEPTS.reduce((sum, c) => sum + report[c].pendingHypotheses, 0) : 0;
   const questions = report ? CONCEPTS.reduce((sum, c) => sum + report[c].openQuestions, 0) : 0;
   const pending = mission.progress?.pendingSubmissions ?? 0;
-  const todo: string[] = [];
-  if (hypotheses > 0) todo.push(t('dashboard.hypotheses', { count: hypotheses }));
-  if (questions > 0) todo.push(t('dashboard.questions', { count: questions }));
-  if (pending > 0) todo.push(t('dashboard.pending', { count: pending }));
+  const gaps = model.status === 'ready' ? model.discrepancies : 0;
+  // « À faire » : chaque élément mène à l'espace Analyse (PO-93) ; les soumissions du validateur
+  // n'ont pas encore d'écran.
+  const analysis = `/missions/${mission.id}/analyse`;
+  const todo: { text: string; action: string; href: string | null; warn?: boolean }[] = [];
+  if (hypotheses > 0) {
+    todo.push({
+      text: t('dashboard.hypotheses', { count: hypotheses }),
+      action: t('dashboard.actionReview'),
+      href: `${analysis}#hypotheses`,
+    });
+  }
+  if (questions > 0) {
+    todo.push({
+      text: t('dashboard.questions', { count: questions }),
+      action: t('dashboard.actionAnswer'),
+      href: `${analysis}#questions`,
+    });
+  }
+  if (gaps > 0) {
+    todo.push({
+      text: t('dashboard.discrepancies', { count: gaps }),
+      action: t('dashboard.actionSee'),
+      href: `${analysis}#contradictions`,
+      warn: true,
+    });
+  }
+  if (pending > 0) {
+    todo.push({ text: t('dashboard.pending', { count: pending }), action: '', href: null });
+  }
 
   return (
     <div className="stack-lg">
@@ -207,9 +239,21 @@ export function MissionDashboard() {
             {todo.length === 0 ? (
               <p className="muted">{t('dashboard.nothingTodo')}</p>
             ) : (
-              <ul className="todo">
+              <ul className="plain todo-links">
                 {todo.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item.text}>
+                    {item.href === null ? (
+                      <span className="todo-link todo-link--static">{item.text}</span>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={`todo-link${item.warn ? ' todo-link--warn' : ''}`}
+                      >
+                        <span>{item.text}</span>
+                        <span className="todo-action">{item.action}</span>
+                      </Link>
+                    )}
+                  </li>
                 ))}
               </ul>
             )}

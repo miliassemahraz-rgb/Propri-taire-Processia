@@ -323,6 +323,10 @@ describe('WP-11 : sources', () => {
     const list = (await consultantA.call('GET', `${base}/sources`)).body as SourceDto[];
     const revisions = list.filter((s) => s.kind === 'free_text').map((s) => s.revision);
     expect(revisions.sort()).toEqual([1, 2, 3]);
+    // Le nombre de morceaux de la liste est celui de chaque source (l'interface en dépend).
+    for (const source of list.filter((s) => s.kind === 'free_text')) {
+      expect(source.chunkCount, `révision ${source.revision}`).toBeGreaterThan(0);
+    }
   });
 
   it('5. l’URL présignée expire en 5 minutes et n’est délivrée qu’après la garde', async () => {

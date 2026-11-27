@@ -3,6 +3,7 @@
 import { HocuspocusProvider, HocuspocusProviderWebsocket } from '@hocuspocus/provider';
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -17,9 +18,13 @@ import {
   workspaceDocName,
   type CollabStatelessMessage,
   type CollabTokenResponse,
+  type WorkspaceFlushRequest,
 } from '@processia/contracts';
 import { BusinessModelSchema, type BusinessModel } from '@processia/model';
 import { endpoints } from './endpoints';
+
+/** Attente maximale de l'accusé d'écriture du texte partagé. */
+const FLUSH_TIMEOUT_MS = 4000;
 
 /** `unavailable` : le profil n'a pas accès à la coédition (validateur) ou l'accès a été retiré. */
 export type CollabStatus = 'connecting' | 'connected' | 'disconnected' | 'unavailable';
@@ -39,6 +44,13 @@ interface CollabValue {
   model: HocuspocusProvider | null;
   workspace: HocuspocusProvider | null;
   self: PresenceUser;
+  /** Publie la vue consultée (« en train de… ») auprès des autres personnes connectées. */
+  setView: (view: string | undefined) => void;
+  /**
+   * Demande au serveur d'écrire tout de suite le texte partagé en base (il est sinon regroupé
+   * pendant 2 à 10 s) et attend son accusé ; rend la main au bout de quelques secondes au plus.
+   */
+  flushWorkspace: () => Promise<void>;
 }
 
 const CollabContext = createContext<CollabValue | null>(null);
@@ -76,6 +88,7 @@ export function CollabProvider({ missionId, myRole, user, children }: Props) {
     myRole === 'validator' ? 'unavailable' : 'connecting',
   );
   const [canEdit, setCanEdit] = useState(false);
+  const [view, setView] = useState<string | undefined>(undefined);
   const [providers, setProviders] = useState<{
     model: HocuspocusProvider;
     workspace: HocuspocusProvider;
@@ -153,8 +166,32 @@ export function CollabProvider({ missionId, myRole, user, children }: Props) {
 
   // Présence : identité publiée sur le document `workspace` (awareness, non persistée).
   useEffect(() => {
-    providers?.workspace.setAwarenessField('user', self);
-  }, [providers, self]);
+    providers?.workspace.setAwarenessField('user', view === undefined ? self : { ...self, view });
+  }, [providers, self, view]);
+
+  const flushWorkspace = useCallback((): Promise<void> => {
+    const target = providers?.workspace;
+    if (target === undefined || status !== 'connected') return Promise.resolve();
+    return new Promise<void>((resolve) => {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const listener = ({ payload }: { payload: string }): void => {
+        try {
+          if ((JSON.parse(payload) as { id?: unknown }).id === id) finish();
+        } catch {
+          // Message d'un autre type : ignoré.
+        }
+      };
+      const timer = setTimeout(() => finish(), FLUSH_TIMEOUT_MS);
+      function finish(): void {
+        clearTimeout(timer);
+        target?.off('stateless', listener);
+        resolve();
+      }
+      target.on('stateless', listener);
+      const request: WorkspaceFlushRequest = { type: 'workspace.flush', id };
+      target.sendStateless(JSON.stringify(request));
+    });
+  }, [providers, status]);
 
   const value = useMemo<CollabValue>(
     () => ({
@@ -163,10 +200,21 @@ export function CollabProvider({ missionId, myRole, user, children }: Props) {
       model: providers?.model ?? null,
       workspace: providers?.workspace ?? null,
       self,
+      setView,
+      flushWorkspace,
     }),
-    [status, canEdit, providers, self],
+    [status, canEdit, providers, self, flushWorkspace],
   );
   return <CollabContext.Provider value={value}>{children}</CollabContext.Provider>;
+}
+
+/** Publie la vue consultée tant que le composant est affiché (`undefined` : aucune vue). */
+export function usePublishView(view: string | undefined): void {
+  const { setView } = useCollab();
+  useEffect(() => {
+    setView(view);
+    return () => setView(undefined);
+  }, [setView, view]);
 }
 
 /** Lit la `Y.Map` du document `model` sous forme de `BusinessModel` ; `null` tant qu'il n'y a aucune version. */

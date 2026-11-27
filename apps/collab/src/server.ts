@@ -6,6 +6,7 @@ import {
   parseDocName,
   type ModelVersionMessage,
   type RunProgressMessage,
+  type WorkspaceFlushedMessage,
 } from '@processia/contracts';
 import type { Database } from '@processia/db';
 import * as Y from 'yjs';
@@ -70,6 +71,28 @@ export function createCollabServer(options: CollabOptions) {
         const head = await loadHead(db, parsed.missionId);
         reconcileModelDoc(document, head.model, head.meta);
       }
+    },
+    /** `workspace.flush` : écrit le texte partagé en base tout de suite, puis accuse réception. */
+    async onStateless({ connection, documentName, payload }) {
+      const parsed = parseDocName(documentName);
+      if (parsed?.kind !== 'workspace') return;
+      let request: unknown;
+      try {
+        request = JSON.parse(payload);
+      } catch {
+        return;
+      }
+      const { type, id } = (request ?? {}) as { type?: unknown; id?: unknown };
+      if (type !== 'workspace.flush' || typeof id !== 'string') return;
+      // Une connexion directe qui se ferme déclenche l'écriture immédiate (hors regroupement).
+      const direct = await server.hocuspocus.openDirectConnection(documentName, { system: true });
+      try {
+        await direct.transact(() => undefined);
+      } finally {
+        await direct.disconnect();
+      }
+      const reply: WorkspaceFlushedMessage = { type: 'workspace.flushed', id };
+      connection.sendStateless(JSON.stringify(reply));
     },
     async onStoreDocument({ document, documentName }) {
       const parsed = parseDocName(documentName);

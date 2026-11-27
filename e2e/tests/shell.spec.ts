@@ -188,6 +188,17 @@ test.describe('coquille web', () => {
     await recordTitle(page, 'mission-equipe');
     await expectNoSeriousViolations(page);
 
+    // Espace Analyse (WP-13) : titre unique ; le parcours détaillé est dans `z-analyse.spec.ts`.
+    await page.getByRole('link', { name: 'Analyse' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Analyse du métier' })).toBeVisible();
+    await expect(page.getByText('Coédition active')).toBeVisible({ timeout: 15_000 });
+    await recordTitle(page, 'mission-analyse');
+    await expectNoSeriousViolations(page);
+    await page.getByRole('link', { name: 'Équipe' }).click();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Équipe de la mission' }),
+    ).toBeVisible();
+
     const assign = async (name: string, role: string) => {
       await page.getByRole('button', { name: /Utilisateur/ }).click();
       await page.getByRole('option', { name: new RegExp(name) }).click();
@@ -354,7 +365,7 @@ test.describe('coquille web', () => {
 
   test('chaque page a un titre unique', () => {
     const values = [...titles.values()];
-    expect(values.length).toBeGreaterThanOrEqual(11);
+    expect(values.length).toBeGreaterThanOrEqual(12);
     for (const value of values) expect(value).toMatch(/ · Processia$/);
     expect(new Set(values).size, JSON.stringify([...titles.entries()])).toBe(values.length);
   });

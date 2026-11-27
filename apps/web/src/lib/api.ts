@@ -32,6 +32,8 @@ export function getCsrfToken(): string | null {
 export interface RequestOptions<S extends z.ZodType | undefined> {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
+  /** Corps multipart (dépôt de fichier) : l'en-tête `content-type` est posé par le navigateur. */
+  form?: FormData;
   /** Schéma zod de la réponse (contrats `@processia/contracts`) ; absent : réponse sans corps. */
   schema?: S;
 }
@@ -45,7 +47,9 @@ export async function apiRequest<S extends z.ZodType | undefined = undefined>(
 ): Promise<Result<S>> {
   const method = options.method ?? 'GET';
   const headers: Record<string, string> = { accept: 'application/json' };
-  if (options.body !== undefined) headers['content-type'] = 'application/json';
+  if (options.body !== undefined && options.form === undefined) {
+    headers['content-type'] = 'application/json';
+  }
   if (method !== 'GET' && csrfToken !== null) headers[CSRF_HEADER] = csrfToken;
 
   let response: Response;
@@ -54,7 +58,11 @@ export async function apiRequest<S extends z.ZodType | undefined = undefined>(
       method,
       headers,
       credentials: 'same-origin',
-      ...(options.body === undefined ? {} : { body: JSON.stringify(options.body) }),
+      ...(options.form !== undefined
+        ? { body: options.form }
+        : options.body === undefined
+          ? {}
+          : { body: JSON.stringify(options.body) }),
     });
   } catch {
     throw new ApiRequestError('NETWORK', 0);

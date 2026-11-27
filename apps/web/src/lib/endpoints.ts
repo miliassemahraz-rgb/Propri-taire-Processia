@@ -17,6 +17,14 @@ import {
   recoveryResponseSchema,
   userSummarySchema,
   type AcceptInvitationRequest,
+  type ChunkDto,
+  type ChunkViewDto,
+  type CommitResult,
+  type RunDto,
+  type SourceDto,
+  type StartExtractionResult,
+  type UploadSourceResult,
+  type VersionSummary,
   type AssignMemberRequest,
   type CreateClientRequest,
   type CreateInvitationRequest,
@@ -24,8 +32,12 @@ import {
   type UpdateUserRequest,
   type UpsertAiConfigRequest,
 } from '@processia/contracts';
+import type { BusinessModel, ModelDiff } from '@processia/model';
 import { z } from 'zod';
 import { apiRequest } from './api';
+
+/** Réponse décrite par un type des contrats (sans schéma zod) : la forme est celle de l'API. */
+const typed = <T>() => z.custom<T>(() => true);
 
 /** Client API typé : un appel par route de l'API, validé par les schémas de `@processia/contracts`. */
 export const endpoints = {
@@ -110,5 +122,58 @@ export const endpoints = {
   headModel: (id: string) =>
     apiRequest(`/missions/${id}/model`, {
       schema: z.object({ version: z.number().int(), model: z.unknown() }),
+    }),
+
+  // Analyse (WP-12, WP-13)
+  startExtraction: (id: string, sourceId?: string) =>
+    apiRequest(`/missions/${id}/analysis/extractions`, {
+      method: 'POST',
+      body: sourceId === undefined ? {} : { sourceId },
+      schema: typed<StartExtractionResult>(),
+    }),
+  getRun: (id: string, runId: string) =>
+    apiRequest(`/missions/${id}/runs/${runId}`, { schema: typed<RunDto>() }),
+  listSources: (id: string) =>
+    apiRequest(`/missions/${id}/sources`, { schema: typed<SourceDto[]>() }),
+  uploadDocument: (id: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return apiRequest(`/missions/${id}/sources/documents`, {
+      method: 'POST',
+      form,
+      schema: typed<UploadSourceResult>(),
+    });
+  },
+  sourceChunks: (id: string, sourceId: string) =>
+    apiRequest(`/missions/${id}/sources/${sourceId}/chunks`, { schema: typed<ChunkDto[]>() }),
+  chunkView: (
+    id: string,
+    sourceId: string,
+    ordinal: number,
+    highlight?: { charStart: number; charEnd: number },
+  ) =>
+    apiRequest(
+      `/missions/${id}/sources/${sourceId}/chunks/${ordinal}${
+        highlight === undefined
+          ? ''
+          : `?charStart=${highlight.charStart}&charEnd=${highlight.charEnd}`
+      }`,
+      { schema: typed<ChunkViewDto>() },
+    ),
+
+  // Historique des versions (WP-08, WP-13)
+  listVersions: (id: string) =>
+    apiRequest(`/missions/${id}/model/versions`, { schema: typed<VersionSummary[]>() }),
+  modelDiff: (id: string, from: number, to: number) =>
+    apiRequest(`/missions/${id}/model/diff?from=${from}&to=${to}`, { schema: typed<ModelDiff>() }),
+  modelAt: (id: string, version: number) =>
+    apiRequest(`/missions/${id}/model?version=${version}`, {
+      schema: typed<{ version: number; model: BusinessModel }>(),
+    }),
+  rollback: (id: string, toVersion: number) =>
+    apiRequest(`/missions/${id}/model/rollback`, {
+      method: 'POST',
+      body: { toVersion },
+      schema: typed<CommitResult>(),
     }),
 };
