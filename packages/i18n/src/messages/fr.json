@@ -150,7 +150,8 @@
       "adminUsers": "Utilisateurs",
       "adminClients": "Clients",
       "adminAi": "Fournisseur IA",
-      "analysis": "Analyse"
+      "analysis": "Analyse",
+      "deliverables": "Livrables"
     },
     "mode": {
       "label": "Mode d’affichage",
@@ -177,7 +178,8 @@
     "adminClients": "Clients",
     "adminAi": "Fournisseur IA",
     "notFound": "Page introuvable",
-    "missionAnalysis": "Analyse de la mission"
+    "missionAnalysis": "Analyse de la mission",
+    "missionDeliverables": "Livrables de la mission"
   },
   "notFound": {
     "heading": "Page introuvable",
@@ -753,6 +755,284 @@
       "archiveHelp": "Ces hypothèses ne sont plus dans le modèle et ne seront pas reproposées.",
       "rejectedOn": "rejetée le {date}",
       "rejectedReason": "motif : {reason}"
+    },
+    "deliverablesLink": "Voir les 4 livrables"
+  },
+  "exports": {
+    "document": {
+      "title": "Dossier d’analyse",
+      "subtitle": "{mission} · {client}",
+      "slug": "dossier-analyse",
+      "page": "Page ",
+      "pageOf": " sur "
+    },
+    "cover": {
+      "mission": "Mission",
+      "client": "Client",
+      "version": "Version du modèle",
+      "versionValue": "Version {version}",
+      "producedAt": "Date de la version",
+      "content": "Contenu du dossier",
+      "contentValue": "{confirmed} élément(s) confirmé(s) ou validé(s) ; {extracted} élément(s) extrait(s) non confirmé(s)"
+    },
+    "notice": {
+      "noHypothesis": "Ce dossier ne contient aucune hypothèse : seuls figurent les éléments lus dans une source ou confirmés par un consultant.",
+      "extracted": "{count} élément(s) au statut « Extrait » ont été lus dans une source, mais ne sont pas encore confirmés par un consultant. Leur source est citée dans la colonne « Sources » et en annexe.",
+      "sourcesKey": "Dans la colonne « Sources », les repères S1, S2… renvoient à la liste des sources en annexe. Quand aucune source n’est citée, l’origine de l’élément est indiquée."
+    },
+    "status": {
+      "extracted": "Extrait",
+      "confirmed": "Confirmé",
+      "validated": "Validé",
+      "hypothesis": "Hypothèse"
+    },
+    "deliverable": {
+      "business_sheet": "Fiche métier et glossaire",
+      "actors_raci": "Acteurs et matrice RACI",
+      "data_flows": "Dictionnaire de données et flux",
+      "rules_register": "Registre des règles",
+      "annex": "Annexe : sources et références"
+    },
+    "sheet": {
+      "overview": "Présentation",
+      "traits": "Fiche métier",
+      "glossary": "Glossaire",
+      "actors": "Acteurs",
+      "raci": "RACI",
+      "raciActivities": "Activités du RACI",
+      "dataObjects": "Objets de données",
+      "dataFields": "Champs de données",
+      "tools": "Outils",
+      "flows": "Flux",
+      "rules": "Règles",
+      "sources": "Sources",
+      "citations": "Citations"
+    },
+    "caption": {
+      "traits": "Caractéristiques du métier",
+      "glossary": "Glossaire",
+      "actors": "Acteurs",
+      "raci": "Matrice RACI : activités et acteurs",
+      "raciActivities": "Activités de la matrice RACI",
+      "dataObjects": "Objets de données",
+      "dataFields": "Champs des objets de données",
+      "tools": "Outils utilisés",
+      "flows": "Flux d’information entre acteurs",
+      "rules": "Règles métier, contraintes, points de décision, exceptions et dépendances",
+      "sources": "Sources citées",
+      "citations": "Citations par élément"
+    },
+    "empty": {
+      "traits": "Aucune caractéristique du métier n’est confirmée pour le moment.",
+      "glossary": "Aucun terme du glossaire pour le moment.",
+      "actors": "Aucun acteur pour le moment.",
+      "raci": "Aucune responsabilité (réalise, approuve, consulté, informé) n’est encore renseignée.",
+      "raciActivities": "Aucune activité n’est concernée.",
+      "dataObjects": "Aucun objet de données pour le moment.",
+      "dataFields": "Aucun champ de données pour le moment.",
+      "tools": "Aucun outil pour le moment.",
+      "flows": "Aucun flux d’information pour le moment.",
+      "rules": "Aucune règle pour le moment.",
+      "sources": "Aucune source n’est citée.",
+      "citations": "Aucune citation."
+    },
+    "raci": {
+      "activity": "Activité",
+      "legend": "R : réalise · A : approuve · C : est consulté · I : est informé.",
+      "withoutRoles": "{count} activité(s) sans responsabilité renseignée ne figurent pas dans la matrice.",
+      "separator": "/"
+    },
+    "col": {
+      "code": "Code",
+      "facet": "Rubrique",
+      "label": "Libellé",
+      "text": "Texte",
+      "term": "Terme",
+      "definition": "Définition",
+      "synonyms": "Synonymes",
+      "actor": "Acteur",
+      "category": "Catégorie",
+      "responsibilities": "Responsabilités",
+      "stakeholder": "Partie prenante",
+      "activity": "Activité",
+      "level": "Niveau",
+      "responsible": "Responsable",
+      "object": "Objet",
+      "nature": "Nature",
+      "tools": "Outils",
+      "personalData": "Données personnelles",
+      "lifecycle": "Cycle de vie",
+      "field": "Champ",
+      "type": "Type",
+      "required": "Obligatoire",
+      "enumValues": "Valeurs possibles",
+      "reference": "Référence",
+      "description": "Description",
+      "tool": "Outil",
+      "system": "Système",
+      "flow": "Flux",
+      "from": "De",
+      "to": "Vers",
+      "data": "Données échangées",
+      "channel": "Canal",
+      "frequency": "Fréquence",
+      "rule": "Règle",
+      "statement": "Énoncé",
+      "appliesTo": "S’applique à",
+      "dependsOn": "Dépend de",
+      "exception": "Traitement de l’exception",
+      "legal": "Référence légale",
+      "status": "Statut",
+      "sources": "Sources",
+      "tag": "Repère",
+      "source": "Source",
+      "sourceKind": "Type de source",
+      "revision": "Révision",
+      "citedBy": "Éléments qui la citent",
+      "element": "Élément",
+      "where": "Emplacement",
+      "quote": "Citation"
+    },
+    "facet": {
+      "sector": "Secteur",
+      "environment": "Environnement",
+      "specificity": "Spécificité",
+      "summary": "Synthèse",
+      "activity_statement": "Description de l’activité"
+    },
+    "actorCategory": {
+      "internal": "Interne",
+      "external": "Externe",
+      "third_party_system": "Système tiers"
+    },
+    "level": {
+      "macro": "Macroprocessus",
+      "process": "Processus",
+      "task": "Tâche",
+      "step": "Étape"
+    },
+    "dataNature": {
+      "business_object": "Objet métier",
+      "document": "Document",
+      "form": "Formulaire"
+    },
+    "toolNature": {
+      "software": "Logiciel",
+      "spreadsheet": "Tableur",
+      "email": "Courriel",
+      "paper": "Papier",
+      "phone": "Téléphone",
+      "other": "Autre"
+    },
+    "fieldType": {
+      "text": "Texte",
+      "number": "Nombre",
+      "amount": "Montant",
+      "date": "Date",
+      "boolean": "Oui ou non",
+      "enum": "Liste de valeurs",
+      "file": "Fichier",
+      "reference": "Référence"
+    },
+    "channel": {
+      "paper": "Papier",
+      "email": "Courriel",
+      "phone": "Téléphone",
+      "software": "Logiciel",
+      "portal": "Portail",
+      "oral": "Oral",
+      "other": "Autre",
+      "unknown": "Inconnu"
+    },
+    "ruleType": {
+      "business": "Règle de gestion",
+      "constraint": "Contrainte",
+      "decision": "Point de décision",
+      "exception": "Exception",
+      "dependency": "Dépendance"
+    },
+    "circuit": {
+      "reminder": "Relance",
+      "escalation": "Escalade",
+      "deadline": "Échéance",
+      "alert": "Alerte",
+      "other": "Autre"
+    },
+    "sourceKind": {
+      "free_text": "Description du métier",
+      "answer": "Réponse à une question",
+      "document": "Document déposé"
+    },
+    "origin": {
+      "free_text": "Description du métier",
+      "answer": "Réponse à une question",
+      "document": "Document déposé",
+      "interview": "Entretien",
+      "system_log": "Journal système",
+      "ai_knowledge": "Connaissance générale de l’outil",
+      "past_mission": "Mission antérieure",
+      "consultant": "Saisie d’un consultant",
+      "deterministic_rule": "Règle de calcul"
+    },
+    "locator": {
+      "page": "page {page}",
+      "sheet": "feuille {sheet}",
+      "cell": "cellule {cell}",
+      "paragraph": "paragraphe {paragraph}",
+      "chars": "caractères {start} à {end}",
+      "join": ", "
+    },
+    "value": {
+      "yes": "Oui",
+      "no": "Non",
+      "when": "Quand : {text}",
+      "then": "Alors : {text}",
+      "otherwise": "Sinon : {text}",
+      "unknownSource": "Source indisponible",
+      "ellipsis": "…",
+      "circuitLine": "{circuit} : {description}"
+    }
+  },
+  "deliverables": {
+    "heading": "Livrables de l’étape 1",
+    "intro": "Les quatre livrables du dossier d’analyse, tels qu’ils sont exportés en Word, PDF et Excel. Aucune hypothèse non confirmée n’y figure.",
+    "version": "Version du modèle présentée : {version}",
+    "validatorNotice": "Les livrables de travail sont réservés aux consultants. Le validateur consulte les versions qui lui sont soumises.",
+    "loading": "Chargement des livrables…",
+    "pending": "{count} hypothèse(s) en attente de décision ne figurent pas dans les livrables.",
+    "pendingLink": "Examiner les hypothèses",
+    "sectionsNav": "Les quatre livrables",
+    "backToAnalysis": "Retour à l’analyse",
+    "notices": "À savoir sur ce dossier",
+    "export": {
+      "heading": "Exporter le dossier d’analyse",
+      "help": "Le fichier est produit à partir de la version du modèle présentée ci-dessous ; il porte son empreinte sha256.",
+      "button": "Exporter en {format}",
+      "running": "Production du fichier {format} en cours…",
+      "progressLabel": "Production du fichier {format}",
+      "progressText": "{percent} %",
+      "done": "Le fichier {format} est prêt.",
+      "doneDetail": "Version {version} du modèle.",
+      "failed": "L’export {format} a échoué.",
+      "formats": {
+        "docx": "Word",
+        "pdf": "PDF",
+        "xlsx": "Excel"
+      },
+      "forbidden": "Vous ne pouvez pas produire d’export pour cette mission."
+    },
+    "files": {
+      "heading": "Fichiers produits",
+      "empty": "Aucun fichier produit pour le moment.",
+      "table": "Fichiers produits pour la mission",
+      "format": "Format",
+      "version": "Version du modèle",
+      "date": "Produit le",
+      "sha": "Empreinte sha256",
+      "actions": "Action",
+      "download": "Télécharger",
+      "downloadLabel": "Télécharger le fichier {filename}",
+      "downloadFailed": "Le téléchargement n’a pas pu démarrer."
     }
   }
 }

@@ -4,3 +4,4 @@ export const PACKAGE_NAME = '@processia/test-fixtures' as const;
 export * from './documents.js';
 export * from './pilot.js';
 export * from './pilot-guided.js';
+export * from './pilot-deliverables.js';

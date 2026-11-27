@@ -65,6 +65,9 @@ importers:
       '@processia/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@processia/exports':
+        specifier: workspace:*
+        version: link:../../packages/exports
       '@processia/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -138,9 +141,18 @@ importers:
       '@types/ws':
         specifier: 8.18.2
         version: 8.18.2
+      exceljs:
+        specifier: 4.4.0
+        version: 4.4.0
+      mammoth:
+        specifier: 1.13.0
+        version: 1.13.0
       tsc-watch:
         specifier: 7.2.1
         version: 7.2.1(typescript@5.9.3)
+      unpdf:
+        specifier: 2.2.3
+        version: 2.2.3
       ws:
         specifier: 8.23.0
         version: 8.23.0
@@ -257,9 +269,18 @@ importers:
       '@processia/test-fixtures':
         specifier: workspace:*
         version: link:../packages/test-fixtures
+      exceljs:
+        specifier: 4.4.0
+        version: 4.4.0
+      mammoth:
+        specifier: 1.13.0
+        version: 1.13.0
       otplib:
         specifier: 13.6.0
         version: 13.6.0
+      unpdf:
+        specifier: 2.2.3
+        version: 2.2.3
 
   packages/ai:
     dependencies:
@@ -382,6 +403,9 @@ importers:
       '@processia/bpmn':
         specifier: workspace:*
         version: link:../bpmn
+      '@processia/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@processia/diagnostic':
         specifier: workspace:*
         version: link:../diagnostic
@@ -391,10 +415,40 @@ importers:
       '@processia/model':
         specifier: workspace:*
         version: link:../model
+      docx:
+        specifier: 9.16.1
+        version: 9.16.1
+      exceljs:
+        specifier: 4.4.0
+        version: 4.4.0
+      jszip:
+        specifier: 3.10.2
+        version: 3.10.2
+      playwright-core:
+        specifier: 1.65.1
+        version: 1.65.1
+      react:
+        specifier: 19.3.1
+        version: 19.3.1
+      react-dom:
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
     devDependencies:
       '@processia/config':
         specifier: workspace:*
         version: link:../config
+      '@types/react':
+        specifier: 19.3.3
+        version: 19.3.3
+      '@types/react-dom':
+        specifier: 19.3.0
+        version: 19.3.0(@types/react@19.3.3)
+      mammoth:
+        specifier: 1.13.0
+        version: 1.13.0
+      unpdf:
+        specifier: 2.2.3
+        version: 2.2.3
 
   packages/i18n:
     devDependencies:
@@ -2008,6 +2062,9 @@ packages:
   '@types/node@22.20.7':
     resolution: {integrity: sha512-F/Mcc4pD3YwXQCG50hb8BjB5RmrOere6hge7n2XHf0V8tpkZOVEjwYv9Ql7n0MpMn8Bv7+q12P9w6UHsBm0Sfw==}
 
+  '@types/node@26.6.11':
+    resolution: {integrity: sha512-uUyQ2XLEz+EXh34lmS3GhKrkqn/8FU7KUiKRpk347At2bmnMVWss45yz8b4FG/tUtmV1tV/+TVkITItPROyeeQ==}
+
   '@types/nodemailer@8.0.2':
     resolution: {integrity: sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA==}
 
@@ -2540,6 +2597,10 @@ packages:
 
   dingbat-to-unicode@1.0.2:
     resolution: {integrity: sha512-R0bRerYzy/EZP6QzD3Hkl6JjUDA1Mnn+pd928w0nWjPzihnbAR6dcjGJGiRyznj5E4S1duEKzWrTqw02DPcdzg==}
+
+  docx@9.16.1:
+    resolution: {integrity: sha512-AL6ECiw4TIz74jTk5/DpLCDNyhONelWLyLy35rKAbhihhpX28AuirWStdUsNn9DuTtzxCv+sT7Ta4WBlF7JixQ==}
+    engines: {node: '>=16'}
 
   domify@3.0.0:
     resolution: {integrity: sha512-bs2yO68JDFOm6rKv8f0EnrM2cENduhRkpqOtt/s5l5JBA/eqGBZCzLPmdYoHtJ6utgLGgcBajFsEQbl12pT0lQ==}
@@ -3491,6 +3552,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@6.0.2:
+    resolution: {integrity: sha512-hIvVOb9Qr1p/9CNNLOe0OlWvgx/ziTsVwKN/GDSsuArN2K0wDiafP3s0SWmsm7o2BdnyS8Z9Z64NFBUbn6ziBg==}
+    engines: {node: ^22 || ^24 || >=26}
+    hasBin: true
+
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -4325,6 +4391,9 @@ packages:
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
   unpdf@2.2.3:
     resolution: {integrity: sha512-fDdQW4Wh+fYow4W0/Cid+Hh4ql1hw3RxhpwXCVHrDzwOpcptqww5QejjssClz7l/srO1S8ObdYswXQbtg+bjbg==}
@@ -5854,6 +5923,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@26.6.11':
+    dependencies:
+      undici-types: 8.9.0
+
   '@types/nodemailer@8.0.2':
     dependencies:
       '@types/node': 22.20.7
@@ -6483,6 +6556,12 @@ snapshots:
   dijkstrajs@1.0.3: {}
 
   dingbat-to-unicode@1.0.2: {}
+
+  docx@9.16.1:
+    dependencies:
+      '@types/node': 26.6.11
+      fflate: 0.8.3
+      nanoid: 6.0.2
 
   domify@3.0.0: {}
 
@@ -7532,6 +7611,8 @@ snapshots:
 
   nanoid@3.3.20: {}
 
+  nanoid@6.0.2: {}
+
   natural-compare@1.4.0: {}
 
   negotiator@1.1.0:
@@ -8519,6 +8600,8 @@ snapshots:
   underscore@1.13.8: {}
 
   undici-types@6.21.0: {}
+
+  undici-types@8.9.0: {}
 
   unpdf@2.2.3: {}
 

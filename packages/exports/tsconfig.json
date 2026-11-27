@@ -1,4 +1,4 @@
 {
-  "extends": "@processia/config/tsconfig/library.json",
+  "extends": "@processia/config/tsconfig/react-library.json",
   "include": ["src"]
 }

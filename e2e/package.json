@@ -13,6 +13,9 @@
     "@playwright/test": "1.65.1",
     "@processia/config": "workspace:*",
     "@processia/test-fixtures": "workspace:*",
-    "otplib": "13.6.0"
+    "exceljs": "4.4.0",
+    "mammoth": "1.13.0",
+    "otplib": "13.6.0",
+    "unpdf": "2.2.3"
   }
 }

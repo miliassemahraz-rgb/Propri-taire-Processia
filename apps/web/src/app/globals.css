@@ -581,3 +581,26 @@ p {
 .todo-link--warn .todo-action {
   color: var(--pr-warning);
 }
+
+/* Livrables de l'étape 1 (WP-15) */
+.deliverable-table .pr-table {
+  font-size: 13px;
+  min-width: 720px;
+}
+.deliverable-table .pr-table th,
+.deliverable-table .pr-table td {
+  padding: 8px 12px;
+  vertical-align: top;
+  white-space: pre-line;
+  border-bottom: 1px solid var(--pr-border-soft);
+}
+.deliverable-table .pr-table tbody th {
+  color: var(--pr-text);
+  font-weight: 600;
+  text-align: left;
+  background: var(--pr-bg);
+}
+.break-all {
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}

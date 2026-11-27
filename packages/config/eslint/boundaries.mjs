@@ -19,7 +19,7 @@ export const allowedDependencies = {
   'packages/ingest': ['model', 'test-fixtures'],
   'packages/bpmn': ['model', 'test-fixtures'],
   'packages/diagnostic': ['model', 'test-fixtures'],
-  'packages/exports': ['model', 'bpmn', 'diagnostic', 'i18n', 'test-fixtures'],
+  'packages/exports': ['model', 'bpmn', 'diagnostic', 'i18n', 'contracts', 'test-fixtures'],
   'packages/ui': ['i18n'],
   'packages/test-fixtures': ['model'],
   'apps/web': ['config', 'contracts', 'model', 'ui', 'i18n'],

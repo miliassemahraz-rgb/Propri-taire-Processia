@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { ClientsModule } from './clients/clients.module.js';
 import { CollabModule } from './collab/collab.module.js';
 import { DbModule } from './db/db.module.js';
+import { ExportsModule } from './exports/exports.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { HealthModule } from './health/health.module.js';
 import { MissionsModule } from './missions/missions.module.js';
@@ -27,6 +28,7 @@ import { UsersModule } from './users/users.module.js';
     JobsModule,
     SourcesModule,
     AnalysisModule,
+    ExportsModule,
     HealthModule,
   ],
 })

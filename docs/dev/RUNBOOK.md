@@ -78,6 +78,13 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Avec le fournisseur factice, les scénarios du pilote (`packages/test-fixtures/src/pilot-guided.ts`) répondent : analysez `PILOT_DESCRIPTION`, générez les questions (la première est celle sur l'environnement du métier), puis répondez avec `PILOT_ANSWER_ENVIRONMENT`, `PILOT_ANSWER_SAISIE` ou `PILOT_ANSWER_IMPUTATION` pour obtenir des éléments cités ; les cinq hypothèses viennent de `PILOT_HYPOTHESES`.
 - Tests d'acceptation : `apps/api/src/analysis/guided.int.test.ts` (`pnpm exec vitest run --config vitest.int.config.ts apps/api/src/analysis/guided.int.test.ts`) et `e2e/tests/z-questionnement.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-14-questionnement.png`).
 
+## Livrables et exports (WP-15)
+
+- Page `/missions/<id>/livrables` (lien « Voir les 4 livrables » de l'espace Analyse) : aperçu des 4 livrables et boutons d'export Word, PDF, Excel.
+- Routes (sous `/missions/:id`) : `GET deliverables[?version=]` (aperçu, sans hypothèse) ; `GET exports` ; `POST exports` (corps `{ "format": "docx" | "pdf" | "xlsx" }`, tâche `export.create` du worker, suivi par `GET runs/:runId`) ; `GET exports/:artifactId/download-url` (URL présignée, 5 minutes). Le validateur reçoit 403.
+- Le PDF est rendu par Chromium dans le **worker** : définir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` (ex. `/opt/pw-browsers/chromium`) ou installer le navigateur Playwright ; l'image `apps/api/Dockerfile.worker` l'embarque.
+- Tests : `packages/exports/src/exports.test.ts` (unitaire : DOCX relu avec mammoth, XLSX avec exceljs), `packages/exports/src/pdf.int.test.ts` et `apps/api/src/exports/exports.int.test.ts` (Chromium et `pnpm services:up` requis), `e2e/tests/z-livrables.spec.ts`. `WP15_SAMPLES_DIR=<dossier>` écrit les échantillons ; `E2E_SCREENSHOT=1` régénère `docs/wp/WP-15-livrables.png`.
+
 ## Réinitialiser
 
 ```bash
@@ -100,6 +107,7 @@ Le schéma de référence est `packages/config/src/env.ts` ; `.env.example` en d
 | `SESSION_SECRET`, `COLLAB_JWT_SECRET`                          | secrets (32 caractères minimum), WP-05 et WP-10                                    |
 | `MASTER_KEY`                                                   | clé de chiffrement des clés API des fournisseurs IA (32 caractères minimum), WP-06 |
 | `AI_PROVIDER`, `ANTHROPIC_API_KEY`                             | fournisseur IA (`fake` par défaut)                                                 |
+| `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`                          | Chromium du rendu PDF du worker (optionnelle, WP-15)                               |
 | `AI_PROVIDER_OVERRIDE`, `AI_RECORD`, `AI_RECORDINGS_DIR`       | force le factice ; mode enregistrement ; dossier des enregistrements (WP-09)       |
 | `AI_PRICE_TABLE`, `AI_BASE_URL`                                | table de prix JSON (estimation du coût) ; URL de base du fournisseur (tests)       |
 

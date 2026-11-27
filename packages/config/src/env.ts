@@ -65,6 +65,9 @@ export const envSchema = z.object({
   AI_BASE_URL: z.string().url().optional(),
   /** Table de prix JSON (euros par million de jetons) pour l'estimation du coût. */
   AI_PRICE_TABLE: z.string().min(2).optional(),
+
+  // Export PDF (WP-15) : Chromium du worker. Absent : celui que Playwright a installé.
+  PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
