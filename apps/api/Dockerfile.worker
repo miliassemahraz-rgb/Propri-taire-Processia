@@ -1,0 +1,12 @@
+# Image du worker de tâches (pg-boss) avec Chromium pour l'export PDF (WP-15, ADR 0023).
+# Contexte de build : la racine du dépôt. Non testée en CI (WP-25 la durcira).
+FROM mcr.microsoft.com/playwright:v1.65.1-noble
+RUN corepack enable
+WORKDIR /workspace
+
+COPY . .
+RUN pnpm install --frozen-lockfile \
+ && pnpm turbo run build --filter=@processia/api
+
+# Chromium est fourni par l'image de base (PLAYWRIGHT_BROWSERS_PATH) : aucune variable à poser.
+CMD ["pnpm", "--filter", "@processia/api", "start:worker"]

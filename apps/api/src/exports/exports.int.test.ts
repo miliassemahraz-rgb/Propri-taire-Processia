@@ -14,7 +14,11 @@ import { resetTestDatabase, resolveDbUrls, SEED_IDS, seedDevelopment } from '@pr
 import { documentTables, sha256Hex } from '@processia/exports';
 import { messages } from '@processia/i18n';
 import type { BusinessModel, Element } from '@processia/model';
-import { PILOT_DESCRIPTION, PILOT_HYPOTHESES } from '@processia/test-fixtures';
+import {
+  PILOT_DESCRIPTION,
+  PILOT_HYPOTHESES,
+  pilotDeliverablesChangeSet,
+} from '@processia/test-fixtures';
 import ExcelJS from 'exceljs';
 import mammoth from 'mammoth';
 import pg from 'pg';
@@ -155,113 +159,13 @@ async function exportAs(
 /** Éléments confirmés par le consultant (saisie directe) : données, flux, règles, RACI. */
 async function enrichModel(): Promise<void> {
   const { version, model } = await head();
-  const id = (label: string): string => byLabel(model, label).id;
-  const stamp = {
-    provenance: {
-      origin: 'consultant',
-      refs: [],
-      author: { type: 'user', userId: SEED_IDS.consultantA },
-      at: NOW,
-    },
-    status: { value: 'confirmed', decidedBy: SEED_IDS.consultantA, decidedAt: NOW },
-  };
-  const meta = { createdInVersion: 0, updatedInVersion: 0 };
-  const dossier = {
-    ...stamp,
-    id: 'tmp:1',
-    code: 'DON-01',
-    label: 'Dossier client',
-    meta,
-    kind: 'data_object',
-    nature: 'business_object',
-    toolIds: [id('Logiciel comptable')],
-    personalData: true,
-    lifecycleStates: ['Ouvert', 'En cours', 'Clôturé'],
-    fields: [
-      {
-        ...stamp,
-        id: '01900000-0000-7000-8000-0000000000f1',
-        name: 'Raison sociale',
-        type: 'text',
-        required: true,
-      },
-      {
-        ...stamp,
-        id: '01900000-0000-7000-8000-0000000000f2',
-        name: 'Régime de TVA',
-        type: 'enum',
-        enumValues: ['Réel normal', 'Réel simplifié', 'Franchise'],
-      },
-    ],
-  };
-  const flow = {
-    ...stamp,
-    id: 'tmp:4',
-    code: 'FLX-01',
-    label: 'Transmission des pièces',
-    meta,
-    kind: 'information_flow',
-    fromActorId: id('Client du cabinet'),
-    toActorId: id('Collaborateur comptable'),
-    dataObjectIds: ['tmp:1'],
-    channel: 'portal',
-    activityId: id('Collecte documentaire'),
-    frequency: 'chaque mois',
-  };
-  const decision = {
-    ...stamp,
-    id: 'tmp:5',
-    code: 'RG-001',
-    label: 'Relance des pièces manquantes',
-    meta,
-    kind: 'rule',
-    type: 'decision',
-    statement: {
-      text: 'Une pièce manquante est relancée.',
-      when: 'La pièce n’est pas reçue sous 7 jours',
-      then: 'Envoyer une relance au client',
-      otherwise: 'Poursuivre la saisie',
-    },
-    appliesTo: [id('Collecte documentaire')],
-  };
-  const exception = {
-    ...stamp,
-    id: 'tmp:6',
-    code: 'RG-002',
-    label: 'Client injoignable',
-    meta,
-    kind: 'rule',
-    type: 'exception',
-    statement: { text: 'Après trois relances sans réponse, le dossier est escaladé.' },
-    appliesTo: [id('Collecte documentaire')],
-    dependsOn: ['tmp:5'],
-    exceptionHandling: {
-      circuit: 'escalation',
-      description: 'Escalade au chef de mission',
-    },
-    legalReference: 'Code de déontologie, article 12',
-  };
   const res = await consultantA.call('POST', `${base}/model/changes`, {
-    changeSet: {
+    changeSet: pilotDeliverablesChangeSet({
       baseVersion: version,
-      cause: 'dialogue_edit',
-      summary: 'Données, flux, règles et RACI saisis par le consultant',
-      ops: [
-        ...[dossier, flow, decision, exception].map((element) => ({ op: 'add', element })),
-        {
-          op: 'update',
-          id: id('Production comptable'),
-          set: {
-            raci: [
-              { actorId: id('Collaborateur comptable'), role: 'R' },
-              { actorId: id('Expert-comptable'), role: 'A' },
-              { actorId: id('Chef de mission'), role: 'C' },
-              { actorId: id('Client du cabinet'), role: 'I' },
-            ],
-          },
-        },
-      ],
-    },
+      userId: SEED_IDS.consultantA,
+      at: NOW,
+      idOf: (label) => byLabel(model, label).id,
+    }),
   });
   expect(res.status, JSON.stringify(res.body)).toBe(201);
 }

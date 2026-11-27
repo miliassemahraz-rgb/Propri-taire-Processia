@@ -269,9 +269,18 @@ importers:
       '@processia/test-fixtures':
         specifier: workspace:*
         version: link:../packages/test-fixtures
+      exceljs:
+        specifier: 4.4.0
+        version: 4.4.0
+      mammoth:
+        specifier: 1.13.0
+        version: 1.13.0
       otplib:
         specifier: 13.6.0
         version: 13.6.0
+      unpdf:
+        specifier: 2.2.3
+        version: 2.2.3
 
   packages/ai:
     dependencies:

@@ -468,6 +468,8 @@ describe('XLSX (relu avec exceljs)', () => {
   it('est identique d’un rendu à l’autre (empreinte sha256)', async () => {
     const doc = build(modelWithHypotheses());
     const first = await renderXlsx(doc, PRODUCED_AT);
+    // Une seconde d'écart : aucune date du jour ne doit se glisser dans l'archive.
+    await new Promise((resolve) => setTimeout(resolve, 1100));
     const second = await renderXlsx(doc, PRODUCED_AT);
     expect(sha256Hex(first)).toBe(sha256Hex(second));
   });
