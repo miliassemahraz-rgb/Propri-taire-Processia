@@ -1,6 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { Correction, DecisionRequest, DecisionResult } from '@processia/contracts';
-import type { BusinessModel, ChangeSet, Element, ModelOp, StatusActor } from '@processia/model';
+import {
+  planHypothesisRejection,
+  type BusinessModel,
+  type ChangeSet,
+  type Element,
+  type ModelOp,
+  type StatusActor,
+} from '@processia/model';
 import { AuthError } from '../auth/errors.js';
 import { ModelService } from '../model/model.service.js';
 import type { MissionContext } from '../policy/mission-context.js';
@@ -40,7 +47,7 @@ export class DecisionsService {
       try {
         return await ctx.run(async (tx) => {
           const { model } = await this.models.getModel(tx, ctx.missionId);
-          const changeSet = this.buildChangeSet(model, elementId, request);
+          const changeSet = this.buildChangeSet(model, elementId, request, userId);
           const committed = await this.models.commitInTx(tx, ctx.missionId, changeSet, {
             userId,
             actor,
@@ -66,6 +73,7 @@ export class DecisionsService {
     model: BusinessModel,
     elementId: string,
     request: DecisionRequest,
+    userId: string,
   ): ChangeSet {
     const element = model.elements[elementId];
     if (element === undefined) {
@@ -84,25 +92,50 @@ export class DecisionsService {
     const ops: ModelOp[] = [];
     let summary: string;
     switch (request.decision) {
-      case 'accept':
+      case 'accept': {
+        const fieldsOp = this.confirmFields(element, userId);
+        if (fieldsOp !== null) ops.push(fieldsOp);
         ops.push({ op: 'set_status', id: elementId, status: 'confirmed' });
         summary = `Confirmation de ${label}`;
         break;
-      case 'reject':
+      }
+      case 'reject': {
         if (status !== 'hypothesis') {
           throw new AuthError('VALIDATION_ERROR', [
             { path: 'decision', message: 'Seule une hypothèse peut être rejetée.' },
           ]);
         }
-        ops.push({
-          op: 'reject_hypothesis',
-          id: elementId,
-          ...(request.reason === undefined || request.reason === ''
-            ? {}
-            : { reason: request.reason }),
-        });
-        summary = `Rejet de l’hypothèse ${label}`;
+        // Les hypothèses qui ne survivent pas à ce rejet (un flux de séquence dont on rejette un
+        // nœud, par exemple) sont rejetées avec lui ; les références facultatives sont nettoyées.
+        const plan = planHypothesisRejection(model, [elementId]);
+        if (!plan.ok) {
+          throw new AuthError(
+            'VALIDATION_ERROR',
+            plan.blockedBy.map((b) => ({
+              path: 'decision',
+              message: `« ${b.code} ${b.label} » est déjà décidé et référence cet élément.`,
+            })),
+          );
+        }
+        for (const update of plan.updates) {
+          ops.push({
+            op: 'update',
+            id: update.id,
+            set: update.set,
+            ...(update.unset.length === 0 ? {} : { unset: update.unset }),
+          });
+        }
+        const reason =
+          request.reason === undefined || request.reason === '' ? {} : { reason: request.reason };
+        for (const id of plan.reject) {
+          ops.push({ op: 'reject_hypothesis', id, ...(id === elementId ? reason : {}) });
+        }
+        summary =
+          plan.reject.length > 1
+            ? `Rejet de l’hypothèse ${label} et de ${plan.reject.length - 1} élément(s) liés`
+            : `Rejet de l’hypothèse ${label}`;
         break;
+      }
       case 'correct': {
         const { set, unset, previous } = this.applyCorrection(element, request.correction);
         ops.push({
@@ -117,6 +150,26 @@ export class DecisionsService {
       }
     }
     return { baseVersion: model.version, ops, cause: 'hypothesis_decision', summary };
+  }
+
+  /**
+   * Les champs d'un objet de données portent leur propre statut : confirmer l'objet confirme ses
+   * champs encore hypothétiques (sinon la vue des livrables les retirerait). `null` : rien à faire.
+   */
+  confirmFields(element: Element, userId: string): ModelOp | null {
+    if (element.kind !== 'data_object') return null;
+    if (!element.fields.some((f) => f.status.value === 'hypothesis')) return null;
+    return {
+      op: 'update',
+      id: element.id,
+      set: {
+        fields: element.fields.map((f) =>
+          f.status.value === 'hypothesis'
+            ? { ...f, status: { value: 'confirmed', decidedBy: userId } }
+            : f,
+        ),
+      },
+    };
   }
 
   /** Valeurs à écrire et valeurs précédentes (conservées dans `status.correction`). */

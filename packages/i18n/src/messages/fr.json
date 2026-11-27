@@ -80,7 +80,10 @@
     "ALREADY_DECIDED": "Cet élément a déjà été décidé par un autre consultant.",
     "QUESTION_NOT_OPEN": "Cette question a déjà reçu une réponse ou a été passée.",
     "GUIDED_IN_PROGRESS": "Cette opération est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
-    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation du dossier d’analyse par le client."
+    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation du dossier d’analyse par le client.",
+    "FLOW_IN_PROGRESS": "La construction des enchaînements est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
+    "NOTHING_TO_BUILD": "Il n’y a rien à construire : les enchaînements demandés existent déjà.",
+    "NOTHING_TO_DECIDE": "Il n’y a plus d’hypothèse à décider ici."
   },
   "warnings": {
     "CAPABILITY_MISSING": {
@@ -170,7 +173,8 @@
       "adminAi": "Fournisseur IA",
       "analysis": "Analyse",
       "deliverables": "Livrables",
-      "validation": "Validation"
+      "validation": "Validation",
+      "mapping": "Cartographie"
     },
     "mode": {
       "label": "Mode d’affichage",
@@ -219,7 +223,8 @@
     "notFound": "Page introuvable",
     "missionAnalysis": "Analyse de la mission",
     "missionDeliverables": "Livrables de la mission",
-    "missionValidation": "Validation de la mission"
+    "missionValidation": "Validation de la mission",
+    "missionMapping": "Cartographie de la mission"
   },
   "notFound": {
     "heading": "Page introuvable",
@@ -1243,6 +1248,61 @@
     },
     "gate": {
       "locked": "La cartographie s’ouvre après la validation du dossier d’analyse."
+    }
+  },
+  "cartography": {
+    "heading": "Cartographie",
+    "intro": "Construisez l’enchaînement de chaque processus (niveau 2), puis le détail des tâches (niveau 3). Tout ce que l’outil propose est une hypothèse : c’est vous qui décidez.",
+    "locked": "La cartographie s’ouvre quand le client a validé le dossier d’analyse.",
+    "lockedLink": "Ouvrir la validation",
+    "validatorNotice": "La cartographie est réservée à l’équipe du cabinet.",
+    "loading": "Chargement de la cartographie…",
+    "summary": "{built} processus sur {total} ont un enchaînement.",
+    "buildAll": "Construire tous les enchaînements",
+    "buildAllHelp": "Un seul lot à la fois : les processus sont traités un par un.",
+    "progress": "Construction des enchaînements",
+    "progressText": "{percent} %",
+    "reviewLink": "Examiner les hypothèses une par une",
+    "started": "Construction lancée",
+    "done": "Enchaînements prêts à examiner",
+    "doneVersion": "Dernière version enregistrée : {version}.",
+    "failed": "La construction a échoué",
+    "failedDetail": "Aucun enchaînement n’a été écrit ; le modèle est inchangé.",
+    "partial": "Certains processus n’ont pas pu être construits",
+    "failuresHeading": "Processus non construits lors du dernier lot",
+    "failureItem": "{code} : {error}",
+    "tableCaption": "Processus du macroprocessus {macro} et état de leurs enchaînements",
+    "columns": {
+      "process": "Processus",
+      "flow": "Enchaînement",
+      "tasks": "Niveau 3 des tâches",
+      "actions": "Actions"
+    },
+    "flow": {
+      "none": "À construire",
+      "built": "Construit : {count} éléments",
+      "pending": "{count} à examiner",
+      "reviewed": "Tout est examiné"
+    },
+    "build": "Construire",
+    "buildLabel": "Construire l’enchaînement de {label}",
+    "accept": "Tout confirmer",
+    "acceptLabel": "Tout confirmer : hypothèses de {label}",
+    "reject": "Tout écarter",
+    "rejectLabel": "Tout écarter : hypothèses de {label}",
+    "rejectConfirm": "Écarter toutes les hypothèses en attente de {label} ? Elles sont retirées du modèle et archivées ; vous pourrez reconstruire l’enchaînement.",
+    "rejectYes": "Oui, tout écarter",
+    "cancel": "Annuler",
+    "decided": "Hypothèses confirmées : {count}.",
+    "rejected": "Hypothèses écartées : {count}.",
+    "task": {
+      "none": "Aucune tâche",
+      "detail": "Détailler",
+      "detailLabel": "Détailler la tâche {label} (niveau 3)",
+      "built": "Niveau 3 construit",
+      "pending": "{count} à examiner",
+      "accept": "Confirmer le niveau 3",
+      "acceptLabel": "Confirmer le niveau 3 de la tâche {label}"
     }
   }
 }

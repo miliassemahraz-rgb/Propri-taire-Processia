@@ -8,6 +8,7 @@ import { DbModule } from './db/db.module.js';
 import { ExportsModule } from './exports/exports.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { HealthModule } from './health/health.module.js';
+import { MappingModule } from './mapping/mapping.module.js';
 import { MissionsModule } from './missions/missions.module.js';
 import { ModelModule } from './model/model.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
@@ -33,6 +34,7 @@ import { ValidationModule } from './validation/validation.module.js';
     ExportsModule,
     NotificationsModule,
     ValidationModule,
+    MappingModule,
     HealthModule,
   ],
 })
