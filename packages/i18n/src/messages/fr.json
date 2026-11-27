@@ -721,6 +721,7 @@
       "summaryDone": "Synthèse proposée",
       "summaryFailed": "La synthèse du métier a échoué",
       "none": "Aucune hypothèse en attente.",
+      "noModel": "Aucune hypothèse tant que le modèle est vide.",
       "why": "Pourquoi",
       "noRationale": "Aucune justification fournie.",
       "seeElement": "Voir la fiche",

@@ -309,7 +309,7 @@ export function HypothesesSection({ missionId, model, canEdit, onDecide, onSelec
       </p>
 
       {model === null ? (
-        <p className="muted">{t('analysis.concepts.noModel')}</p>
+        <p className="muted">{t('analysis.hypotheses.noModel')}</p>
       ) : hypotheses.length === 0 ? (
         <p className="muted" data-testid="hypotheses-empty">
           {t('analysis.hypotheses.none')}
