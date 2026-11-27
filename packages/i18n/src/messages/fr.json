@@ -58,7 +58,8 @@
     "FILE_TOO_LARGE": "Le fichier dépasse la taille maximale de 50 Mo.",
     "UNSUPPORTED_FILE_TYPE": "Ce type de fichier n’est pas pris en charge, ou son contenu ne correspond pas à son extension.",
     "NETWORK": "Le serveur est injoignable. Vérifiez votre connexion et réessayez.",
-    "UNKNOWN": "Une erreur inattendue est survenue. Réessayez."
+    "UNKNOWN": "Une erreur inattendue est survenue. Réessayez.",
+    "ANALYSIS_IN_PROGRESS": "Une analyse est déjà en cours pour cette mission. Patientez jusqu’à sa fin."
   },
   "warnings": {
     "CAPABILITY_MISSING": {
@@ -253,7 +254,11 @@
       "head": "Version de tête du modèle : {version}",
       "client": "Identifiant du client : {id}"
     },
-    "heading": "Tableau de bord"
+    "heading": "Tableau de bord",
+    "discrepancies": "{count} contradiction(s) entre deux sources",
+    "actionReview": "Examiner",
+    "actionAnswer": "Répondre",
+    "actionSee": "Voir"
   },
   "team": {
     "heading": "Équipe de la mission",
@@ -415,6 +420,240 @@
     "model": {
       "version": "Version du modèle partagé : {version}",
       "none": "Aucune version du modèle pour le moment."
+    }
+  },
+  "analysis": {
+    "heading": "Analyse du métier",
+    "intro": "Décrivez le métier du client, déposez ses documents, puis lancez l’analyse : les éléments extraits apparaissent avec leur source. Rien n’est confirmé sans votre décision.",
+    "validatorNotice": "L’espace d’analyse n’est pas ouvert à votre rôle : vous examinez les documents qui vous sont soumis.",
+    "analyze": {
+      "button": "Analyser",
+      "running": "Analyse en cours…",
+      "help": "« Analyser » enregistre le texte tel qu’il est maintenant (il devient une source citée), puis en extrait les éléments du modèle.",
+      "progressLabel": "Progression de l’analyse",
+      "progressText": "{percent} %",
+      "otherRunning": "Une analyse est en cours pour cette mission.",
+      "emptyDescription": "La description du métier est vide : saisissez du texte avant d’analyser.",
+      "done": "Analyse terminée",
+      "doneVersion": "Le modèle est maintenant à la version {version}.",
+      "doneNoChange": "Le modèle était déjà à jour : aucune nouvelle version.",
+      "failed": "L’analyse a échoué",
+      "failedDetail": "Le modèle n’a pas été modifié. Vous pouvez relancer l’analyse.",
+      "readOnly": "Vous pouvez consulter l’analyse, mais pas la lancer."
+    },
+    "sources": {
+      "heading": "Sources",
+      "empty": "Aucune source pour le moment. « Analyser » en crée une à partir de la description du métier.",
+      "list": "Sources de la mission",
+      "descriptionTitle": "Description du métier, révision {revision}",
+      "elementCount": "{count} élément(s) citent cette source",
+      "noElement": "Aucun élément ne cite encore cette source",
+      "status": {
+        "pending": "Lecture du texte en cours…",
+        "extracted": "Texte lu, prêt à analyser",
+        "unreadable": "Illisible : aucun fournisseur IA n’est configuré pour lire ce type de document",
+        "failed": "Échec de la lecture du texte"
+      },
+      "analyzeSource": "Analyser ce document",
+      "analyzeSourceLabel": "Analyser ce document : {title}",
+      "open": "Voir le texte",
+      "openLabel": "Voir le texte de {title}",
+      "upload": "Déposer des documents",
+      "uploadLabel": "Fichiers à déposer",
+      "uploadHelp": "PDF, DOCX, XLSX, PNG, JPEG, TXT ou MD, 50 Mo au plus.",
+      "uploaded": "Document déposé",
+      "uploadedDetail": "{name} : lecture du texte en cours.",
+      "uploadFailed": "Dépôt impossible : {name}",
+      "uploadFailedDetail": "{name} : {reason}"
+    },
+    "contradiction": {
+      "title": "Contradiction entre sources",
+      "claims": "{first} ; {second}",
+      "see": "Voir l’écart",
+      "more": "{count} autre(s) écart(s) ouvert(s)."
+    },
+    "concepts": {
+      "heading": "Éléments du modèle",
+      "tabs": "Concepts du modèle",
+      "discrepancies": "Écarts",
+      "tabWithCount": "{name} ({count})",
+      "empty": "Aucun élément de ce type pour le moment.",
+      "noModel": "Le modèle est vide pour le moment. Lancez « Analyser » pour en extraire les premiers éléments.",
+      "listLabel": "Éléments : {name}",
+      "filter": "Statut",
+      "filterAll": "Tous les statuts",
+      "noMatch": "Aucun élément ne correspond à ce statut.",
+      "completeness": "Complétude : {percent} %",
+      "completenessBar": "Complétude du concept {name}",
+      "missingHeading": "Ce qui manque",
+      "nothingMissing": "Rien ne manque pour ce concept.",
+      "moreGaps": "et {count} autre(s)"
+    },
+    "status": {
+      "extracted": "Extrait",
+      "hypothesis": "Hypothèse",
+      "confirmed": "Confirmé",
+      "validated": "Validé"
+    },
+    "statusIcon": {
+      "extracted": "◆",
+      "hypothesis": "?",
+      "confirmed": "✓",
+      "validated": "★"
+    },
+    "statusHint": {
+      "extracted": "Lu dans une source, pas encore confirmé par vous",
+      "hypothesis": "Proposé par l’outil, à examiner : n’entre dans aucun livrable",
+      "confirmed": "Confirmé par un consultant",
+      "validated": "Validé par le client"
+    },
+    "kind": {
+      "business_trait": "Trait du métier",
+      "glossary_term": "Terme du glossaire",
+      "actor": "Acteur",
+      "activity": "Activité",
+      "event": "Événement",
+      "gateway": "Point de décision",
+      "sequence_flow": "Enchaînement",
+      "process_link": "Lien entre processus",
+      "data_object": "Objet de données",
+      "tool": "Outil",
+      "information_flow": "Flux d’information",
+      "rule": "Règle",
+      "indicator": "Indicateur",
+      "discrepancy": "Écart entre sources",
+      "finding": "Constat",
+      "optimisation": "Optimisation"
+    },
+    "origin": {
+      "free_text": "Description du métier",
+      "answer": "Réponse à une question",
+      "document": "Document déposé",
+      "interview": "Entretien",
+      "system_log": "Journal système",
+      "ai_knowledge": "Connaissance générale de l’outil",
+      "past_mission": "Mission antérieure",
+      "consultant": "Saisie d’un consultant",
+      "deterministic_rule": "Règle de calcul"
+    },
+    "fiche": {
+      "heading": "Fiche de l’élément",
+      "none": "Choisissez un élément dans la liste pour voir sa fiche.",
+      "code": "Code",
+      "kind": "Nature",
+      "status": "Statut",
+      "origin": "Origine",
+      "confidence": "Confiance : {percent} %",
+      "rationale": "Justification",
+      "description": "Description",
+      "citations": "Citations",
+      "noCitation": "Aucune citation : cet élément ne vient pas d’un passage de source.",
+      "citationOpen": "Voir dans la source",
+      "citationOpenLabel": "Voir dans la source la citation « {quote} »",
+      "decided": "Décidé le {date}",
+      "elements": "Éléments concernés",
+      "expertId": "Identifiant : {id}",
+      "expertVersions": "Créé à la version {created}, modifié à la version {updated}"
+    },
+    "field": {
+      "level": "Niveau",
+      "scope": "Périmètre",
+      "responsible": "Responsable",
+      "category": "Catégorie",
+      "responsibilities": "Responsabilités",
+      "facet": "Rubrique",
+      "text": "Texte",
+      "definition": "Définition",
+      "statement": "Énoncé",
+      "side": "Version {number}"
+    },
+    "level": {
+      "macro": "Macroprocessus",
+      "process": "Processus",
+      "task": "Tâche",
+      "step": "Étape"
+    },
+    "scope": {
+      "mapping_only": "Cartographie seule",
+      "application": "Cartographie et application"
+    },
+    "actorCategory": {
+      "internal": "Interne",
+      "external": "Externe",
+      "third_party_system": "Système tiers"
+    },
+    "facet": {
+      "sector": "Secteur",
+      "environment": "Environnement",
+      "specificity": "Spécificité",
+      "summary": "Synthèse",
+      "activity_statement": "Description de l’activité"
+    },
+    "discrepancy": {
+      "open": "Ouvert",
+      "resolved": "Résolu",
+      "resolution": "Résolution : {note}"
+    },
+    "viewer": {
+      "title": "Source : {title}",
+      "loading": "Chargement du passage…",
+      "position": "Passage {number}",
+      "previous": "Passage précédent",
+      "next": "Passage suivant",
+      "page": "Page {number}",
+      "paragraph": "Paragraphe {number}",
+      "sheet": "Feuille {name}",
+      "line": "Ligne {number}",
+      "text": "Texte du passage",
+      "notFound": "Ce passage de la source est introuvable."
+    },
+    "history": {
+      "heading": "Historique des versions",
+      "hint": "Chaque modification crée une version ; un retour arrière crée aussi une nouvelle version.",
+      "empty": "Aucune version pour le moment.",
+      "list": "Versions du modèle",
+      "version": "Version {version}",
+      "current": "version actuelle",
+      "by": "par {name}",
+      "byYou": "par vous",
+      "byTool": "par l’outil",
+      "cause": {
+        "extraction": "Analyse des sources",
+        "answer": "Réponse à une question",
+        "hypotheses": "Hypothèses proposées",
+        "hypothesis_decision": "Décision sur une hypothèse",
+        "process_flow": "Enchaînement des processus",
+        "dialogue_edit": "Modification",
+        "diagnostic": "Diagnostic",
+        "optimisation": "Optimisation",
+        "validation": "Validation",
+        "rollback": "Retour arrière",
+        "layout": "Mise en page",
+        "to_be_composition": "Composition du TO-BE"
+      },
+      "showChanges": "Voir les changements",
+      "hideChanges": "Masquer les changements",
+      "changes": "Changements de la version {version}",
+      "added": "{count} ajouté(s)",
+      "modified": "{count} modifié(s)",
+      "removed": "{count} retiré(s)",
+      "noChange": "Aucun changement d’élément.",
+      "loadingChanges": "Chargement des changements…",
+      "addedList": "Ajoutés",
+      "modifiedList": "Modifiés",
+      "removedList": "Retirés",
+      "rollback": "Revenir à cette version",
+      "rollbackLabel": "Revenir à cette version, version {version}",
+      "rollbackTitle": "Revenir à la version {version} ?",
+      "rollbackBody": "Une nouvelle version est créée avec le contenu de la version {version}. Aucune version n’est supprimée : vous pourrez revenir en avant.",
+      "rollbackConfirm": "Créer la version de retour",
+      "rolledBack": "Retour arrière effectué",
+      "rolledBackDetail": "La version {version} reprend le contenu de la version {from}.",
+      "moreElements": "et {count} autre(s)"
+    },
+    "view": {
+      "tab": "Analyse, {tab}",
+      "element": "Analyse, {tab}, {element}"
     }
   }
 }

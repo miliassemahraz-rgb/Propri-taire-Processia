@@ -53,3 +53,17 @@ export interface ModelVersionMessage {
 
 /** Messages sans état diffusés sur le document `model` (les autres types arriveront avec leurs WP). */
 export type CollabStatelessMessage = ModelVersionMessage | RunProgressMessage;
+
+/**
+ * Messages sans état du document `workspace` : « enregistrer maintenant ». Le texte est regroupé
+ * avant d'être écrit en base (2 s, au plus 10 s) ; « Analyser » demande l'écriture immédiate puis
+ * attend `workspace.flushed` avant de figer la description côté API.
+ */
+export interface WorkspaceFlushRequest {
+  type: 'workspace.flush';
+  id: string;
+}
+export interface WorkspaceFlushedMessage {
+  type: 'workspace.flushed';
+  id: string;
+}

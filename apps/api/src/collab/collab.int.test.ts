@@ -117,7 +117,7 @@ interface Connected {
 }
 
 /** Client Yjs Node connecté à un document. */
-function connect(name: string, token: string): Connected {
+function connect(name: string, token: string, url: string = collabUrl): Connected {
   const doc = new Y.Doc();
   const messages: CollabStatelessMessage[] = [];
   let scope: string | null = null;
@@ -125,7 +125,7 @@ function connect(name: string, token: string): Connected {
   let resolve!: () => void;
   const ready = new Promise<void>((r) => (resolve = r));
   const socket = new HocuspocusProviderWebsocket({
-    url: collabUrl,
+    url,
     WebSocketPolyfill: WebSocket as unknown as typeof globalThis.WebSocket,
   });
   const provider = new HocuspocusProvider({
@@ -378,6 +378,47 @@ describe('WP-10 : coédition', () => {
       const v = connect(name, forged);
       await v.ready;
       expect(v.failed(), name).toBe(true);
+    }
+  });
+
+  it('6. workspace.flush écrit le texte en base sans attendre le regroupement et accuse réception', async () => {
+    // Serveur au regroupement très long : seule la demande explicite peut écrire dans le délai du test.
+    const slow = createCollabServer({
+      port: 0,
+      address: '127.0.0.1',
+      quiet: true,
+      db: collabDb,
+      jwtSecret: SECRET,
+      debounceMs: 60_000,
+      maxDebounceMs: 120_000,
+    });
+    await slow.listen();
+    try {
+      const url = slow.httpURL.replace('http', 'ws');
+      const a = connect(workspaceDocName(MISSION), await tokenOf(consultantA), url);
+      await a.ready;
+      const paragraph = new Y.XmlElement('paragraph');
+      paragraph.insert(0, [new Y.XmlText('Texte à enregistrer tout de suite FLUSH-WP13')]);
+      a.doc.getXmlFragment('description').insert(0, [paragraph]);
+
+      const stored = async (): Promise<string> => {
+        const r = await admin.query('select state from yjs_documents where name = $1', [
+          workspaceDocName(MISSION),
+        ]);
+        return r.rows[0] === undefined ? '' : descriptionTextFromState(r.rows[0].state);
+      };
+      expect(await stored()).not.toContain('FLUSH-WP13');
+
+      const flushed: unknown[] = [];
+      a.provider.on('stateless', ({ payload }: { payload: string }) =>
+        flushed.push(JSON.parse(payload)),
+      );
+      a.provider.sendStateless(JSON.stringify({ type: 'workspace.flush', id: 'abc' }));
+      await until(() => flushed.length > 0);
+      expect(flushed[0]).toEqual({ type: 'workspace.flushed', id: 'abc' });
+      expect(await stored()).toContain('FLUSH-WP13');
+    } finally {
+      await slow.destroy();
     }
   });
 });

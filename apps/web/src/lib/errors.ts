@@ -32,6 +32,13 @@ export const ERROR_MESSAGE_KEYS: Record<ClientErrorCode, MessageKey> = {
 
 /** Message affichable pour une erreur quelconque (jamais le texte brut du serveur). */
 export function errorMessage(error: unknown): string {
-  if (error instanceof ApiRequestError) return t(ERROR_MESSAGE_KEYS[error.code]);
+  if (error instanceof ApiRequestError) {
+    // Une analyse est déjà en cours : le conflit a une cause précise (WP-12).
+    const reason = (error.details as { reason?: unknown } | undefined)?.reason;
+    if (error.code === 'CONFLICT' && reason === 'ANALYSIS_IN_PROGRESS') {
+      return t('errors.ANALYSIS_IN_PROGRESS');
+    }
+    return t(ERROR_MESSAGE_KEYS[error.code]);
+  }
   return t('errors.UNKNOWN');
 }

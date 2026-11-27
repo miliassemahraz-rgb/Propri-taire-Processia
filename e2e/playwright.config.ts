@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig, devices } from '@playwright/test';
+import { testDbEnv } from './test-env.js';
 
 const baseURL = process.env['E2E_BASE_URL'] ?? 'http://localhost:3000';
 // En CI, Chromium est installé par `playwright install`. Sur un poste où il est déjà présent,
@@ -7,18 +8,9 @@ const baseURL = process.env['E2E_BASE_URL'] ?? 'http://localhost:3000';
 const executablePath = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'];
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-/**
- * Les parcours E2E tournent contre la base de test (`processia_test`), jamais contre la base de
- * développement : l'API démarrée ici et l'aide `dev:totp` la visent (voir `tests/support.ts`).
- */
-const testDbEnv = {
-  DATABASE_URL: 'postgres://processia:processia@localhost:5432/processia_test',
-  DATABASE_OWNER_URL: 'postgres://processia_owner:processia_owner@localhost:5432/processia_test',
-  DATABASE_APP_URL: 'postgres://processia_app:processia_app@localhost:5432/processia_test',
-};
-
 export default defineConfig({
   testDir: './tests',
+  globalSetup: './global-setup.ts',
   // Les parcours partagent la base de test et ses comptes : un seul travailleur.
   fullyParallel: false,
   workers: 1,
