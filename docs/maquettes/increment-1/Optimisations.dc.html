@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Diagnostic et optimisations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;font-family:Inter,system-ui,sans-serif;color:#1A1D23}
+a{color:#1F4FBF}a:hover{color:#163A8F}
+.nav a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:#3B414B;text-decoration:none;font-size:14px;font-weight:500}
+.nav a:hover{background:#ECEFF4;color:#1A1D23}
+.nav a.on{background:#E8EEFB;color:#163A8F}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;align-items:stretch">
+  <nav class="nav" aria-label="Navigation principale" style="flex:1 1 220px;max-width:260px;box-sizing:border-box;padding:24px 16px;background:#FFFFFF;border-right:1px solid #DDE1E8;display:flex;flex-direction:column;gap:4px">
+    <div style="font-family:'Space Grotesk',Inter,sans-serif;font-size:22px;font-weight:600;padding:0 12px 20px">Processia</div>
+    <a href="Main.dc.html">Missions</a>
+    <a href="Analyse.dc.html">Analyse</a>
+    <a href="Cartographie.dc.html">Cartographie</a>
+    <a class="on" href="Optimisations.dc.html" aria-current="page">Diagnostic et optimisations</a>
+    <a href="Validation.dc.html">Portail du validateur</a>
+  </nav>
+  <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:32px 40px;display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+      <div>
+        <p style="margin:0;font-size:13px;color:#5A6270">AS-IS validé par le client · Étape 2</p>
+        <h1 style="margin:4px 0 0;font-family:'Space Grotesk',Inter,sans-serif;font-size:30px;font-weight:600">Diagnostic et optimisations</h1>
+      </div>
+      <a href="Validation.dc.html" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:8px;background:#1F4FBF;color:#FFFFFF;font-weight:600;font-size:14px;text-decoration:none">Soumettre le TO-BE au validateur</a>
+    </div>
+
+    <section aria-labelledby="t-diag" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <h2 id="t-diag" style="position:absolute;left:-9999px">Constats par famille</h2>
+      <div style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:16px"><div style="font-size:13px;color:#5A6270">Gaspillages</div><div style="font-size:26px;font-weight:600;margin-top:4px">4 constats</div><div style="font-size:13px;margin-top:6px">dont ressaisie des pièces dans le logiciel comptable</div></div>
+      <div style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:16px"><div style="font-size:13px;color:#5A6270">Flux et délais</div><div style="font-size:26px;font-weight:600;margin-top:4px">3 constats</div><div style="font-size:13px;margin-top:6px">dont pièces transmises par email, sans suivi</div></div>
+      <div style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:16px"><div style="font-size:13px;color:#5A6270">Organisation</div><div style="font-size:26px;font-weight:600;margin-top:4px">2 constats</div><div style="font-size:13px;margin-top:6px">dont relances dépendant d'une seule personne</div></div>
+      <div style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:16px"><div style="font-size:13px;color:#5A6270">Risques et conformité</div><div style="font-size:26px;font-weight:600;margin-top:4px">2 constats</div><div style="font-size:13px;margin-top:6px">dont validation des liasses non tracée</div></div>
+    </section>
+
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+      <section aria-labelledby="t-mx" style="flex:1 1 480px;min-width:0;background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:20px">
+        <h2 id="t-mx" style="margin:0 0 4px;font-size:16px">Matrice gain × effort</h2>
+        <p style="margin:0 0 16px;font-size:13px;color:#5A6270">Gains rapides en haut à gauche : gain élevé, effort faible. Cliquez sur un point.</p>
+        <div style="display:flex;gap:8px">
+          <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:12px;color:#5A6270;text-align:center">Gain estimé →</div>
+          <div style="flex:1 1 auto">
+            <div style="position:relative;height:340px;border-left:1px solid #9AA3B2;border-bottom:1px solid #9AA3B2;background:linear-gradient(#FFFFFF,#FFFFFF)">
+              <div style="position:absolute;left:0;top:0;width:50%;height:50%;background:#EEF6F0"></div>
+              <div style="position:absolute;left:8px;top:8px;font-size:12px;font-weight:600;color:#1E4D2B">Gains rapides</div>
+              <div style="position:absolute;left:50%;top:0;bottom:0;border-left:1px dashed #C9CFD9"></div>
+              <div style="position:absolute;top:50%;left:0;right:0;border-top:1px dashed #C9CFD9"></div>
+              <sc-for list="{{opts}}" as="o" hint-placeholder-count="6">
+                <button type="button" onClick="{{o.pick}}" aria-label="{{o.aria}}" style="position:absolute;left:{{o.x}};top:{{o.y}};width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:2px solid #1F4FBF;background:{{o.fill}};color:{{o.ink}};font:600 13px Inter,sans-serif;cursor:pointer">{{o.id}}</button>
+              </sc-for>
+            </div>
+            <div style="text-align:center;font-size:12px;color:#5A6270;margin-top:6px">Effort de mise en œuvre →</div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="t-det" style="flex:1 1 380px;min-width:0;background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px">
+        <h2 id="t-det" style="margin:0;font-size:16px">{{sel.id}} · {{sel.name}}</h2>
+        <dl style="margin:0;display:grid;grid-template-columns:140px 1fr;gap:8px 12px;font-size:14px">
+          <dt style="color:#5A6270">Constat traité</dt><dd style="margin:0">{{sel.finding}}</dd>
+          <dt style="color:#5A6270">Type</dt><dd style="margin:0">{{sel.kind}}</dd>
+          <dt style="color:#5A6270">Gain estimé</dt><dd style="margin:0">{{sel.gain}} / 5 · ordre de grandeur [À ESTIMER PAR L'OUTIL]</dd>
+          <dt style="color:#5A6270">Effort</dt><dd style="margin:0">{{sel.effort}} / 5</dd>
+          <dt style="color:#5A6270">Dépend de</dt><dd style="margin:0">{{sel.deps}}</dd>
+          <dt style="color:#5A6270">Source</dt><dd style="margin:0">{{sel.source}}</dd>
+        </dl>
+        <a href="Cartographie.dc.html" style="font-weight:600;font-size:14px">Voir AS-IS et TO-BE côte à côte</a>
+        <button type="button" style="align-self:flex-start;min-height:44px;padding:0 16px;border:1px solid #C9CFD9;border-radius:8px;background:#FFFFFF;font:600 14px Inter,sans-serif;color:#1A1D23;cursor:pointer">Proposer une alternative</button>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: 'O2' }; }
+  renderVals() {
+    const list = [
+      { id: 'O1', name: 'Espace de dépôt des pièces pour le client', gain: 4, effort: 2, kind: 'Règles et notifications', finding: 'Pièces transmises par email, sans suivi', deps: 'aucune', source: 'Diagnostic, constat F-02' },
+      { id: 'O2', name: 'Relance automatique des pièces manquantes', gain: 4, effort: 1, kind: 'Règles et notifications', finding: 'Relances dépendant d’une seule personne', deps: 'O1 Espace de dépôt', source: 'Diagnostic, constat G-01 ; mission antérieure' },
+      { id: 'O3', name: 'Lecture automatique des pièces (OCR)', gain: 3, effort: 3, kind: 'Documents', finding: 'Ressaisie des pièces', deps: 'O1 Espace de dépôt', source: 'Diagnostic, constat G-02' },
+      { id: 'O4', name: 'Circuit de validation unique jusqu’à l’expert-comptable', gain: 3, effort: 2, kind: 'Règles et notifications', finding: 'Validation des liasses non tracée', deps: 'aucune', source: 'Diagnostic, constat R-01' },
+      { id: 'O5', name: 'Récupération automatique des relevés bancaires', gain: 4, effort: 4, kind: 'Intégrations', finding: 'Relevés demandés au client chaque mois', deps: 'aucune', source: 'Diagnostic, constat F-01' },
+      { id: 'O6', name: 'Alerte des échéances fiscales', gain: 2, effort: 1, kind: 'Règles et notifications', finding: 'Échéances suivies dans un tableur', deps: 'aucune', source: 'Connaissance IA' }
+    ];
+    const jitter = { O2: -6, O6: 6 };
+    const opts = list.map((o) => {
+      const on = this.state.sel === o.id;
+      return Object.assign({}, o, {
+        x: ((o.effort - 0.5) / 5 * 100 + (jitter[o.id] || 0)) + '%',
+        y: (100 - (o.gain - 0.5) / 5 * 100) + '%',
+        fill: on ? '#1F4FBF' : '#FFFFFF', ink: on ? '#FFFFFF' : '#163A8F',
+        aria: o.id + ' ' + o.name + ', gain ' + o.gain + ', effort ' + o.effort,
+        pick: () => this.setState({ sel: o.id })
+      });
+    });
+    const sel = list.find((o) => o.id === this.state.sel);
+    return { opts, sel };
+  }
+}
+</script>
+</body>
+</html>

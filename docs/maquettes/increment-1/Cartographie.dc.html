@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Cartographie</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;font-family:Inter,system-ui,sans-serif;color:#1A1D23}
+a{color:#1F4FBF}a:hover{color:#163A8F}
+.nav a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:#3B414B;text-decoration:none;font-size:14px;font-weight:500}
+.nav a:hover{background:#ECEFF4;color:#1A1D23}
+.nav a.on{background:#E8EEFB;color:#163A8F}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;align-items:stretch">
+  <nav class="nav" aria-label="Navigation principale" style="flex:1 1 220px;max-width:260px;box-sizing:border-box;padding:24px 16px;background:#FFFFFF;border-right:1px solid #DDE1E8;display:flex;flex-direction:column;gap:4px">
+    <div style="font-family:'Space Grotesk',Inter,sans-serif;font-size:22px;font-weight:600;padding:0 12px 20px">Processia</div>
+    <a href="Main.dc.html">Missions</a>
+    <a href="Analyse.dc.html">Analyse</a>
+    <a class="on" href="Cartographie.dc.html" aria-current="page">Cartographie</a>
+    <a href="Optimisations.dc.html">Diagnostic et optimisations</a>
+    <a href="Validation.dc.html">Portail du validateur</a>
+  </nav>
+  <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:32px 40px;display:flex;flex-direction:column;gap:20px">
+    <nav aria-label="Niveaux de la cartographie" style="font-size:14px;color:#5A6270">
+      <a href="#">Niveau 0 · 14 macroprocessus</a> ›
+      <a href="#">P04 Collecte documentaire</a> ›
+      <span aria-current="page" style="color:#1A1D23;font-weight:600">Relance des pièces manquantes (niveau 2)</span>
+    </nav>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+      <h1 style="margin:0;font-family:'Space Grotesk',Inter,sans-serif;font-size:28px;font-weight:600">Relance des pièces manquantes · AS-IS</h1>
+      <div role="group" aria-label="Vue" style="display:flex;border:1px solid #C9CFD9;border-radius:8px;overflow:hidden">
+        <button type="button" onClick="{{toSimple}}" aria-pressed="{{isSimple}}" style="min-height:44px;padding:0 16px;border:0;background:{{simpleBg}};font:600 14px Inter,sans-serif;color:{{simpleInk}};cursor:pointer">Vue simplifiée</button>
+        <button type="button" onClick="{{toBpmn}}" aria-pressed="{{isBpmn}}" style="min-height:44px;padding:0 16px;border:0;border-left:1px solid #C9CFD9;background:{{bpmnBg}};font:600 14px Inter,sans-serif;color:{{bpmnInk}};cursor:pointer">BPMN complet</button>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+      <section aria-label="Schéma du processus" style="flex:999 1 560px;min-width:0;background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:20px;overflow-x:auto">
+        <sc-if value="{{isSimple}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;flex-direction:column;gap:10px;min-width:760px">
+            <sc-for list="{{lanes}}" as="l" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:170px repeat(5,minmax(0,1fr));gap:10px;align-items:stretch;padding:10px;border-radius:10px;background:{{l.bg}}">
+                <div style="display:flex;align-items:center;font-size:13px;font-weight:600;color:#3B414B">{{l.name}}</div>
+                <sc-for list="{{l.cells}}" as="c" hint-placeholder-count="5">
+                  <div style="min-height:64px">
+                    <sc-if value="{{c.has}}" hint-placeholder-val="{{false}}">
+                      <div style="box-sizing:border-box;height:100%;padding:10px;border-radius:8px;border:{{c.border}};background:{{c.fill}};font-size:13px;line-height:1.35">
+                        <div style="font-size:11px;font-weight:600;color:#5A6270">{{c.num}} {{c.badge}}</div>
+                        {{c.label}}
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+            <p style="margin:6px 0 0;font-size:13px;color:#3B414B">Si la pièce n'arrive pas sous 15 jours après deux relances : escalade au chef de mission (exception).</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{isBpmn}}" hint-placeholder-val="{{false}}">
+          <div style="min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1px dashed #9AA3B2;border-radius:10px;background:#FAFBFC;text-align:center;padding:24px">
+            <div style="font-weight:600">Rendu BPMN 2.0 complet (bpmn-js)</div>
+            <div style="font-size:14px;color:#5A6270;max-width:520px">Couloirs, événements, passerelles et flux de messages, avec les identifiants du modèle. Lecture seule : la modification passe par le dialogue à droite.</div>
+            <a href="#" style="font-weight:600">Alternative textuelle du schéma</a>
+          </div>
+        </sc-if>
+      </section>
+
+      <aside aria-labelledby="t-dlg" style="flex:1 1 320px;max-width:420px;background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <h2 id="t-dlg" style="margin:0;font-size:16px">Modifier par dialogue</h2>
+        <div style="align-self:flex-end;max-width:92%;padding:10px 12px;border-radius:10px;background:#E8EEFB;font-size:14px">Remplace la relance manuelle par une relance automatique à J+7, et garde l'escalade après deux relances.</div>
+        <div style="align-self:flex-start;max-width:96%;padding:12px;border-radius:10px;background:#F1F3F6;font-size:14px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-weight:600">Modification proposée</div>
+          <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+            <li>Activité 2 remplacée : « Relance automatique par email à J+7 » (nouveau couloir Automatisme)</li>
+            <li>Règle ajoutée : relance si pièce absente 7 jours après l'échéance</li>
+            <li>Exception conservée : escalade après deux relances</li>
+          </ul>
+          <div style="font-size:13px;color:#1E6B3A">Contrôle de cohérence : aucune incohérence.</div>
+        </div>
+        <sc-if value="{{notApplied}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" onClick="{{apply}}" style="min-height:44px;padding:0 18px;border:0;border-radius:8px;background:#1F4FBF;font:600 14px Inter,sans-serif;color:#FFFFFF;cursor:pointer">Appliquer</button>
+            <button type="button" style="min-height:44px;padding:0 18px;border:1px solid #C9CFD9;border-radius:8px;background:#FFFFFF;font:600 14px Inter,sans-serif;color:#1A1D23;cursor:pointer">Annuler</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{applied}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="padding:10px 12px;border-radius:8px;background:#E6F4EA;font-size:13px;color:#1E4D2B">Version 14 enregistrée. Consultant B voit le schéma mis à jour. <button type="button" onClick="{{undo}}" style="min-height:44px;border:0;background:transparent;font:600 13px Inter,sans-serif;color:#1F4FBF;cursor:pointer;padding:0 4px">Revenir à la version 13</button></div>
+        </sc-if>
+        <label for="msg" style="font-size:13px;color:#5A6270">Nouvelle demande</label>
+        <textarea id="msg" rows="2" style="box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid #C9CFD9;border-radius:8px;font:14px Inter,sans-serif;resize:vertical" placeholder="Ex. : ajoute une validation par le chef de mission après la révision"></textarea>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { view: 'simple', applied: false }; }
+  renderVals() {
+    const a = this.state.applied;
+    const box = (num, label, isNew) => ({ has: true, num, label, badge: isNew ? '· NOUVEAU' : '', border: isNew ? '2px solid #1F4FBF' : '1px solid #C9CFD9', fill: isNew ? '#E8EEFB' : '#FFFFFF' });
+    const none = { has: false };
+    const lanes = [
+      { name: 'Client du cabinet', bg: '#FAFBFC', cells: [none, none, box('3', 'Transmettre la pièce'), none, none] },
+      { name: 'Assistant administratif', bg: '#FAFBFC', cells: [none, a ? none : box('2', 'Envoyer un email de relance'), none, box('4', 'Enregistrer la pièce reçue'), none] },
+      { name: 'Collaborateur comptable', bg: '#FAFBFC', cells: [box('1', 'Constater une pièce manquante'), none, none, none, box('5', 'Reprendre la saisie')] }
+    ];
+    if (a) lanes.splice(1, 0, { name: 'Automatisme', bg: '#F3F6FD', cells: [none, box('2', 'Relance automatique par email à J+7', true), none, none, none] });
+    const simple = this.state.view === 'simple';
+    return {
+      lanes,
+      isSimple: simple, isBpmn: !simple,
+      simpleBg: simple ? '#1F4FBF' : '#FFFFFF', simpleInk: simple ? '#FFFFFF' : '#1A1D23',
+      bpmnBg: simple ? '#FFFFFF' : '#1F4FBF', bpmnInk: simple ? '#1A1D23' : '#FFFFFF',
+      toSimple: () => this.setState({ view: 'simple' }),
+      toBpmn: () => this.setState({ view: 'bpmn' }),
+      applied: a, notApplied: !a,
+      apply: () => this.setState({ applied: true }),
+      undo: () => this.setState({ applied: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

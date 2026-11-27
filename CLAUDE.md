@@ -13,7 +13,7 @@ Processia analyse et cartographie les processus métier d'un client à partir de
 2. **Ne pas élargir le périmètre du WP.** Toute découverte qui le dépasse est notée dans le rapport du WP, rubrique « Suite ».
 3. Toute décision technique structurante devient un ADR (copier `docs/adr/0000-template.md`). Toute question de produit est ajoutée à `docs/po/DECISIONS.md` avec le statut `ouverte` ; applique la valeur par défaut documentée.
 4. Avant de terminer, `pnpm lint && pnpm typecheck && pnpm test` sont verts, ainsi que les tests d'acceptation du WP. Mettre à jour `docs/wp/TRACKER.md` et écrire `docs/wp/WP-XX.md` (fait, écarts, dettes, suite).
-5. Branches et commits : suivre les instructions de l'orchestrateur (branche `wp/WP-XX-slug`). Le dépôt n'a pas encore de dépôt distant : ne pas pousser tant que le PO ne l'a pas créé [PO-16].
+5. Branches et commits : suivre les instructions de l'orchestrateur (branche `wp/WP-XX-slug`). Dépôt distant : GitHub `miliassemahraz-rgb/propri-taire-processia`. Seul l'orchestrateur pousse ; les agents ne poussent jamais.
 
 ## Documents de référence
 

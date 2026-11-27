@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Missions</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;font-family:Inter,system-ui,sans-serif;color:#1A1D23}
+a{color:#1F4FBF}a:hover{color:#163A8F}
+.nav a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:#3B414B;text-decoration:none;font-size:14px;font-weight:500}
+.nav a:hover{background:#ECEFF4;color:#1A1D23}
+.nav a.on{background:#E8EEFB;color:#163A8F}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;align-items:stretch">
+  <nav class="nav" aria-label="Navigation principale" style="flex:1 1 220px;max-width:260px;box-sizing:border-box;padding:24px 16px;background:#FFFFFF;border-right:1px solid #DDE1E8;display:flex;flex-direction:column;gap:4px">
+    <div style="font-family:'Space Grotesk',Inter,sans-serif;font-size:22px;font-weight:600;padding:0 12px 20px">Processia</div>
+    <a class="on" href="Main.dc.html" aria-current="page">Missions</a>
+    <a href="Analyse.dc.html">Analyse</a>
+    <a href="Cartographie.dc.html">Cartographie</a>
+    <a href="Optimisations.dc.html">Diagnostic et optimisations</a>
+    <a href="Validation.dc.html">Portail du validateur</a>
+    <div style="margin-top:auto;padding:16px 12px 0;border-top:1px solid #DDE1E8;font-size:13px;color:#5A6270">Connecté : consultante A · Mode simple</div>
+  </nav>
+  <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:32px 40px;display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+      <div>
+        <h1 style="margin:0;font-family:'Space Grotesk',Inter,sans-serif;font-size:30px;font-weight:600">Missions</h1>
+        <p style="margin:6px 0 0;color:#5A6270;font-size:15px">Les missions auxquelles vous êtes affectée.</p>
+      </div>
+      <button type="button" style="min-height:44px;padding:0 20px;border:0;border-radius:8px;background:#1F4FBF;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer">Nouvelle mission</button>
+    </div>
+
+    <section aria-labelledby="t-missions" style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;overflow-x:auto">
+      <h2 id="t-missions" style="position:absolute;left:-9999px">Liste des missions</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:720px">
+        <thead>
+          <tr style="text-align:left;color:#5A6270;border-bottom:1px solid #DDE1E8">
+            <th scope="col" style="padding:14px 20px;font-weight:600">Mission</th>
+            <th scope="col" style="padding:14px 20px;font-weight:600">Client</th>
+            <th scope="col" style="padding:14px 20px;font-weight:600">Étape</th>
+            <th scope="col" style="padding:14px 20px;font-weight:600">Complétude de l'analyse</th>
+            <th scope="col" style="padding:14px 20px;font-weight:600">Équipe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #EEF0F4">
+            <td style="padding:16px 20px"><a href="Analyse.dc.html" style="font-weight:600">Digitalisation du cycle dossier client</a></td>
+            <td style="padding:16px 20px">Cabinet d'expertise comptable (pilote)</td>
+            <td style="padding:16px 20px"><span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#E8EEFB;color:#163A8F;font-weight:600;font-size:13px">Analyse</span></td>
+            <td style="padding:16px 20px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="flex:0 0 140px;height:8px;border-radius:4px;background:#E4E7EC" aria-hidden="true"><div style="width:62%;height:8px;border-radius:4px;background:#1F4FBF"></div></div>
+                <span>62 %</span>
+              </div>
+            </td>
+            <td style="padding:16px 20px">2 consultants · validateur à désigner</td>
+          </tr>
+          <tr>
+            <td style="padding:16px 20px"><a href="Validation.dc.html" style="font-weight:600">Mission de démonstration</a></td>
+            <td style="padding:16px 20px">Client fictif</td>
+            <td style="padding:16px 20px"><span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#FFF1E0;color:#8A4500;font-weight:600;font-size:13px">Validation du TO-BE</span></td>
+            <td style="padding:16px 20px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="flex:0 0 140px;height:8px;border-radius:4px;background:#E4E7EC" aria-hidden="true"><div style="width:100%;height:8px;border-radius:4px;background:#1E6B3A"></div></div>
+                <span>Validée</span>
+              </div>
+            </td>
+            <td style="padding:16px 20px">1 consultant · validateur désigné</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="t-cockpit" style="display:flex;flex-direction:column;gap:16px">
+      <h2 id="t-cockpit" style="margin:0;font-family:'Space Grotesk',Inter,sans-serif;font-size:20px;font-weight:600">Mission pilote : où en est-on ?</h2>
+      <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="6">
+          <li style="{{s.box}}">
+            <div style="font-size:12px;font-weight:600;letter-spacing:.02em;{{s.labelColor}}">{{s.state}}</div>
+            <div style="margin-top:6px;font-size:15px;font-weight:600">{{s.name}}</div>
+          </li>
+        </sc-for>
+      </ol>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+        <div style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:20px 24px">
+          <h3 style="margin:0 0 4px;font-size:16px">Complétude par concept</h3>
+          <p style="margin:0 0 16px;font-size:13px;color:#5A6270">Cliquez sur un concept pour voir ce qui manque. Vous décidez quand arrêter les questions.</p>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{concepts}}" as="c" hint-placeholder-count="7">
+              <li>
+                <button type="button" onClick="{{c.pick}}" aria-expanded="{{c.open}}" style="width:100%;min-height:44px;display:flex;align-items:center;gap:12px;padding:0 8px;border:0;border-radius:8px;background:{{c.bg}};font:500 14px Inter,sans-serif;color:#1A1D23;cursor:pointer;text-align:left">
+                  <span style="flex:0 0 110px">{{c.name}}</span>
+                  <span aria-hidden="true" style="flex:1 1 auto;height:8px;border-radius:4px;background:#E4E7EC"><span style="display:block;height:8px;border-radius:4px;background:#1F4FBF;width:{{c.pct}}"></span></span>
+                  <span style="flex:0 0 48px;text-align:right">{{c.pct}}</span>
+                </button>
+                <sc-if value="{{c.open}}" hint-placeholder-val="{{false}}">
+                  <div style="margin:4px 8px 8px;padding:10px 12px;border-radius:8px;background:#F6F7F9;font-size:13px;color:#3B414B">Manque : {{c.missing}}</div>
+                </sc-if>
+              </li>
+            </sc-for>
+          </ul>
+        </div>
+
+        <div style="background:#FFFFFF;border:1px solid #DDE1E8;border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
+          <h3 style="margin:0;font-size:16px">À faire</h3>
+          <a href="Analyse.dc.html" style="display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 14px;border:1px solid #DDE1E8;border-radius:8px;text-decoration:none;color:#1A1D23"><span>5 hypothèses à examiner</span><span style="color:#1F4FBF;font-weight:600">Examiner</span></a>
+          <a href="Analyse.dc.html" style="display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 14px;border:1px solid #DDE1E8;border-radius:8px;text-decoration:none;color:#1A1D23"><span>3 questions ouvertes</span><span style="color:#1F4FBF;font-weight:600">Répondre</span></a>
+          <a href="Analyse.dc.html" style="display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 14px;border:1px solid #F0C9A0;background:#FFF8F0;border-radius:8px;text-decoration:none;color:#1A1D23"><span>1 contradiction entre deux sources</span><span style="color:#8A4500;font-weight:600">Voir</span></a>
+          <h3 style="margin:12px 0 0;font-size:16px">Activité récente</h3>
+          <ul style="margin:0;padding:0 0 0 18px;font-size:14px;color:#3B414B;display:flex;flex-direction:column;gap:6px">
+            <li>Consultant B a confirmé l'acteur « Gestionnaire de paie ».</li>
+            <li>L'outil a extrait 12 activités de « Procédure collecte.pdf ».</li>
+            <li>Vous avez répondu à la question sur la validation des liasses.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { open: null }; }
+  renderVals() {
+    const done = 'box-sizing:border-box;padding:14px 16px;border-radius:10px;background:#E6F4EA;border:1px solid #BFE0C8';
+    const now = 'box-sizing:border-box;padding:14px 16px;border-radius:10px;background:#E8EEFB;border:2px solid #1F4FBF';
+    const todo = 'box-sizing:border-box;padding:14px 16px;border-radius:10px;background:#FFFFFF;border:1px solid #DDE1E8';
+    const steps = [
+      { name: 'Analyse du métier', state: 'EN COURS', box: now, labelColor: 'color:#163A8F' },
+      { name: 'Validation du dossier d’analyse', state: 'À VENIR', box: todo, labelColor: 'color:#5A6270' },
+      { name: 'Cartographie AS-IS', state: 'À VENIR', box: todo, labelColor: 'color:#5A6270' },
+      { name: 'Validation de l’AS-IS', state: 'À VENIR', box: todo, labelColor: 'color:#5A6270' },
+      { name: 'Diagnostic et TO-BE', state: 'À VENIR', box: todo, labelColor: 'color:#5A6270' },
+      { name: 'Validation du TO-BE', state: 'À VENIR', box: todo, labelColor: 'color:#5A6270' }
+    ];
+    const raw = [
+      ['Métier', '80 %', 'glossaire : 4 termes sans définition'],
+      ['Acteurs', '90 %', 'responsabilités de l’administrateur du système'],
+      ['Activités', '55 %', 'sous-processus de P07, P08 et P09'],
+      ['Données', '40 %', 'champs des formulaires de collecte'],
+      ['Flux', '50 %', 'échanges avec les organismes sociaux'],
+      ['Règles', '45 %', 'délais de relance, seuils d’anomalie'],
+      ['Indicateurs', '25 %', 'volumes de dossiers par mois']
+    ];
+    const concepts = raw.map(([name, pct, missing]) => ({
+      name, pct, missing,
+      open: this.state.open === name,
+      bg: this.state.open === name ? '#ECEFF4' : 'transparent',
+      pick: () => this.setState({ open: this.state.open === name ? null : name })
+    }));
+    return { steps, concepts, false: false };
+  }
+}
+</script>
+</body>
+</html>
