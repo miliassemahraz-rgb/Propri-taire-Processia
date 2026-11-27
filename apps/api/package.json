@@ -24,6 +24,7 @@
     "@processia/config": "workspace:*",
     "@processia/contracts": "workspace:*",
     "@processia/db": "workspace:*",
+    "@processia/exports": "workspace:*",
     "@processia/i18n": "workspace:*",
     "@processia/ingest": "workspace:*",
     "@processia/model": "workspace:*",
@@ -50,7 +51,10 @@
     "@types/pg": "8.23.1",
     "@types/qrcode": "1.5.6",
     "@types/ws": "8.18.2",
+    "exceljs": "4.4.0",
+    "mammoth": "1.13.0",
     "tsc-watch": "7.2.1",
+    "unpdf": "2.2.3",
     "ws": "8.23.0"
   }
 }

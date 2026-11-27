@@ -6,3 +6,4 @@ export * from './model/index.js';
 export * from './sources/index.js';
 export * from './collab/index.js';
 export * from './guided/index.js';
+export * from './deliverables/index.js';

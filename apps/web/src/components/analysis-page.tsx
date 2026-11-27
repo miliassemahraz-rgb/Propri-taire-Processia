@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { DecisionRequest, SourceDto } from '@processia/contracts';
 import { t } from '@processia/i18n';
@@ -257,14 +258,24 @@ export function AnalysisPage() {
 
   return (
     <div className="stack-lg analysis">
-      <div className="stack-sm">
-        <h1>{t('analysis.heading')}</h1>
-        <p className="muted">{t('analysis.intro')}</p>
-        <p className="muted small" data-testid="model-version">
-          {model === null
-            ? t('collab.model.none')
-            : t('collab.model.version', { version: model.version })}
-        </p>
+      <div className="page-head">
+        <div className="stack-sm">
+          <h1>{t('analysis.heading')}</h1>
+          <p className="muted">{t('analysis.intro')}</p>
+          <p className="muted small" data-testid="model-version">
+            {model === null
+              ? t('collab.model.none')
+              : t('collab.model.version', { version: model.version })}
+          </p>
+        </div>
+        <div className="row">
+          <Link
+            href={`/missions/${missionId}/livrables`}
+            className="pr-button pr-button--secondary"
+          >
+            {t('analysis.deliverablesLink')}
+          </Link>
+        </div>
       </div>
 
       <div className="grid-2">

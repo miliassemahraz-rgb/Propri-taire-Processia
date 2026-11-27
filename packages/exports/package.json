@@ -16,12 +16,23 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@processia/model": "workspace:*",
     "@processia/bpmn": "workspace:*",
+    "@processia/contracts": "workspace:*",
     "@processia/diagnostic": "workspace:*",
-    "@processia/i18n": "workspace:*"
+    "@processia/i18n": "workspace:*",
+    "@processia/model": "workspace:*",
+    "docx": "9.16.1",
+    "exceljs": "4.4.0",
+    "jszip": "3.10.2",
+    "playwright-core": "1.65.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@processia/config": "workspace:*"
+    "@processia/config": "workspace:*",
+    "@types/react": "19.3.3",
+    "@types/react-dom": "19.3.0",
+    "mammoth": "1.13.0",
+    "unpdf": "2.2.3"
   }
 }

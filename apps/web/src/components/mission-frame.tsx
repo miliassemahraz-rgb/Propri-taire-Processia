@@ -68,6 +68,7 @@ export function MissionFrame({ children }: { children: ReactNode }) {
   const links = [
     { href: base, label: t('shell.nav.dashboard') },
     { href: `${base}/analyse`, label: t('shell.nav.analysis') },
+    { href: `${base}/livrables`, label: t('shell.nav.deliverables') },
     { href: `${base}/equipe`, label: t('shell.nav.team') },
   ];
 

@@ -23,6 +23,11 @@ import {
   type CommitResult,
   type DecisionRequest,
   type DecisionResult,
+  type DeliverablesPreviewDto,
+  type ExportArtifactDto,
+  type ExportFormat,
+  type PresignedUrlDto,
+  type StartExportResult,
   type QuestionDto,
   type RunDto,
   type SourceDto,
@@ -226,5 +231,21 @@ export const endpoints = {
       method: 'POST',
       body: { toVersion },
       schema: typed<CommitResult>(),
+    }),
+
+  // Livrables de l'étape 1 et exports du dossier d'analyse (WP-15)
+  deliverables: (id: string) =>
+    apiRequest(`/missions/${id}/deliverables`, { schema: typed<DeliverablesPreviewDto>() }),
+  listExports: (id: string) =>
+    apiRequest(`/missions/${id}/exports`, { schema: typed<ExportArtifactDto[]>() }),
+  startExport: (id: string, format: ExportFormat) =>
+    apiRequest(`/missions/${id}/exports`, {
+      method: 'POST',
+      body: { format },
+      schema: typed<StartExportResult>(),
+    }),
+  exportDownloadUrl: (id: string, artifactId: string) =>
+    apiRequest(`/missions/${id}/exports/${artifactId}/download-url`, {
+      schema: typed<PresignedUrlDto>(),
     }),
 };
