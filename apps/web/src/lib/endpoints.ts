@@ -3,6 +3,7 @@ import {
   aiStatusSchema,
   assignableUserSchema,
   clientSchema,
+  collabTokenResponseSchema,
   createInvitationResponseSchema,
   createMissionResponseSchema,
   dataPolicySchema,
@@ -96,6 +97,14 @@ export const endpoints = {
   removeMember: (id: string, userId: string) =>
     apiRequest(`/missions/${id}/members/${userId}`, { method: 'DELETE' }),
   aiStatus: (id: string) => apiRequest(`/missions/${id}/ai-status`, { schema: aiStatusSchema }),
+
+  // Coédition (WP-10) : jeton court pour le serveur Hocuspocus
+  collabToken: (id: string) =>
+    apiRequest(`/missions/${id}/collab-token`, {
+      method: 'POST',
+      body: {},
+      schema: collabTokenResponseSchema,
+    }),
 
   // Modèle (WP-08) : tête de version, pour la complétude du tableau de bord
   headModel: (id: string) =>

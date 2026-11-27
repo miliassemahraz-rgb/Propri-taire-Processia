@@ -37,5 +37,4 @@ export function descriptionTextFromState(state: Uint8Array): string {
   }
 }
 
-/** Nom du document Yjs de l'espace de travail d'une mission (spécification 5.1). */
-export const workspaceDocName = (missionId: string): string => `mission:${missionId}:workspace`;
+export { workspaceDocName } from '@processia/contracts';

@@ -369,3 +369,40 @@ p {
   flex-direction: column;
   gap: 6px;
 }
+
+/* Coédition (WP-10) : présence et texte partagé */
+.presence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.presence-list {
+  display: flex;
+  gap: 4px;
+}
+.presence-item {
+  display: inline-flex;
+}
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.description-editor {
+  min-height: 260px;
+  padding: 16px;
+  background: var(--pr-surface);
+  border: 1px solid var(--pr-border);
+  border-radius: var(--pr-radius);
+  line-height: 1.6;
+}
+.description-editor p {
+  margin: 0 0 12px;
+}

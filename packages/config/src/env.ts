@@ -40,6 +40,11 @@ export const envSchema = z.object({
   COLLAB_PORT: z.coerce.number().int().positive().default(3002),
   API_URL: z.string().url().default('http://localhost:3001'),
   WEB_ORIGIN: z.string().url().default('http://localhost:3000'),
+  /** URL WebSocket du serveur de coédition, telle que le navigateur doit s'y connecter (WP-10). */
+  COLLAB_PUBLIC_URL: z
+    .string()
+    .regex(/^wss?:\/\//)
+    .default('ws://localhost:3002'),
 
   // Secrets applicatifs (WP-05 et WP-10)
   SESSION_SECRET: z.string().min(32),

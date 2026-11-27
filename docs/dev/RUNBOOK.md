@@ -89,6 +89,7 @@ Le schéma de référence est `packages/config/src/env.ts` ; `.env.example` en d
 | `S3_*`                                                         | stockage objet : point d'accès, identifiants, buckets                              |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`                          | courrier                                                                           |
 | `WEB_PORT`, `API_PORT`, `COLLAB_PORT`, `API_URL`, `WEB_ORIGIN` | ports et URL des services                                                          |
+| `COLLAB_PUBLIC_URL`                                            | URL WebSocket du serveur de coédition vue du navigateur (WP-10)                    |
 | `SESSION_SECRET`, `COLLAB_JWT_SECRET`                          | secrets (32 caractères minimum), WP-05 et WP-10                                    |
 | `MASTER_KEY`                                                   | clé de chiffrement des clés API des fournisseurs IA (32 caractères minimum), WP-06 |
 | `AI_PROVIDER`, `ANTHROPIC_API_KEY`                             | fournisseur IA (`fake` par défaut)                                                 |

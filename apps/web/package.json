@@ -11,14 +11,21 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hocuspocus/provider": "3.4.4",
     "@processia/config": "workspace:*",
     "@processia/contracts": "workspace:*",
     "@processia/i18n": "workspace:*",
     "@processia/model": "workspace:*",
     "@processia/ui": "workspace:*",
+    "@tiptap/extension-collaboration": "3.35.0",
+    "@tiptap/pm": "3.35.0",
+    "@tiptap/react": "3.35.0",
+    "@tiptap/starter-kit": "3.35.0",
+    "@tiptap/y-tiptap": "3.3.1",
     "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
+    "yjs": "13.6.33",
     "zod": "4.6.7"
   },
   "devDependencies": {

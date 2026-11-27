@@ -113,6 +113,43 @@ export async function loginAndEnroll(
   return { recoveryCodes };
 }
 
+/**
+ * Connexion d'un compte quel que soit son état : enrôlement du TOTP s'il n'en a pas encore, code
+ * de l'outil `dev:totp` sinon (les parcours E2E partagent la base, l'ordre des fichiers varie).
+ */
+export async function loginAnyState(
+  page: Page,
+  email: string,
+  password: string = DEV_PASSWORD,
+): Promise<void> {
+  await submitLogin(page, email, password);
+  await page.waitForURL(/\/connexion\/(enrolement|verification)/);
+  if (page.url().includes('/connexion/enrolement')) {
+    // Le limiteur de débit de l'API (30 appels par minute et par adresse) peut refuser l'appel
+    // d'enrôlement après de nombreuses connexions : on attend la fin de la fenêtre et on recharge.
+    const manualKey = page.getByTestId('manual-key');
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        await manualKey.waitFor({ timeout: 8_000 });
+        break;
+      } catch {
+        await page.waitForTimeout(25_000);
+        await page.reload();
+      }
+    }
+    const key = (await manualKey.textContent()) ?? '';
+    const code = totpFromKey(key);
+    lastCodeByEmail.set(email, code);
+    await page.getByLabel('Code à 6 chiffres').fill(code);
+    await page.getByRole('button', { name: 'Activer' }).click();
+    await page.getByRole('button', { name: 'J’ai conservé mes codes, continuer' }).click();
+  } else {
+    await page.getByLabel('Code à 6 chiffres').fill(await freshDevTotp(email));
+    await page.getByRole('button', { name: 'Vérifier' }).click();
+  }
+  await expect(page).toHaveURL(/\/missions$/);
+}
+
 /** Connexion d'un compte déjà enrôlé, avec le code de l'outil `dev:totp`. */
 export async function loginWithDevTotp(
   page: Page,

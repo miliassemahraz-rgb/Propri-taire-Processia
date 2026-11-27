@@ -145,7 +145,8 @@
       "team": "Équipe",
       "adminUsers": "Utilisateurs",
       "adminClients": "Clients",
-      "adminAi": "Fournisseur IA"
+      "adminAi": "Fournisseur IA",
+      "analysis": "Analyse"
     },
     "mode": {
       "label": "Mode d’affichage",
@@ -171,7 +172,8 @@
     "adminUsers": "Utilisateurs",
     "adminClients": "Clients",
     "adminAi": "Fournisseur IA",
-    "notFound": "Page introuvable"
+    "notFound": "Page introuvable",
+    "missionAnalysis": "Analyse de la mission"
   },
   "notFound": {
     "heading": "Page introuvable",
@@ -387,5 +389,32 @@
   },
   "format": {
     "percent": "{value} %"
+  },
+  "collab": {
+    "status": {
+      "label": "Coédition",
+      "connecting": "Connexion à la coédition…",
+      "connected": "Coédition active",
+      "disconnected": "Coédition interrompue, reconnexion en cours",
+      "unavailable": "Coédition indisponible pour votre profil"
+    },
+    "presence": {
+      "label": "Personnes connectées à cette mission",
+      "none": "Vous êtes seul(e) sur cette mission.",
+      "others": "{names} édite aussi cette mission.",
+      "self": "{name} (vous)",
+      "connected": "{name}, connecté(e)",
+      "viewing": "{name}, connecté(e), consulte : {view}"
+    },
+    "description": {
+      "heading": "Description du métier",
+      "help": "Ce texte est partagé en temps réel avec les autres consultants de la mission.",
+      "label": "Description du métier du client",
+      "readOnly": "Vous consultez ce texte en lecture seule."
+    },
+    "model": {
+      "version": "Version du modèle partagé : {version}",
+      "none": "Aucune version du modèle pour le moment."
+    }
   }
 }
