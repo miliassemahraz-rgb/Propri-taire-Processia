@@ -16,6 +16,7 @@ import {
   createMissionRequestSchema,
   updateMissionRequestSchema,
   uuidSchema,
+  type AssignableUser,
   type AssignMemberRequest,
   type CreateMissionRequest,
   type CreateMissionResponse,
@@ -79,6 +80,12 @@ export class MissionsController {
   @Get(':missionId/members')
   members(@CurrentMission() ctx: MissionContext): Promise<MemberDto[]> {
     return this.missions.members(ctx);
+  }
+
+  @Can('mission.assign')
+  @Get(':missionId/assignable-users')
+  assignable(): Promise<AssignableUser[]> {
+    return this.missions.assignableUsers();
   }
 
   @Can('mission.assign')

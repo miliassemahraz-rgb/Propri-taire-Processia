@@ -7,11 +7,11 @@ describe('@processia/i18n', () => {
   });
 
   it('traduit une clé existante', () => {
-    expect(t('home.title')).toBe('Processia');
+    expect(t('app.name')).toBe('Processia');
     expect(messages.app.name).toBe('Processia');
   });
 
   it('refuse une clé inconnue au runtime', () => {
-    expect(() => t('home.inconnue' as never)).toThrow(/inconnue/);
+    expect(() => t('app.inconnue' as never)).toThrow(/inconnue/);
   });
 });

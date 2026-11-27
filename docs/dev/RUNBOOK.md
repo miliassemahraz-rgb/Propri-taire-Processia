@@ -34,10 +34,10 @@ curl localhost:3001/health  # {"db":"ok","s3":"ok"}
 ```bash
 pnpm lint && pnpm typecheck && pnpm test     # avant chaque fin de WP
 pnpm services:up && pnpm test:int            # intégration (services requis)
-pnpm e2e                                     # E2E de fumée : build du web, démarrage, Playwright
+pnpm e2e                                     # E2E : build web + API, base processia_test remise à l'état du seed, Playwright
 ```
 
-**Navigateur Playwright.** En CI, `pnpm --filter @processia/e2e exec playwright install --with-deps chromium`. Dans un environnement où Chromium est déjà installé (cas des agents), ne pas lancer `playwright install` : définir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium`. Les traces sont désactivées (`trace: 'off'`). Pour viser un serveur déjà lancé : `E2E_BASE_URL=http://localhost:3000`.
+**Navigateur Playwright.** En CI, `pnpm --filter @processia/e2e exec playwright install --with-deps chromium`. Dans un environnement où Chromium est déjà installé (cas des agents), ne pas lancer `playwright install` : définir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium`. Les traces sont désactivées (`trace: 'off'`). Pour viser un serveur déjà lancé : `E2E_BASE_URL=http://localhost:3000` (la base de test n'est alors pas préparée). `pnpm e2e` démarre l'API sur `processia_test` (port 3001, qui doit être libre) et le web (port 3000) ; il n'utilise pas la base de développement. `E2E_SCREENSHOT=1 pnpm e2e` régénère `docs/wp/WP-07-dashboard.png`.
 
 ## Comptes de développement et connexion locale
 

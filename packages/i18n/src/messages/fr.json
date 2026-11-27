@@ -3,11 +3,6 @@
     "name": "Processia",
     "tagline": "Analyse et cartographie des processus métier"
   },
-  "home": {
-    "title": "Processia",
-    "intro": "Analyse et cartographie des processus métier.",
-    "status": "Socle technique en place. Les écrans arrivent dans les prochains lots."
-  },
   "email": {
     "invitation": {
       "subject": "Invitation à rejoindre Processia",
@@ -20,6 +15,377 @@
     }
   },
   "a11y": {
-    "skipToContent": "Aller au contenu principal"
+    "skipToContent": "Aller au contenu principal",
+    "mainNav": "Navigation principale",
+    "missionNav": "Navigation de la mission",
+    "adminNav": "Navigation de l’administration"
+  },
+  "ui": {
+    "close": "Fermer",
+    "notifications": "Notifications",
+    "loading": "Chargement…",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "create": "Créer",
+    "back": "Retour",
+    "none": "Aucun",
+    "yes": "Oui",
+    "no": "Non",
+    "dropdown": "▾",
+    "cross": "✕"
+  },
+  "errors": {
+    "UNAUTHENTICATED": "Votre session a expiré. Reconnectez-vous.",
+    "MFA_REQUIRED": "La double authentification est requise pour continuer.",
+    "CSRF_INVALID": "La requête a été refusée par mesure de sécurité. Rechargez la page et recommencez.",
+    "INVALID_CREDENTIALS": "Adresse de courriel ou mot de passe incorrect.",
+    "ACCOUNT_LOCKED": "Compte temporairement verrouillé après trop d’échecs. Réessayez dans 15 minutes ou demandez à un administrateur de le déverrouiller.",
+    "RATE_LIMITED": "Trop de tentatives. Patientez un instant avant de réessayer.",
+    "INVALID_CODE": "Code invalide ou expiré. Vérifiez le code affiché par votre application d’authentification.",
+    "MFA_ALREADY_ENROLLED": "La double authentification est déjà configurée pour ce compte.",
+    "MFA_NOT_ENROLLED": "La double authentification n’est pas encore configurée.",
+    "INVITATION_INVALID": "Cette invitation est invalide, expirée ou déjà utilisée. Demandez-en une nouvelle.",
+    "WEAK_PASSWORD": "Ce mot de passe est trop faible ou trop courant. Choisissez-en un autre d’au moins 12 caractères.",
+    "ACCOUNT_EXISTS": "Un compte existe déjà pour cette adresse.",
+    "FORBIDDEN": "Vous n’avez pas le droit d’effectuer cette action.",
+    "VALIDATION_ERROR": "Certaines informations saisies sont invalides. Vérifiez le formulaire.",
+    "NOT_FOUND": "Cet élément est introuvable, ou vous n’y avez pas accès.",
+    "CONFLICT": "Cette action est en conflit avec l’état actuel. Rechargez la page et recommencez.",
+    "POLICY_NOT_ACCEPTED": "La politique de données du fournisseur doit être acceptée avant d’enregistrer cette configuration.",
+    "STALE": "Le modèle a été modifié entre-temps. Rechargez pour voir la version la plus récente.",
+    "CHANGESET_INVALID": "La modification est refusée par les règles du modèle.",
+    "PHASE_REGRESSION": "Impossible de revenir à une étape déjà validée par le client.",
+    "FILE_TOO_LARGE": "Le fichier dépasse la taille maximale de 50 Mo.",
+    "UNSUPPORTED_FILE_TYPE": "Ce type de fichier n’est pas pris en charge, ou son contenu ne correspond pas à son extension.",
+    "NETWORK": "Le serveur est injoignable. Vérifiez votre connexion et réessayez.",
+    "UNKNOWN": "Une erreur inattendue est survenue. Réessayez."
+  },
+  "warnings": {
+    "CAPABILITY_MISSING": {
+      "text": "Le fournisseur IA de ce client ne déclare pas la capacité « texte » : l’analyse de textes sera limitée.",
+      "documents": "Le fournisseur IA de ce client ne déclare pas la capacité « documents » : les PDF scannés et les images ne pourront pas être lus."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "heading": "Connexion à Processia",
+      "email": "Adresse de courriel",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "intro": "Connectez-vous avec votre compte professionnel."
+    },
+    "verify": {
+      "title": "Vérification en deux étapes",
+      "heading": "Vérification en deux étapes",
+      "intro": "Saisissez le code à 6 chiffres affiché par votre application d’authentification.",
+      "code": "Code à 6 chiffres",
+      "submit": "Vérifier",
+      "useRecovery": "Utiliser un code de secours",
+      "useTotp": "Utiliser le code de l’application",
+      "recoveryCode": "Code de secours",
+      "recoveryHint": "Chaque code de secours ne sert qu’une fois.",
+      "remaining": "Il vous reste {count} code(s) de secours."
+    },
+    "enroll": {
+      "title": "Configurer la double authentification",
+      "heading": "Configurer la double authentification",
+      "intro": "La double authentification est obligatoire. Scannez le code QR avec une application d’authentification (par exemple FreeOTP ou Aegis), puis saisissez le code affiché.",
+      "qrAlt": "Code QR à scanner avec votre application d’authentification",
+      "manualKey": "Clé de saisie manuelle",
+      "manualHint": "Si vous ne pouvez pas scanner le code QR, saisissez cette clé dans votre application.",
+      "code": "Code à 6 chiffres",
+      "submit": "Activer",
+      "recoveryHeading": "Conservez vos codes de secours",
+      "recoveryIntro": "Ces 10 codes permettent de vous connecter si vous perdez votre application. Ils ne seront plus affichés : notez-les dans un endroit sûr.",
+      "recoveryList": "Codes de secours",
+      "continue": "J’ai conservé mes codes, continuer"
+    },
+    "invitation": {
+      "title": "Accepter l’invitation",
+      "heading": "Bienvenue sur Processia",
+      "intro": "Choisissez votre nom et votre mot de passe pour créer votre compte. Le lien d’invitation ne sert qu’une fois.",
+      "displayName": "Nom affiché",
+      "password": "Mot de passe",
+      "passwordHint": "12 caractères au moins.",
+      "submit": "Créer mon compte",
+      "doneTitle": "Compte créé",
+      "doneBody": "Votre compte est prêt. Connectez-vous pour configurer la double authentification.",
+      "goLogin": "Aller à la connexion"
+    },
+    "logout": "Se déconnecter",
+    "loggedAs": "Connecté : {name}",
+    "redirecting": "Redirection…"
+  },
+  "roles": {
+    "global": {
+      "admin": "Administrateur",
+      "mission_manager": "Responsable de mission",
+      "consultant": "Consultant",
+      "client_validator": "Validateur client"
+    },
+    "mission": {
+      "manager": "Responsable",
+      "consultant": "Consultant",
+      "validator": "Validateur"
+    }
+  },
+  "phases": {
+    "analysis": "Analyse",
+    "mapping": "Cartographie",
+    "transformation": "Diagnostic et TO-BE",
+    "generation": "Livrables"
+  },
+  "shell": {
+    "brand": "Processia",
+    "nav": {
+      "missions": "Missions",
+      "admin": "Administration",
+      "dashboard": "Tableau de bord",
+      "team": "Équipe",
+      "adminUsers": "Utilisateurs",
+      "adminClients": "Clients",
+      "adminAi": "Fournisseur IA"
+    },
+    "mode": {
+      "label": "Mode d’affichage",
+      "simple": "Simple",
+      "expert": "Expert"
+    },
+    "notifications": {
+      "button": "Notifications",
+      "title": "Notifications",
+      "empty": "Aucune notification pour le moment."
+    },
+    "simulatedAi": {
+      "banner": "IA simulée",
+      "detail": "Les réponses de l’IA sont fictives (fournisseur factice). Aucune donnée n’est envoyée à un fournisseur externe."
+    },
+    "loadingSession": "Chargement de votre session…",
+    "currentMission": "Mission : {name}"
+  },
+  "pages": {
+    "missions": "Missions",
+    "missionDashboard": "Tableau de bord de la mission",
+    "missionTeam": "Équipe de la mission",
+    "adminUsers": "Utilisateurs",
+    "adminClients": "Clients",
+    "adminAi": "Fournisseur IA",
+    "notFound": "Page introuvable"
+  },
+  "notFound": {
+    "heading": "Page introuvable",
+    "body": "Cette page n’existe pas, ou vous n’y avez pas accès.",
+    "back": "Retour aux missions"
+  },
+  "missions": {
+    "heading": "Missions",
+    "subtitleMember": "Les missions auxquelles vous êtes affecté(e).",
+    "subtitleAll": "Toutes les missions du cabinet.",
+    "new": "Nouvelle mission",
+    "table": {
+      "caption": "Liste des missions",
+      "name": "Mission",
+      "client": "Client",
+      "phase": "Étape",
+      "completeness": "Complétude de l’analyse",
+      "team": "Votre rôle"
+    },
+    "empty": "Aucune mission pour le moment.",
+    "emptyHint": "Créez une première mission pour commencer.",
+    "emptyReader": "Aucune mission ne vous est affectée pour le moment.",
+    "noModel": "Pas encore de modèle",
+    "readOnly": "Lecture seule",
+    "pending": "{count} soumission(s) en attente",
+    "noProgress": "Non communiqué",
+    "create": {
+      "title": "Nouvelle mission",
+      "name": "Nom de la mission",
+      "client": "Client",
+      "clientPlaceholder": "Choisir un client",
+      "description": "Description du métier (facultative)",
+      "submit": "Créer la mission",
+      "noClients": "Aucun client n’existe encore. Un administrateur doit d’abord en créer un.",
+      "created": "Mission « {name} » créée."
+    }
+  },
+  "dashboard": {
+    "stepsHeading": "Où en est-on ?",
+    "steps": {
+      "analysis": "Analyse du métier",
+      "dossierValidation": "Validation du dossier d’analyse",
+      "asIs": "Cartographie AS-IS",
+      "asIsValidation": "Validation de l’AS-IS",
+      "toBe": "Diagnostic et TO-BE",
+      "toBeValidation": "Validation du TO-BE"
+    },
+    "state": {
+      "done": "TERMINÉE",
+      "current": "EN COURS",
+      "upcoming": "À VENIR"
+    },
+    "completenessHeading": "Complétude par concept",
+    "completenessHint": "Cliquez sur un concept pour voir ce qui manque. Vous décidez quand arrêter les questions.",
+    "concepts": {
+      "business": "Métier",
+      "actors": "Acteurs",
+      "activities": "Activités",
+      "data": "Données",
+      "flows": "Flux",
+      "rules": "Règles",
+      "indicators": "Indicateurs"
+    },
+    "missing": "Manque :",
+    "nothingMissing": "Rien ne manque pour ce concept.",
+    "global": "Complétude globale",
+    "noModelYet": "Aucune version du modèle n’existe encore : la complétude apparaîtra après la première analyse.",
+    "modelUnavailable": "Le modèle n’est pas accessible avec votre rôle.",
+    "todoHeading": "À faire",
+    "hypotheses": "{count} hypothèse(s) à examiner",
+    "questions": "{count} question(s) ouverte(s)",
+    "nothingTodo": "Rien à faire pour le moment.",
+    "pending": "{count} soumission(s) du validateur en attente",
+    "activityHeading": "Activité récente",
+    "activityEmpty": "L’activité de la mission apparaîtra ici.",
+    "expert": {
+      "head": "Version de tête du modèle : {version}",
+      "client": "Identifiant du client : {id}"
+    },
+    "heading": "Tableau de bord"
+  },
+  "team": {
+    "heading": "Équipe de la mission",
+    "intro": "Un seul validateur par mission ; le responsable et les consultants peuvent être plusieurs.",
+    "table": {
+      "caption": "Membres de la mission",
+      "name": "Nom",
+      "email": "Courriel",
+      "role": "Rôle",
+      "actions": "Actions"
+    },
+    "empty": "Aucun membre affecté.",
+    "remove": "Retirer {name}",
+    "removed": "{name} a été retiré(e) de la mission.",
+    "assigned": "{name} est affecté(e) comme {role}.",
+    "add": {
+      "heading": "Affecter un membre",
+      "user": "Utilisateur",
+      "userPlaceholder": "Choisir un utilisateur",
+      "role": "Rôle dans la mission",
+      "rolePlaceholder": "Choisir un rôle",
+      "submit": "Affecter",
+      "readOnly": "Vous consultez cette mission en lecture seule : seul un responsable peut modifier l’équipe.",
+      "noUsers": "Aucun compte actif n’est disponible pour cette affectation.",
+      "roleHint": "Les rôles proposés dépendent du rôle global du compte."
+    },
+    "invite": {
+      "heading": "Inviter une personne dans la mission",
+      "email": "Adresse de courriel",
+      "role": "Rôle dans la mission",
+      "rolePlaceholder": "Choisir un rôle",
+      "submit": "Envoyer l’invitation",
+      "sent": "Invitation envoyée à {email}."
+    },
+    "removeShort": "Retirer"
+  },
+  "admin": {
+    "users": {
+      "heading": "Utilisateurs",
+      "intro": "Comptes de l’application. L’invitation envoie un lien à usage unique (72 heures).",
+      "table": {
+        "caption": "Liste des utilisateurs",
+        "name": "Nom",
+        "email": "Courriel",
+        "role": "Rôle global",
+        "status": "Statut",
+        "mfa": "2FA",
+        "lastLogin": "Dernière connexion",
+        "actions": "Actions"
+      },
+      "status": {
+        "invited": "Invité",
+        "active": "Actif",
+        "disabled": "Désactivé"
+      },
+      "mfaOn": "Activée",
+      "mfaOff": "Non configurée",
+      "never": "Jamais",
+      "unlock": "Déverrouiller {name}",
+      "unlocked": "Le compte de {name} est déverrouillé.",
+      "disable": "Désactiver {name}",
+      "enable": "Réactiver {name}",
+      "statusChanged": "Le statut de {name} a été mis à jour.",
+      "invite": {
+        "heading": "Inviter un utilisateur",
+        "email": "Adresse de courriel",
+        "role": "Rôle global",
+        "rolePlaceholder": "Choisir un rôle",
+        "submit": "Envoyer l’invitation",
+        "sent": "Invitation envoyée à {email}."
+      },
+      "unlockShort": "Déverrouiller",
+      "enableShort": "Réactiver",
+      "disableShort": "Désactiver"
+    },
+    "clients": {
+      "heading": "Clients",
+      "intro": "Chaque mission appartient à un client ; la rétention des données se règle par client.",
+      "table": {
+        "caption": "Liste des clients",
+        "name": "Nom",
+        "retention": "Rétention (mois)",
+        "created": "Créé le"
+      },
+      "empty": "Aucun client pour le moment.",
+      "create": {
+        "heading": "Nouveau client",
+        "name": "Nom du client",
+        "retention": "Rétention par défaut (mois)",
+        "retentionHint": "Entre 1 et 240 ; vide : valeur par défaut.",
+        "submit": "Créer le client",
+        "created": "Client « {name} » créé."
+      }
+    },
+    "ai": {
+      "heading": "Fournisseur IA",
+      "intro": "La configuration est propre à chaque client. Sans configuration, l’IA est simulée.",
+      "client": "Client",
+      "clientPlaceholder": "Choisir un client",
+      "noClients": "Créez d’abord un client.",
+      "none": "Aucune configuration enregistrée : l’IA est simulée pour ce client.",
+      "tabs": {
+        "label": "Sections de la configuration",
+        "config": "Configuration",
+        "policy": "Politique de données"
+      },
+      "provider": "Fournisseur",
+      "providerPlaceholder": "Choisir un fournisseur",
+      "providers": {
+        "fake": "IA simulée (factice)",
+        "anthropic": "Anthropic"
+      },
+      "apiKey": "Clé d’API",
+      "apiKeyConfigured": "Une clé est enregistrée ({masked}). Laissez vide pour la conserver, saisissez-en une autre pour la remplacer.",
+      "apiKeyNone": "Aucune clé enregistrée.",
+      "defaultModel": "Modèle par défaut",
+      "defaultModelHint": "Identifiant du modèle, fourni par le fournisseur.",
+      "budget": "Plafond mensuel (€)",
+      "active": "Configuration active",
+      "capabilities": "Capacités déclarées",
+      "cap": {
+        "text": "Texte",
+        "documents": "Documents (PDF, images)",
+        "audio": "Audio"
+      },
+      "policyNone": "Ce fournisseur n’envoie aucune donnée à l’extérieur : aucune acceptation n’est requise.",
+      "accept": "J’ai lu la politique de données et je l’accepte au nom du cabinet.",
+      "acceptedAt": "Politique acceptée le {date}.",
+      "acceptRequired": "L’acceptation est requise pour un fournisseur externe.",
+      "submit": "Enregistrer la configuration",
+      "saved": "Configuration enregistrée."
+    }
+  },
+  "format": {
+    "percent": "{value} %"
   }
 }

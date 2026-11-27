@@ -48,7 +48,7 @@ pnpm typecheck            # tsc sur chaque unité (construit d'abord les paquets
 pnpm test                 # Vitest à la racine (tests unitaires, sans service externe)
 pnpm test:int             # tests d'intégration (*.int.test.ts) : exige `pnpm services:up`
 pnpm build                # Turborepo : paquets, API, collab, web
-pnpm e2e                  # build du web puis Playwright (voir le RUNBOOK pour le navigateur)
+pnpm e2e                  # build du web et de l'API, base de test, Playwright (voir le RUNBOOK)
 pnpm dev                  # tous les `dev` (web 3000, API 3001, collab 3002)
 pnpm services:up|down     # docker compose : postgres, minio, mailpit
 pnpm db:migrate           # migrations (rôles, schéma, RLS) ; pnpm db:seed pour les données de démonstration
