@@ -54,7 +54,8 @@ export class DecisionsService {
         // Le modèle a avancé pendant la décision : on la rejuge sur la nouvelle tête. Si
         // l'élément a été décidé entre-temps, `buildChangeSet` répond « déjà décidé ».
         const retry =
-          error instanceof AuthError && (error.code === 'STALE' || error.code === 'CHANGESET_INVALID');
+          error instanceof AuthError &&
+          (error.code === 'STALE' || error.code === 'CHANGESET_INVALID');
         if (!retry || attempt === MAX_ATTEMPTS) throw error;
       }
     }
@@ -132,7 +133,10 @@ export class DecisionsService {
       if (value === undefined) continue;
       if (allowed === undefined || !allowed.includes(field)) {
         throw new AuthError('VALIDATION_ERROR', [
-          { path: `correction.${field}`, message: 'Cet attribut ne se corrige pas par formulaire.' },
+          {
+            path: `correction.${field}`,
+            message: 'Cet attribut ne se corrige pas par formulaire.',
+          },
         ]);
       }
       if (JSON.stringify(current[field]) === JSON.stringify(value)) continue;

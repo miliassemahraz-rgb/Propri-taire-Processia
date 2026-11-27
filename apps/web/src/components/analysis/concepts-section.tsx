@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { t } from '@processia/i18n';
 import {
   completeness,
@@ -106,13 +106,22 @@ function Fiche({
   model,
   titleOf,
   onOpenCitation,
+  canEdit,
+  onConfirm,
 }: {
   element: Element;
   model: BusinessModel;
   titleOf: (sourceId: string) => string;
   onOpenCitation: (reference: SourceRef) => void;
+  canEdit: boolean;
+  onConfirm: (elementId: string) => Promise<unknown>;
 }) {
   const { mode } = useMode();
+  const [confirming, setConfirming] = useState(false);
+  const decidable =
+    canEdit &&
+    element.kind !== 'discrepancy' &&
+    (element.status.value === 'extracted' || element.status.value === 'hypothesis');
   const { provenance } = element;
   const rows = detailRows(element, model);
   return (
@@ -131,6 +140,29 @@ function Fiche({
       </div>
       {element.description !== undefined && element.description !== '' ? (
         <p>{element.description}</p>
+      ) : null}
+      {decidable ? (
+        <div className="stack-sm" data-testid="fiche-decision">
+          <div className="row">
+            <Button
+              isDisabled={confirming}
+              aria-label={t('analysis.fiche.confirmLabel', { label: element.label })}
+              onPress={() => {
+                setConfirming(true);
+                void onConfirm(element.id).finally(() => setConfirming(false));
+              }}
+            >
+              {t('analysis.fiche.confirm')}
+            </Button>
+          </div>
+          <p className="muted small">
+            {t(
+              element.status.value === 'hypothesis'
+                ? 'analysis.fiche.confirmHelpHypothesis'
+                : 'analysis.fiche.confirmHelp',
+            )}
+          </p>
+        </div>
       ) : null}
       {rows.length > 0 ? (
         <dl className="fiche-fields">
@@ -248,6 +280,8 @@ function ConceptPanel({
   onFilterChange,
   titleOf,
   onOpenCitation,
+  canEdit,
+  onConfirm,
 }: {
   tab: AnalysisTab;
   model: BusinessModel;
@@ -258,6 +292,8 @@ function ConceptPanel({
   onFilterChange: (filter: StatusFilter) => void;
   titleOf: (sourceId: string) => string;
   onOpenCitation: (reference: SourceRef) => void;
+  canEdit: boolean;
+  onConfirm: (elementId: string) => Promise<unknown>;
 }) {
   const report = useMemo(
     () => (tab === 'discrepancies' ? null : completeness(model)),
@@ -353,6 +389,8 @@ function ConceptPanel({
               model={model}
               titleOf={titleOf}
               onOpenCitation={onOpenCitation}
+              canEdit={canEdit}
+              onConfirm={onConfirm}
             />
           )}
         </aside>
@@ -371,6 +409,8 @@ interface Props {
   onFilterChange: (filter: StatusFilter) => void;
   titleOf: (sourceId: string) => string;
   onOpenCitation: (reference: SourceRef) => void;
+  canEdit: boolean;
+  onConfirm: (elementId: string) => Promise<unknown>;
 }
 
 /** Onglets par concept (et écarts) : listes d'éléments, fiches avec citations, complétude. */
@@ -406,6 +446,8 @@ export function ConceptsSection({ model, tab, onTabChange, ...rest }: Props) {
                   onFilterChange={rest.onFilterChange}
                   titleOf={rest.titleOf}
                   onOpenCitation={rest.onOpenCitation}
+                  canEdit={rest.canEdit}
+                  onConfirm={rest.onConfirm}
                 />
               ) : null,
           }))}

@@ -38,6 +38,15 @@ export function errorMessage(error: unknown): string {
     if (error.code === 'CONFLICT' && reason === 'ANALYSIS_IN_PROGRESS') {
       return t('errors.ANALYSIS_IN_PROGRESS');
     }
+    if (error.code === 'CONFLICT' && reason === 'ALREADY_DECIDED') {
+      return t('errors.ALREADY_DECIDED');
+    }
+    if (error.code === 'CONFLICT' && reason === 'QUESTION_NOT_OPEN') {
+      return t('errors.QUESTION_NOT_OPEN');
+    }
+    if (error.code === 'CONFLICT' && reason === 'GUIDED_IN_PROGRESS') {
+      return t('errors.GUIDED_IN_PROGRESS');
+    }
     return t(ERROR_MESSAGE_KEYS[error.code]);
   }
   return t('errors.UNKNOWN');

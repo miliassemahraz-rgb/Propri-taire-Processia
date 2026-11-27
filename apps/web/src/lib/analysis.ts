@@ -38,6 +38,12 @@ export function elementsByTab(model: BusinessModel | null): Record<AnalysisTab, 
   return result;
 }
 
+/** Onglet qui présente un élément (écarts à part). */
+export function tabOfElement(element: Element): AnalysisTab | null {
+  if (element.kind === 'discrepancy') return 'discrepancies';
+  return element.kind in CONCEPT_OF_KIND ? CONCEPT_OF_KIND[element.kind as ConceptKind] : null;
+}
+
 /** Références de source portées par un élément (provenance, et côtés d'un écart). */
 export function refsOf(element: Element): SourceRef[] {
   const refs = [...element.provenance.refs];

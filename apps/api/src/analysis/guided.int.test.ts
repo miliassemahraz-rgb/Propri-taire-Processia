@@ -150,9 +150,9 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
     expect((await validator.call('POST', `${base}/hypotheses/generate`, {})).status).toBe(403);
     expect((await validator.call('POST', `${base}/questions/stop`, {})).status).toBe(403);
     const { model } = await head();
-    expect((await decide(validator, (list(model)[0] as Element).id, { decision: 'accept' })).status).toBe(
-      403,
-    );
+    expect(
+      (await decide(validator, (list(model)[0] as Element).id, { decision: 'accept' })).status,
+    ).toBe(403);
   });
 
   let first: QuestionDto;
@@ -216,9 +216,11 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
     expect(ref.sourceId).toBe(answer.source.id);
     const chunks = (await consultantA.call('GET', `${base}/sources/${answer.source.id}/chunks`))
       .body as ChunkDto[];
-    expect(chunks.find((c) => c.id === ref.chunkId)?.text.slice(ref.locator.charStart, ref.locator.charEnd)).toBe(
-      ref.quote,
-    );
+    expect(
+      chunks
+        .find((c) => c.id === ref.chunkId)
+        ?.text.slice(ref.locator.charStart, ref.locator.charEnd),
+    ).toBe(ref.quote);
     const version = await admin.query(
       'select cause, ai_call_id from model_versions where mission_id = $1 and version = $2',
       [MISSION, after.version],
@@ -243,7 +245,9 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
 
   it('5. la complétude des activités augmente après une réponse qui apporte des tâches', async () => {
     const before = await head();
-    const saisie = (await questionsList()).find((q) => q.text.includes('« Saisie »')) as QuestionDto;
+    const saisie = (await questionsList()).find((q) =>
+      q.text.includes('« Saisie »'),
+    ) as QuestionDto;
     const res = await consultantA.call('POST', `${base}/questions/${saisie.id}/answer`, {
       text: PILOT_ANSWER_SAISIE,
     });
@@ -259,7 +263,9 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
       'Saisie des écritures',
     ]);
     const parent = byLabel(after.model, 'Saisie') as Activity;
-    expect(tasks.every((t) => t.parentId === parent.id && t.status.value === 'extracted')).toBe(true);
+    expect(tasks.every((t) => t.parentId === parent.id && t.status.value === 'extracted')).toBe(
+      true,
+    );
     expect(tasks.every((t) => t.provenance.origin === 'answer')).toBe(true);
     expect(completeness(after.model).activities.score).toBeGreaterThan(
       completeness(before.model).activities.score,
@@ -274,7 +280,7 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
     });
     expect(res.status).toBe(201);
     const done = await waitRun(res.body.runId);
-    expect(done.status).toBe('succeeded');
+    expect(done).toMatchObject({ status: 'succeeded', resultVersion: null });
     expect((await head()).version).toBe(before.version);
   });
 
@@ -283,9 +289,9 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
     const skipped = await consultantA.call('POST', `${base}/questions/${open[0]!.id}/skip`, {});
     expect(skipped.status).toBe(201);
     expect(skipped.body).toMatchObject({ status: 'skipped', rank: null });
-    expect((await consultantA.call('POST', `${base}/questions/${open[0]!.id}/skip`, {})).status).toBe(
-      409,
-    );
+    expect(
+      (await consultantA.call('POST', `${base}/questions/${open[0]!.id}/skip`, {})).status,
+    ).toBe(409);
     const stopped = await consultantA.call('POST', `${base}/questions/stop`, {});
     expect(stopped.body.skipped).toBe(open.length - 1);
     const all = await questionsList();
@@ -309,7 +315,11 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
       PILOT_HYPOTHESES.map((h) => h.proposal.label).sort(),
     );
     for (const h of hypotheses) {
-      expect(h.provenance).toMatchObject({ origin: 'ai_knowledge', author: { type: 'ai' }, refs: [] });
+      expect(h.provenance).toMatchObject({
+        origin: 'ai_knowledge',
+        author: { type: 'ai' },
+        refs: [],
+      });
       expect(h.provenance.rationale).toBeTruthy();
       expect(h.provenance.aiCallId).toBeTruthy();
     }
@@ -358,13 +368,17 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
     // Un attribut qui ne se corrige pas par formulaire est refusé.
     const actor = hypotheses.find((h) => h.kind === 'actor') as Element;
     expect(
-      (await decide(consultantA, actor.id, { decision: 'correct', correction: { text: 'x' } })).status,
+      (await decide(consultantA, actor.id, { decision: 'correct', correction: { text: 'x' } }))
+        .status,
     ).toBe(400);
   });
 
   it('3. rejeter une hypothèse la retire du modèle, l’archive ; relancer `hypotheses` ne la repropose pas', async () => {
     const tool = hypotheses.find((h) => h.kind === 'tool') as Element;
-    const rejected = await decide(consultantA, tool.id, { decision: 'reject', reason: 'Pas de GED' });
+    const rejected = await decide(consultantA, tool.id, {
+      decision: 'reject',
+      reason: 'Pas de GED',
+    });
     expect(rejected.status, JSON.stringify(rejected.body)).toBe(201);
     expect(rejected.body).toMatchObject({ outcome: 'rejected' });
     const { model, version } = await head();
@@ -433,9 +447,10 @@ describe('WP-14 : questionnement guidé et hypothèses', () => {
       value: 'confirmed',
       decidedBy: SEED_IDS.consultantB,
     });
-    expect((await decide(consultantA, '00000000-0000-7000-8000-00000000ffff', { decision: 'accept' })).status).toBe(
-      404,
-    );
+    expect(
+      (await decide(consultantA, '00000000-0000-7000-8000-00000000ffff', { decision: 'accept' }))
+        .status,
+    ).toBe(404);
   });
 
   it('synthèse du métier : hypothèse à confirmer, jamais écrasée une fois décidée', async () => {

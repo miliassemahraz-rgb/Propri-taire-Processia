@@ -4,7 +4,6 @@ import { normalizeForMatch } from '../extraction/text.js';
 import { loadPrompt } from '../prompts.js';
 import type { PipelineDef } from '../runner.js';
 import {
-  CANDIDATE_KINDS,
   chunkMessage,
   DONNEES_CLOSE,
   DONNEES_OPEN,
@@ -12,6 +11,7 @@ import {
   extractionCandidatesSchema,
   extractionChunkPipeline,
   summaryContext,
+  type CandidateKind,
   type ChunkInput,
   type ExtractionCandidates,
   type ModelSummaryEntry,
@@ -186,8 +186,11 @@ export const answerIntegratePipeline: PipelineDef<AnswerIntegrateInput, Extracti
   }),
   // Même contrôle interne que l'extraction d'un morceau (la rétrogradation n'est pas une erreur).
   semanticCheck: (output, input, ctx) =>
-    extractionChunkPipeline.semanticCheck?.(output, { chunk: input.chunk, model: input.model }, ctx) ??
-    [],
+    extractionChunkPipeline.semanticCheck?.(
+      output,
+      { chunk: input.chunk, model: input.model },
+      ctx,
+    ) ?? [],
 };
 
 // ------------------------------------------------------------------ hypotheses
@@ -222,9 +225,7 @@ export const hypothesesPipeline: PipelineDef<HypothesesInput, HypothesesOutput> 
   buildRequest: (input) => ({
     system: loadPrompt('hypotheses'),
     context: summaryContext(input.model),
-    messages: [
-      { role: 'user', content: donnees({ gaps: input.gaps, rejected: input.rejected }) },
-    ],
+    messages: [{ role: 'user', content: donnees({ gaps: input.gaps, rejected: input.rejected }) }],
     maxOutputTokens: 8_000,
     effort: 'medium',
   }),
@@ -242,7 +243,7 @@ export const hypothesesPipeline: PipelineDef<HypothesesInput, HypothesesOutput> 
       }
       if (refs.has(p.ref)) issues.push({ path: `${at}.ref`, message: `Référence en double.` });
       refs.add(p.ref);
-      const required: Record<(typeof CANDIDATE_KINDS)[number], unknown> = {
+      const required: Record<CandidateKind, unknown> = {
         business_trait: p.trait,
         actor: p.actor,
         activity: p.activity,
@@ -250,7 +251,10 @@ export const hypothesesPipeline: PipelineDef<HypothesesInput, HypothesesOutput> 
         glossary_term: p.term,
       };
       if (required[p.kind] === undefined) {
-        issues.push({ path: `${at}.${p.kind}`, message: 'Le détail propre à la nature est requis.' });
+        issues.push({
+          path: `${at}.${p.kind}`,
+          message: 'Le détail propre à la nature est requis.',
+        });
       }
       if (p.kind === 'activity' && p.activity !== undefined && p.activity.level !== 'macro') {
         if (p.activity.parent === undefined) {

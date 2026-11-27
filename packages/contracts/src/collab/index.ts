@@ -54,9 +54,7 @@ export interface ModelVersionMessage {
 
 /** Messages sans état diffusés sur le document `model` (les autres types arriveront avec leurs WP). */
 export type CollabStatelessMessage =
-  | ModelVersionMessage
-  | RunProgressMessage
-  | QuestionUpdatedMessage;
+  ModelVersionMessage | RunProgressMessage | QuestionUpdatedMessage;
 
 /**
  * Messages sans état du document `workspace` : « enregistrer maintenant ». Le texte est regroupé

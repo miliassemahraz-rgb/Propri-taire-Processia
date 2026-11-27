@@ -149,7 +149,9 @@ export class GuidedService implements OnModuleInit {
     const order: Record<string, number> = { open: 0, answered: 1, skipped: 2 };
     return rows
       .map(toQuestionDto)
-      .sort((a, b) => (order[a.status] ?? 3) - (order[b.status] ?? 3) || (a.rank ?? 0) - (b.rank ?? 0));
+      .sort(
+        (a, b) => (order[a.status] ?? 3) - (order[b.status] ?? 3) || (a.rank ?? 0) - (b.rank ?? 0),
+      );
   }
 
   /** « Passer » : la question n'est pas reposée (son texte reste connu de `questions`). */
@@ -275,7 +277,12 @@ export class GuidedService implements OnModuleInit {
       if (busy !== undefined) throw new AuthError('CONFLICT', { reason: 'GUIDED_IN_PROGRESS' });
       return this.createRun(tx, ctx.missionId, runKind, userId, null);
     });
-    await this.enqueue(ctx.missionId, runId, null, { kind, missionId: ctx.missionId, runId, userId });
+    await this.enqueue(ctx.missionId, runId, null, {
+      kind,
+      missionId: ctx.missionId,
+      runId,
+      userId,
+    });
     return { runId };
   }
 
@@ -308,7 +315,10 @@ export class GuidedService implements OnModuleInit {
       );
     } catch (error) {
       await withMission(this.db, missionId, (tx) =>
-        updateRun(tx, missionId, runId, sourceId, { status: 'failed', error: 'JOB_ENQUEUE_FAILED' }),
+        updateRun(tx, missionId, runId, sourceId, {
+          status: 'failed',
+          error: 'JOB_ENQUEUE_FAILED',
+        }),
       );
       throw error;
     }
@@ -354,7 +364,9 @@ export class GuidedService implements OnModuleInit {
         });
       });
     } catch (error) {
-      this.logger.error(`Exécution ${data.kind} ${data.runId} en échec : ${(error as Error).message}`);
+      this.logger.error(
+        `Exécution ${data.kind} ${data.runId} en échec : ${(error as Error).message}`,
+      );
       const message = error instanceof AiError ? error.code : (error as Error).message;
       await withMission(this.db, data.missionId, async (tx) => {
         await updateRun(tx, data.missionId, data.runId, sourceId, {
@@ -429,7 +441,10 @@ export class GuidedService implements OnModuleInit {
         asc(questions.id),
       );
     for (const [index, row] of open.entries()) {
-      await tx.update(questions).set({ rank: index + 1 }).where(eq(questions.id, row.id));
+      await tx
+        .update(questions)
+        .set({ rank: index + 1 })
+        .where(eq(questions.id, row.id));
     }
   }
 
@@ -447,13 +462,17 @@ export class GuidedService implements OnModuleInit {
       { missionId, userId },
     );
     await progress(70);
-    return this.commitWithRetry(missionId, userId, run.callId, (model) =>
-      buildHypothesesChangeSet({
-        model,
-        output: run.output,
-        aiCallId: run.callId,
-        at: this.clock.now().toISOString(),
-      }).changeSet,
+    return this.commitWithRetry(
+      missionId,
+      userId,
+      run.callId,
+      (model) =>
+        buildHypothesesChangeSet({
+          model,
+          output: run.output,
+          aiCallId: run.callId,
+          at: this.clock.now().toISOString(),
+        }).changeSet,
     );
   }
 
@@ -573,7 +592,8 @@ export class GuidedService implements OnModuleInit {
     for (let attempt = 1; attempt <= MAX_COMMIT_ATTEMPTS; attempt += 1) {
       const model = await this.head(missionId);
       const changeSet = build(model);
-      if (changeSet === null) return model.version === 0 ? null : model.version;
+      // Rien à écrire : l'exécution ne produit aucune version.
+      if (changeSet === null) return null;
       try {
         const committed = await this.models.commit(missionId, changeSet, {
           userId,

@@ -183,7 +183,12 @@ export function pilotAnswerIntegrateScenario(req: ScenarioRequest): unknown {
   const haystack = canon(text);
   const found = ANSWER_ENTRIES.filter((e) => haystack.includes(canon(e.quote)));
   return {
-    candidates: found.map((e, i) => ({ ref: `c${i + 1}`, chunkId, quote: e.quote, ...e.candidate })),
+    candidates: found.map((e, i) => ({
+      ref: `c${i + 1}`,
+      chunkId,
+      quote: e.quote,
+      ...e.candidate,
+    })),
   };
 }
 

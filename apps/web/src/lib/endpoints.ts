@@ -17,12 +17,18 @@ import {
   recoveryResponseSchema,
   userSummarySchema,
   type AcceptInvitationRequest,
+  type AnswerQuestionResult,
   type ChunkDto,
   type ChunkViewDto,
   type CommitResult,
+  type DecisionRequest,
+  type DecisionResult,
+  type QuestionDto,
   type RunDto,
   type SourceDto,
   type StartExtractionResult,
+  type StartGuidedResult,
+  type StopQuestionsResult,
   type UploadSourceResult,
   type VersionSummary,
   type AssignMemberRequest,
@@ -169,6 +175,51 @@ export const endpoints = {
   modelAt: (id: string, version: number) =>
     apiRequest(`/missions/${id}/model?version=${version}`, {
       schema: typed<{ version: number; model: BusinessModel }>(),
+    }),
+  // Questionnement guidé, hypothèses et décisions (WP-14)
+  listQuestions: (id: string) =>
+    apiRequest(`/missions/${id}/questions`, { schema: typed<QuestionDto[]>() }),
+  generateQuestions: (id: string) =>
+    apiRequest(`/missions/${id}/questions/generate`, {
+      method: 'POST',
+      body: {},
+      schema: typed<StartGuidedResult>(),
+    }),
+  answerQuestion: (id: string, questionId: string, text: string) =>
+    apiRequest(`/missions/${id}/questions/${questionId}/answer`, {
+      method: 'POST',
+      body: { text },
+      schema: typed<AnswerQuestionResult>(),
+    }),
+  skipQuestion: (id: string, questionId: string) =>
+    apiRequest(`/missions/${id}/questions/${questionId}/skip`, {
+      method: 'POST',
+      body: {},
+      schema: typed<QuestionDto>(),
+    }),
+  stopQuestions: (id: string) =>
+    apiRequest(`/missions/${id}/questions/stop`, {
+      method: 'POST',
+      body: {},
+      schema: typed<StopQuestionsResult>(),
+    }),
+  generateHypotheses: (id: string) =>
+    apiRequest(`/missions/${id}/hypotheses/generate`, {
+      method: 'POST',
+      body: {},
+      schema: typed<StartGuidedResult>(),
+    }),
+  generateSummary: (id: string) =>
+    apiRequest(`/missions/${id}/summary/generate`, {
+      method: 'POST',
+      body: {},
+      schema: typed<StartGuidedResult>(),
+    }),
+  decideElement: (id: string, elementId: string, decision: DecisionRequest) =>
+    apiRequest(`/missions/${id}/elements/${elementId}/decision`, {
+      method: 'POST',
+      body: decision,
+      schema: typed<DecisionResult>(),
     }),
   rollback: (id: string, toVersion: number) =>
     apiRequest(`/missions/${id}/model/rollback`, {
