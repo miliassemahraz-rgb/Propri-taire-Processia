@@ -71,6 +71,13 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Sans clé IA, le fournisseur factice rejoue le **scénario du pilote** (`packages/test-fixtures/src/pilot.ts`) : collez `PILOT_DESCRIPTION` dans la description du métier pour obtenir les 14 macroprocessus, les 8 acteurs et les 4 parties prenantes du CDC 8. Un autre texte ne produit aucun candidat.
 - Les tests d'acceptation sont dans `apps/api/src/analysis/extraction.int.test.ts` (`pnpm exec vitest run --config vitest.int.config.ts apps/api/src/analysis`).
 
+## Questionnement guidé et hypothèses (WP-14)
+
+- Routes (toutes sous `/missions/:id`) : `GET questions` ; `POST questions/generate` (pipeline `questions`), `questions/:questionId/answer` (corps `{ text }` : source `answer` puis `answer.integrate`), `questions/:questionId/skip`, `questions/stop` ; `POST hypotheses/generate`, `POST summary/generate` (`deliverable.summary`) ; `POST elements/:elementId/decision` (corps `{ decision: 'accept' }`, `{ decision: 'correct', correction }` ou `{ decision: 'reject', reason? }` ; 409 `ALREADY_DECIDED` si l'élément est déjà décidé).
+- Les quatre genres d'exécution (`questions`, `hypotheses`, `summary`, `answer`) passent par la file pg-boss `analysis.guided`, donc par le worker ; suivi par `GET runs/:runId` ou `run.progress`. Une seule exécution de chaque genre à la fois (409 `GUIDED_IN_PROGRESS`).
+- Avec le fournisseur factice, les scénarios du pilote (`packages/test-fixtures/src/pilot-guided.ts`) répondent : analysez `PILOT_DESCRIPTION`, générez les questions (la première est celle sur l'environnement du métier), puis répondez avec `PILOT_ANSWER_ENVIRONMENT`, `PILOT_ANSWER_SAISIE` ou `PILOT_ANSWER_IMPUTATION` pour obtenir des éléments cités ; les cinq hypothèses viennent de `PILOT_HYPOTHESES`.
+- Tests d'acceptation : `apps/api/src/analysis/guided.int.test.ts` (`pnpm exec vitest run --config vitest.int.config.ts apps/api/src/analysis/guided.int.test.ts`) et `e2e/tests/z-questionnement.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-14-questionnement.png`).
+
 ## Réinitialiser
 
 ```bash

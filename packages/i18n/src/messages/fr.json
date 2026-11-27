@@ -59,7 +59,10 @@
     "UNSUPPORTED_FILE_TYPE": "Ce type de fichier n’est pas pris en charge, ou son contenu ne correspond pas à son extension.",
     "NETWORK": "Le serveur est injoignable. Vérifiez votre connexion et réessayez.",
     "UNKNOWN": "Une erreur inattendue est survenue. Réessayez.",
-    "ANALYSIS_IN_PROGRESS": "Une analyse est déjà en cours pour cette mission. Patientez jusqu’à sa fin."
+    "ANALYSIS_IN_PROGRESS": "Une analyse est déjà en cours pour cette mission. Patientez jusqu’à sa fin.",
+    "ALREADY_DECIDED": "Cet élément a déjà été décidé par un autre consultant.",
+    "QUESTION_NOT_OPEN": "Cette question a déjà reçu une réponse ou a été passée.",
+    "GUIDED_IN_PROGRESS": "Cette opération est déjà en cours pour la mission. Patientez jusqu’à sa fin."
   },
   "warnings": {
     "CAPABILITY_MISSING": {
@@ -553,7 +556,11 @@
       "decided": "Décidé le {date}",
       "elements": "Éléments concernés",
       "expertId": "Identifiant : {id}",
-      "expertVersions": "Créé à la version {created}, modifié à la version {updated}"
+      "expertVersions": "Créé à la version {created}, modifié à la version {updated}",
+      "confirm": "Confirmer",
+      "confirmLabel": "Confirmer l’élément « {label} »",
+      "confirmHelp": "Confirmer indique que vous avez vérifié cet élément extrait de la source.",
+      "confirmHelpHypothesis": "Confirmer fait de cette hypothèse un élément validé par vous ; pour la corriger ou la rejeter, utilisez « Hypothèses à examiner »."
     },
     "field": {
       "level": "Niveau",
@@ -654,6 +661,98 @@
     "view": {
       "tab": "Analyse, {tab}",
       "element": "Analyse, {tab}, {element}"
+    },
+    "decision": {
+      "confirmed": "Élément confirmé",
+      "corrected": "Élément corrigé et confirmé",
+      "rejected": "Hypothèse rejetée et archivée",
+      "already": "Cet élément a déjà été décidé par un autre consultant."
+    },
+    "questions": {
+      "heading": "Questions de l’outil",
+      "count": "({count} ouverte(s))",
+      "intro": "L’outil pose une question à la fois, la plus bloquante d’abord. Votre réponse devient une source citée par les éléments qu’elle apporte.",
+      "completenessLabel": "Complétude du modèle",
+      "completenessText": "{percent} %",
+      "completenessHelp": "La complétude mesure l’avancement du modèle ; c’est vous qui décidez quand arrêter le questionnement.",
+      "loading": "Chargement des questions…",
+      "none": "Aucune question pour le moment. L’outil peut en préparer à partir des manques du modèle.",
+      "allDone": "Toutes les questions ont reçu une réponse ou ont été passées.",
+      "stopped": "Le questionnement est arrêté. Vous pourrez demander de nouvelles questions plus tard.",
+      "generate": "Préparer des questions",
+      "generating": "L’outil prépare des questions…",
+      "generateDone": "Questions prêtes",
+      "generateFailed": "La préparation des questions a échoué",
+      "failedDetail": "Le modèle n’a pas été modifié. Vous pouvez recommencer.",
+      "blocking": "Bloquant pour : {concepts}",
+      "score": "effet bloquant {score} sur 100",
+      "why": "Pourquoi cette question",
+      "targets": "Éléments concernés",
+      "answerLabel": "Votre réponse",
+      "answer": "Répondre",
+      "skip": "Passer",
+      "stop": "Arrêter les questions",
+      "remaining": "Il reste {count} autre(s) question(s) ouverte(s).",
+      "readOnly": "Vous pouvez lire les questions, mais pas y répondre.",
+      "integrating": "Votre réponse est en cours d’intégration au modèle…",
+      "answerDone": "Réponse intégrée",
+      "answerVersion": "Le modèle est maintenant à la version {version}.",
+      "answerNoChange": "La réponse est enregistrée comme source ; elle n’a apporté aucun nouvel élément.",
+      "answerFailed": "L’intégration de la réponse a échoué",
+      "treated": "Questions traitées ({count})",
+      "status": {
+        "answered": "Répondue",
+        "skipped": "Passée",
+        "open": "Ouverte"
+      }
+    },
+    "hypotheses": {
+      "heading": "Hypothèses à examiner",
+      "count": "({count})",
+      "intro": "Aucune hypothèse n’entre dans un livrable sans votre confirmation.",
+      "generate": "Proposer des hypothèses",
+      "summary": "Proposer une synthèse du métier",
+      "summaryNeeds": "La synthèse du métier s’écrit à partir des caractéristiques du métier déjà extraites ou confirmées.",
+      "progress": "Progression de la proposition",
+      "generateDone": "Propositions prêtes",
+      "generateVersion": "Le modèle est maintenant à la version {version}.",
+      "generateNoChange": "Aucune nouvelle hypothèse : le modèle n’a pas changé.",
+      "generateFailed": "La proposition d’hypothèses a échoué",
+      "summaryDone": "Synthèse proposée",
+      "summaryFailed": "La synthèse du métier a échoué",
+      "none": "Aucune hypothèse en attente.",
+      "noModel": "Aucune hypothèse tant que le modèle est vide.",
+      "why": "Pourquoi",
+      "noRationale": "Aucune justification fournie.",
+      "seeElement": "Voir la fiche",
+      "accept": "Accepter",
+      "acceptLabel": "Accepter l’hypothèse « {label} »",
+      "correct": "Corriger",
+      "correctLabel": "Corriger l’hypothèse « {label} »",
+      "reject": "Rejeter",
+      "rejectLabel": "Rejeter l’hypothèse « {label} »",
+      "correctForm": "Correction de l’hypothèse « {label} »",
+      "correctHelp": "Modifiez les textes ; l’hypothèse est confirmée avec votre correction, l’ancienne valeur est conservée.",
+      "correctSave": "Enregistrer la correction",
+      "nothingChanged": "Aucune valeur n’a changé : utilisez « Accepter » pour confirmer telle quelle.",
+      "cancel": "Annuler",
+      "rejectHelp": "L’hypothèse sera retirée du modèle et archivée ; l’outil ne la reproposera pas.",
+      "reasonLabel": "Motif du rejet (facultatif)",
+      "rejectConfirm": "Confirmer le rejet",
+      "field": {
+        "label": "Libellé",
+        "description": "Description",
+        "text": "Texte",
+        "definition": "Définition",
+        "responsibilities": "Responsabilités (une par ligne)"
+      },
+      "announceConfirmed": "« {label} » est confirmée.",
+      "announceRejected": "« {label} » est rejetée et archivée.",
+      "announceAlready": "« {label} » a déjà été décidée par un autre consultant.",
+      "archive": "Hypothèses rejetées ({count})",
+      "archiveHelp": "Ces hypothèses ne sont plus dans le modèle et ne seront pas reproposées.",
+      "rejectedOn": "rejetée le {date}",
+      "rejectedReason": "motif : {reason}"
     }
   }
 }

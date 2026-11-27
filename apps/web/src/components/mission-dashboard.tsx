@@ -43,7 +43,13 @@ type ModelState =
   | { status: 'none' }
   | { status: 'unavailable' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; report: CompletenessByConcept; discrepancies: number };
+  | {
+      status: 'ready';
+      report: CompletenessByConcept;
+      discrepancies: number;
+      /** Questions de l'outil encore ouvertes (WP-14). */
+      openQuestions: number;
+    };
 
 function stepState(index: number, current: number): 'done' | 'current' | 'upcoming' {
   if (index < current) return 'done';
@@ -134,10 +140,14 @@ export function MissionDashboard() {
           return;
         }
         const parsed = BusinessModelSchema.parse(head.model);
+        // Les questions de l'outil sont en base (WP-14) ; leur absence ne bloque pas le tableau.
+        const asked = await endpoints.listQuestions(mission.id).catch(() => []);
+        if (cancelled) return;
         setModel({
           status: 'ready',
           report: completeness(parsed),
           discrepancies: openDiscrepancies(parsed).length,
+          openQuestions: asked.filter((q) => q.status === 'open').length,
         });
       } catch (error) {
         if (cancelled) return;
@@ -155,7 +165,7 @@ export function MissionDashboard() {
 
   const report = model.status === 'ready' ? model.report : null;
   const hypotheses = report ? CONCEPTS.reduce((sum, c) => sum + report[c].pendingHypotheses, 0) : 0;
-  const questions = report ? CONCEPTS.reduce((sum, c) => sum + report[c].openQuestions, 0) : 0;
+  const questions = model.status === 'ready' ? model.openQuestions : 0;
   const pending = mission.progress?.pendingSubmissions ?? 0;
   const gaps = model.status === 'ready' ? model.discrepancies : 0;
   // « À faire » : chaque élément mène à l'espace Analyse (PO-93) ; les soumissions du validateur

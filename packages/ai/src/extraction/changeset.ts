@@ -3,6 +3,7 @@ import type {
   Activity,
   BusinessModel,
   BusinessTrait,
+  ChangeCause,
   ChangeSet,
   Discrepancy,
   Element,
@@ -61,6 +62,8 @@ export interface BuildInput {
   at: string;
   /** Texte du résumé du ChangeSet. */
   summary?: string;
+  /** Cause du ChangeSet : `extraction` par défaut, `answer` ou `hypotheses` (WP-14). */
+  cause?: ChangeCause;
 }
 
 export interface BuildResult {
@@ -323,7 +326,7 @@ export function buildExtractionChangeSet(input: BuildInput): BuildResult {
     changeSet: {
       baseVersion: model.version,
       ops,
-      cause: 'extraction',
+      cause: input.cause ?? 'extraction',
       summary: input.summary ?? `Extraction : ${parts.join(', ')}`,
     },
     stats,

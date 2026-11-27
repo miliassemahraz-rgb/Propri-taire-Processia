@@ -5,6 +5,7 @@ import {
   modelDocName,
   parseDocName,
   type ModelVersionMessage,
+  type QuestionUpdatedMessage,
   type RunProgressMessage,
   type WorkspaceFlushedMessage,
 } from '@processia/contracts';
@@ -153,7 +154,7 @@ export function createCollabServer(options: CollabOptions) {
     }
   }
 
-  function relayProgress(message: RunProgressMessage): void {
+  function relayProgress(message: RunProgressMessage | QuestionUpdatedMessage): void {
     hocuspocus.documents
       .get(modelDocName(message.missionId))
       ?.broadcastStateless(JSON.stringify(message));
@@ -172,8 +173,11 @@ export function createCollabServer(options: CollabOptions) {
     if (typeof missionId !== 'string' || !UUID.test(missionId)) return;
     if (channel === MISSION_EVENTS_CHANNEL) {
       enqueue(missionId.toLowerCase(), () => syncModel(missionId.toLowerCase()));
-    } else if (channel === MISSION_MESSAGES_CHANNEL && record['type'] === 'run.progress') {
-      relayProgress(data as RunProgressMessage);
+    } else if (
+      channel === MISSION_MESSAGES_CHANNEL &&
+      (record['type'] === 'run.progress' || record['type'] === 'question.updated')
+    ) {
+      relayProgress(data as RunProgressMessage | QuestionUpdatedMessage);
     }
   }
 

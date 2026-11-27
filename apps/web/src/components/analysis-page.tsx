@@ -1,15 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { SourceDto } from '@processia/contracts';
+import type { DecisionRequest, SourceDto } from '@processia/contracts';
 import { t } from '@processia/i18n';
 import type { SourceRef } from '@processia/model';
 import { Button, Notice, ProgressMeter, showToast } from '@processia/ui';
 import {
   applyRunMessage,
-  elementsByTab,
   hasPendingSources,
   isActive,
+  tabOfElement,
   type AnalysisTab,
   type ExtractionRunState,
 } from '../lib/analysis';
@@ -19,6 +19,8 @@ import { endpoints } from '../lib/endpoints';
 import { errorMessage } from '../lib/errors';
 import { ConceptsSection, type StatusFilter } from './analysis/concepts-section';
 import { HistorySection } from './analysis/history-section';
+import { HypothesesSection, type DecisionOutcome } from './analysis/hypotheses-section';
+import { QuestionsSection } from './analysis/questions-section';
 import { SourceViewer, type ViewerTarget } from './analysis/source-viewer';
 import { SourcesSection, sourceTitle } from './analysis/sources-section';
 import { DescriptionEditor } from './description-editor';
@@ -28,6 +30,7 @@ const POLL_MS = 1500;
 const DISCREPANCIES: AnalysisTab = 'discrepancies';
 const ALL: StatusFilter = 'all';
 const SCROLL_TO_TOP: ScrollIntoViewOptions = { block: 'start' };
+const ACCEPT: DecisionRequest = { decision: 'accept' };
 
 /**
  * Espace « Analyse » (WP-13) : description partagée et bouton « Analyser », sources et état de
@@ -162,7 +165,7 @@ export function AnalysisPage() {
     }
   }
 
-  // Liens du tableau de bord : `#hypotheses` (hypothèses à examiner), `#contradictions` (écarts).
+  // Liens du tableau de bord : `#questions`, `#hypotheses` (panneaux) et `#contradictions` (écarts).
   useEffect(() => {
     pendingHash.current = window.location.hash.replace('#', '') || null;
   }, []);
@@ -170,15 +173,8 @@ export function AnalysisPage() {
     if (model === null || pendingHash.current === null) return;
     const wanted = pendingHash.current;
     pendingHash.current = null;
-    const byTab = elementsByTab(model);
-    if (wanted === 'hypotheses') {
-      const first = (Object.keys(byTab) as AnalysisTab[]).find((id) =>
-        byTab[id].some((element) => element.status.value === 'hypothesis'),
-      );
-      if (first !== undefined) {
-        setTab(first);
-        setFilter('hypothesis');
-      }
+    if (wanted === 'questions' || wanted === 'hypotheses') {
+      document.getElementById(wanted)?.scrollIntoView(SCROLL_TO_TOP);
     } else if (wanted === 'contradictions') {
       setTab('discrepancies');
     }
@@ -200,6 +196,45 @@ export function AnalysisPage() {
     const byId = new Map((sources ?? []).map((source) => [source.id, sourceTitle(source)]));
     return (sourceId: string) => byId.get(sourceId) ?? sourceId;
   }, [sources]);
+
+  /** Enregistre la décision du consultant sur un élément (partagée par la fiche et les hypothèses). */
+  async function decide(elementId: string, decision: DecisionRequest): Promise<DecisionOutcome> {
+    try {
+      await endpoints.decideElement(missionId, elementId, decision);
+      showToast({
+        tone: 'success',
+        title: t(
+          decision.decision === 'reject'
+            ? 'analysis.decision.rejected'
+            : decision.decision === 'correct'
+              ? 'analysis.decision.corrected'
+              : 'analysis.decision.confirmed',
+        ),
+      });
+      return 'done';
+    } catch (error) {
+      const already =
+        error instanceof ApiRequestError &&
+        error.code === 'CONFLICT' &&
+        (error.details as { reason?: unknown } | undefined)?.reason === 'ALREADY_DECIDED';
+      showToast({
+        tone: already ? 'info' : 'error',
+        title: already ? t('analysis.decision.already') : errorMessage(error),
+      });
+      return already ? 'already' : 'error';
+    }
+  }
+
+  /** Ouvre un élément dans l'onglet de son concept, avec sa fiche. */
+  function selectElement(elementId: string): void {
+    const element = model?.elements[elementId];
+    const target = element === undefined ? null : tabOfElement(element);
+    if (target === null) return;
+    setTab(target);
+    setFilter(ALL);
+    setSelectedId(elementId);
+    conceptsRef.current?.scrollIntoView(SCROLL_TO_TOP);
+  }
 
   function openCitation(reference: SourceRef): void {
     setViewer({
@@ -288,6 +323,21 @@ export function AnalysisPage() {
         />
       </div>
 
+      <QuestionsSection
+        missionId={missionId}
+        model={model}
+        canEdit={canEdit}
+        onSelectElement={selectElement}
+      />
+
+      <HypothesesSection
+        missionId={missionId}
+        model={model}
+        canEdit={canEdit}
+        onDecide={decide}
+        onSelectElement={selectElement}
+      />
+
       <div ref={conceptsRef}>
         <ConceptsSection
           model={model}
@@ -302,6 +352,8 @@ export function AnalysisPage() {
           onFilterChange={setFilter}
           titleOf={titleOf}
           onOpenCitation={openCitation}
+          canEdit={canEdit}
+          onConfirm={(elementId) => decide(elementId, ACCEPT)}
         />
       </div>
 
