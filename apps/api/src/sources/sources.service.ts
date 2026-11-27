@@ -59,6 +59,7 @@ function runDto(row: typeof analysisRuns.$inferSelect): RunDto {
     status: row.status as RunStatus,
     progress: row.progress,
     error: row.error,
+    resultVersion: row.resultVersion,
   };
 }
 

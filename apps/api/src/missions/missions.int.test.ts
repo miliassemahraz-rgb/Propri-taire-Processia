@@ -436,6 +436,20 @@ describe('WP-06 : configuration IA par client', () => {
     expect(audit.rowCount).toBe(2);
     expect(audit.rows.map((r) => r.p).join('')).not.toContain(SECRET);
 
+    // PO-33 : le texte de la politique change plus tard, aucune nouvelle acceptation n'est exigée.
+    await admin.query(
+      `update ai_provider_configs set data_policy_text = 'Ancien texte de politique' where client_id = $1`,
+      [SEED_IDS.client],
+    );
+    const afterChange = await adminC.call('PUT', url, {
+      provider: 'anthropic',
+      monthlyBudgetEur: 90,
+    });
+    expect(afterChange.status).toBe(200);
+    expect(afterChange.body.policyAcceptedAt).toBe(saved.body.policyAcceptedAt);
+    expect(afterChange.body.policyAcceptedBy).toBe(SEED_IDS.admin);
+    expect(afterChange.body.dataPolicyText).toBe('Ancien texte de politique');
+
     // Suppression de la clé.
     const cleared = await adminC.call('PUT', url, { provider: 'anthropic', apiKey: '' });
     expect(cleared.body.apiKey).toEqual({ configured: false, masked: null });

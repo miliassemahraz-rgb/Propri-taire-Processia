@@ -85,20 +85,20 @@ export class AiConfigService {
 
     const policyText = dataPolicyFor(input.provider);
     const sameProvider = existing?.provider === input.provider;
-    // Acceptation : explicite dans cette requête, ou déjà enregistrée pour ce fournisseur et ce texte.
+    // Acceptation (PO-33) : explicite dans cette requête, ou déjà enregistrée pour ce fournisseur.
+    // Elle n'est exigée qu'une fois : un changement ultérieur du texte de la politique ne demande
+    // pas de nouvelle acceptation, et le texte accepté reste celui enregistré.
     let acceptedBy: string | null = null;
     let acceptedAt: Date | null = null;
+    let acceptedText: string | null = policyText;
     if (policyText !== null) {
       if (input.acceptDataPolicy === true) {
         acceptedBy = actorId;
         acceptedAt = this.clock.now();
-      } else if (
-        sameProvider &&
-        existing.policyAcceptedAt !== null &&
-        existing.dataPolicyText === policyText
-      ) {
+      } else if (sameProvider && existing.policyAcceptedAt !== null) {
         acceptedBy = existing.policyAcceptedBy;
         acceptedAt = existing.policyAcceptedAt;
+        acceptedText = existing.dataPolicyText ?? policyText;
       } else {
         throw new AuthError('POLICY_NOT_ACCEPTED');
       }
@@ -118,7 +118,7 @@ export class AiConfigService {
       capabilities:
         input.capabilities ??
         (sameProvider ? existing.capabilities : DEFAULT_CAPABILITIES[input.provider]),
-      dataPolicyText: policyText,
+      dataPolicyText: acceptedText,
       policyAcceptedBy: acceptedBy,
       policyAcceptedAt: acceptedAt,
       monthlyBudgetEur: String(

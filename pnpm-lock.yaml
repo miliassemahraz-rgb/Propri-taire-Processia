@@ -195,6 +195,9 @@ importers:
       '@processia/config':
         specifier: workspace:*
         version: link:../config
+      '@processia/test-fixtures':
+        specifier: workspace:*
+        version: link:../test-fixtures
 
   packages/bpmn:
     dependencies:
