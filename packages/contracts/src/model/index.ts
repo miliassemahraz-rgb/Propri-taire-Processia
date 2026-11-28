@@ -76,3 +76,11 @@ export interface ProposalDto {
   /** Version de tête sur laquelle l'aperçu a été recalculé (« adapté à la version N »), sinon nul. */
   adaptedToVersion: number | null;
 }
+
+/** Message sans état : une proposition de modification a changé d'état (nouvelle, appliquée, abandonnée, périmée). */
+export interface ProposalUpdatedMessage {
+  type: 'proposal.updated';
+  missionId: string;
+  proposalId: string;
+  status: ProposalStatus;
+}

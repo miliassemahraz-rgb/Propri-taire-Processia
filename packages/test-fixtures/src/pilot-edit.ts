@@ -100,7 +100,7 @@ function candidates(data: EditData): Node[] {
 type Found = { ok: true; node: Node } | { ok: false; question: string };
 
 /** Cherche l'élément désigné par `phrase` (libellé complet ou partiel, ou « cette tâche »). */
-function findNode(data: EditData, rawPhrase: string, what = 'cette tâche'): Found {
+function findNode(data: EditData, rawPhrase: string, what = 'la tâche'): Found {
   const phrase = canon(stripArticle(unquote(rawPhrase)));
   if (/^(?:cette|cet) (?:tache|etape|element)$/.test(phrase)) {
     const selected = data.focus.selected;

@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type {
-  CoherenceWarningDto,
-  CommitResult,
-  ProposalDto,
-  ProposalStatus,
+import {
+  MISSION_MESSAGES_CHANNEL,
+  type CoherenceWarningDto,
+  type CommitResult,
+  type ProposalDto,
+  type ProposalStatus,
+  type ProposalUpdatedMessage,
 } from '@processia/contracts';
 import { changeProposals, type MissionTx } from '@processia/db';
 import {
@@ -13,7 +15,7 @@ import {
   type CoherenceIssue,
   type ModelDiff,
 } from '@processia/model';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import { AuthError } from '../auth/errors.js';
 import { CLOCK, type Clock } from '../auth/services.js';
 import { ModelService, type CommitAuthor } from './model.service.js';
@@ -49,12 +51,29 @@ export class ProposalsService {
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
-  private dto(row: ProposalRow, adaptedToVersion: number | null = null): ProposalDto {
+  /** Diffuse l'état d'une proposition aux consultants connectés (`proposal.updated`). */
+  private async notify(tx: MissionTx, row: ProposalRow): Promise<void> {
+    const message: ProposalUpdatedMessage = {
+      type: 'proposal.updated',
+      missionId: row.missionId,
+      proposalId: row.id,
+      status: row.status as ProposalStatus,
+    };
+    await tx.execute(
+      sql`select pg_notify(${MISSION_MESSAGES_CHANNEL}, ${JSON.stringify(message)})`,
+    );
+  }
+
+  private dto(
+    row: ProposalRow,
+    adaptedToVersion: number | null = null,
+    changeSet: unknown = row.changeSet,
+  ): ProposalDto {
     return {
       id: row.id,
       baseVersion: row.baseVersion,
       instruction: row.instruction,
-      changeSet: row.changeSet,
+      changeSet,
       explanation: row.explanation,
       diff: (row.diff ?? null) as ModelDiff | null,
       warnings: (row.warnings ?? []) as CoherenceWarningDto[],
@@ -110,6 +129,7 @@ export class ProposalsService {
       })
       .returning();
     if (row === undefined) throw new Error('Insertion de la proposition sans retour.');
+    await this.notify(tx, row);
     return this.dto(row);
   }
 
@@ -147,10 +167,12 @@ export class ProposalsService {
         .set({ status: 'stale' })
         .where(eq(changeProposals.id, id))
         .returning();
+      if (stale !== undefined) await this.notify(tx, stale);
       return this.dto(stale ?? row);
     }
     return {
-      ...this.dto(row, headVersion),
+      // Le ChangeSet rebasé : l'aperçu côté navigateur s'applique à la tête, pas à l'ancienne base.
+      ...this.dto(row, headVersion, rebased.ok ? rebased.cs : row.changeSet),
       diff: applied.diff,
       warnings: toWarnings(applied.warnings),
     };
@@ -183,13 +205,19 @@ export class ProposalsService {
         .set({ status: 'applied', appliedVersion: result.version })
         .where(eq(changeProposals.id, id))
         .returning();
+      if (updated !== undefined) await this.notify(tx, updated);
       return { result, proposal: this.dto(updated ?? row) };
     } catch (error) {
       if (
         error instanceof AuthError &&
         (error.code === 'STALE' || error.code === 'CHANGESET_INVALID')
       ) {
-        await tx.update(changeProposals).set({ status: 'stale' }).where(eq(changeProposals.id, id));
+        const [stale] = await tx
+          .update(changeProposals)
+          .set({ status: 'stale' })
+          .where(eq(changeProposals.id, id))
+          .returning();
+        if (stale !== undefined) await this.notify(tx, stale);
         return { stale: error };
       }
       throw error;
@@ -204,6 +232,7 @@ export class ProposalsService {
       .set({ status: 'discarded' })
       .where(eq(changeProposals.id, id))
       .returning();
+    if (updated !== undefined) await this.notify(tx, updated);
     return this.dto(updated ?? row);
   }
 }

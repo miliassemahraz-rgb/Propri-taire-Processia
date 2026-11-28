@@ -10,3 +10,4 @@ export * from './deliverables/index.js';
 export * from './validation/index.js';
 export * from './flow/index.js';
 export * from './cartography/index.js';
+export * from './dialogue/index.js';
