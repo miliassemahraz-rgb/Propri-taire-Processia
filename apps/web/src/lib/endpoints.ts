@@ -23,6 +23,11 @@ import {
   type CommentDto,
   type CommentTargetKind,
   type CommitResult,
+  type DialogueDto,
+  type ProposalDto,
+  type RegenerateProposalResult,
+  type SendDialogueMessageRequest,
+  type SendDialogueResult,
   type CreateCommentRequest,
   type CreateSubmissionRequest,
   type DecisionRequest,
@@ -248,6 +253,40 @@ export const endpoints = {
       method: 'POST',
       body: { toVersion },
       schema: typed<CommitResult>(),
+    }),
+
+  // Modification par dialogue (WP-20)
+  dialogue: (id: string) =>
+    apiRequest(`/missions/${id}/dialogue`, { schema: typed<DialogueDto>() }),
+  sendDialogue: (id: string, body: SendDialogueMessageRequest) =>
+    apiRequest(`/missions/${id}/dialogue/messages`, {
+      method: 'POST',
+      body,
+      schema: typed<SendDialogueResult>(),
+    }),
+  proposal: (id: string, proposalId: string) =>
+    apiRequest(`/missions/${id}/proposals/${proposalId}`, { schema: typed<ProposalDto>() }),
+  applyProposal: (id: string, proposalId: string) =>
+    apiRequest(`/missions/${id}/proposals/${proposalId}/apply`, {
+      method: 'POST',
+      body: {},
+      schema: typed<{ result: CommitResult; proposal: ProposalDto }>(),
+    }),
+  discardProposal: (id: string, proposalId: string) =>
+    apiRequest(`/missions/${id}/proposals/${proposalId}/discard`, {
+      method: 'POST',
+      body: {},
+      schema: typed<ProposalDto>(),
+    }),
+  regenerateProposal: (
+    id: string,
+    proposalId: string,
+    body: Pick<SendDialogueMessageRequest, 'focus'>,
+  ) =>
+    apiRequest(`/missions/${id}/dialogue/proposals/${proposalId}/regenerate`, {
+      method: 'POST',
+      body,
+      schema: typed<RegenerateProposalResult>(),
     }),
 
   // Cartographie : BPMN d'un diagramme pour la visionneuse (WP-19)

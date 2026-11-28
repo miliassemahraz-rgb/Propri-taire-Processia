@@ -1483,5 +1483,108 @@
       }
     },
     "flowsHeading": "Construction des enchaînements"
+  },
+  "dialogue": {
+    "heading": "Modifier par dialogue",
+    "intro": "Décrivez la modification en français. L’assistant prépare une proposition avec un aperçu ; rien n’est enregistré avant « Appliquer ».",
+    "loading": "Chargement du dialogue…",
+    "loadError": "Le dialogue n’a pas pu être chargé.",
+    "empty": "Aucune demande pour l’instant. Exemple : « ajoute une validation par le chef de mission après la révision ».",
+    "thread": "Fil du dialogue",
+    "who": {
+      "you": "Vous",
+      "colleague": "Un collègue",
+      "assistant": "Assistant",
+      "system": "Information"
+    },
+    "composer": {
+      "label": "Nouvelle demande",
+      "placeholder": "Ex. : ajoute une validation par le chef de mission après la révision",
+      "help": "Le niveau affiché et l’étape sélectionnée précisent la demande.",
+      "send": "Envoyer",
+      "sending": "L’assistant prépare une proposition…",
+      "readOnly": "Vous pouvez lire le dialogue ; seuls le responsable de mission et les consultants modifient la cartographie."
+    },
+    "proposal": {
+      "heading": "Modification proposée",
+      "status": {
+        "pending": "En attente de décision",
+        "applied": "Appliquée (version {version})",
+        "discarded": "Abandonnée",
+        "stale": "Périmée"
+      },
+      "adapted": "Adaptée à la version {version}.",
+      "apply": "Appliquer",
+      "applying": "Application en cours…",
+      "discard": "Abandonner",
+      "showPreview": "Voir l’aperçu avant/après",
+      "hidePreview": "Masquer l’aperçu",
+      "changes": "Changements",
+      "noChange": "Aucun changement visible dans la cartographie.",
+      "warningsHeading": "Incohérences créées par cette modification",
+      "noWarnings": "Contrôle de cohérence : aucune incohérence créée.",
+      "warningItem": "{code} : {message}",
+      "staleNotice": "La cartographie a changé depuis cette proposition : elle touche des éléments modifiés entre-temps.",
+      "regenerate": "Régénérer sur la version actuelle",
+      "regenerated": "Nouvelle proposition préparée sur la version {version}.",
+      "appliedNotice": "Version {version} enregistrée : la cartographie est à jour pour tous les consultants.",
+      "undo": "Revenir à la version {version}",
+      "undone": "Retour à la version {version} enregistré (nouvelle version {created}).",
+      "appliedToast": "Modification appliquée",
+      "discardedToast": "Proposition abandonnée",
+      "outdated": "Aperçu indisponible : la cartographie vient de changer, la proposition est recalculée."
+    },
+    "change": {
+      "added": "Ajouté",
+      "removed": "Supprimé",
+      "modified": "Modifié"
+    },
+    "entry": {
+      "added": "Ajout : {kind} {code} « {label} »",
+      "removed": "Suppression : {kind} {code} « {label} »",
+      "modified": "Modification : {kind} {code} « {label} » ({fields})",
+      "flowAdded": "Enchaînement ajouté : {route}",
+      "flowRemoved": "Enchaînement supprimé : {route}",
+      "flowModified": "Enchaînement modifié : {route}"
+    },
+    "kind": {
+      "activity": "tâche ou étape",
+      "event": "événement",
+      "gateway": "décision",
+      "sequence_flow": "enchaînement",
+      "rule": "règle",
+      "indicator": "indicateur",
+      "actor": "acteur",
+      "data_object": "objet de données",
+      "information_flow": "flux d’information",
+      "other": "élément"
+    },
+    "field": {
+      "label": "libellé",
+      "description": "description",
+      "responsibleActorId": "responsable",
+      "raci": "RACI",
+      "actorId": "acteur",
+      "toId": "suite",
+      "fromId": "origine",
+      "ruleIds": "règles",
+      "appliesTo": "périmètre",
+      "value": "valeur",
+      "unit": "unité",
+      "status": "statut",
+      "condition": "condition",
+      "order": "ordre",
+      "other": "autre champ"
+    },
+    "preview": {
+      "title": "Aperçu de la modification",
+      "note": "Rien n’est enregistré avant « Appliquer ».",
+      "before": "Avant (version {version})",
+      "after": "Après la modification",
+      "close": "Fermer l’aperçu",
+      "openLevel": "Afficher le niveau modifié",
+      "missing": "Ce niveau n’existe plus après la modification.",
+      "legend": "Aperçu : ajouté (vert), modifié (orange), supprimé (rouge), toujours avec une mention."
+    }
   }
 }

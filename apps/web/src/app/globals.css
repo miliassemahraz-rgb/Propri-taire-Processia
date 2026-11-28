@@ -700,6 +700,72 @@ p {
   border: 1px solid var(--pr-border);
   border-radius: var(--pr-radius-lg);
 }
+.map-side {
+  min-width: 0;
+}
+.dialogue-thread {
+  display: grid;
+  gap: 10px;
+  max-height: 560px;
+  overflow-y: auto;
+  padding: 2px;
+}
+.dialogue-message {
+  display: grid;
+  gap: 4px;
+  max-width: 96%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f1f3f6;
+}
+.dialogue-message--user {
+  justify-self: end;
+  background: var(--pr-accent-bg);
+}
+.dialogue-message--system {
+  background: var(--pr-warning-bg);
+}
+.dialogue-who {
+  font-weight: 600;
+  color: var(--pr-muted);
+}
+.dialogue-text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.dialogue-proposal {
+  margin-top: 6px;
+  padding: 10px;
+  background: var(--pr-surface);
+  border: 1px solid var(--pr-border);
+  border-radius: var(--pr-radius);
+}
+.dialogue-proposal-head {
+  justify-content: space-between;
+  align-items: center;
+}
+.dialogue-proposal-head h4 {
+  margin: 0;
+}
+.dialogue-changes {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+.dialogue-change--added::marker {
+  color: var(--pr-success);
+}
+.dialogue-change--removed::marker {
+  color: var(--pr-danger);
+}
+.dialogue-change--modified::marker {
+  color: var(--pr-warning);
+}
+.dialogue-ok {
+  color: var(--pr-success);
+  margin: 0;
+}
 .map-panel {
   min-width: 0;
   padding: 16px;
@@ -956,6 +1022,46 @@ p {
 .map-tag--discrepancy {
   background: var(--pr-accent-bg);
   color: var(--pr-accent-dark);
+}
+/* Aperçu d'une modification (WP-20) : toujours une mention et un symbole, jamais la couleur seule. */
+.map-tag--added {
+  background: var(--pr-success-bg);
+  color: var(--pr-success);
+}
+.map-tag--removed {
+  background: var(--pr-danger-bg);
+  color: var(--pr-danger);
+}
+.map-tag--modified {
+  background: var(--pr-warning-bg);
+  color: var(--pr-warning);
+}
+.map-card--added {
+  border-color: var(--pr-success);
+  border-width: 3px;
+  background: var(--pr-success-bg);
+}
+.map-card--removed {
+  border-color: var(--pr-danger);
+  border-width: 3px;
+  background: var(--pr-danger-bg);
+}
+.map-card--modified {
+  border-color: var(--pr-warning);
+  border-width: 3px;
+  background: var(--pr-warning-bg);
+}
+.map-bpmn .processia-added .djs-visual > :first-child {
+  stroke: #1e6b3a !important;
+  stroke-width: 4px !important;
+}
+.map-bpmn .processia-removed .djs-visual > :first-child {
+  stroke: #a32020 !important;
+  stroke-width: 4px !important;
+}
+.map-bpmn .processia-modified .djs-visual > :first-child {
+  stroke: #8a4500 !important;
+  stroke-width: 4px !important;
 }
 .map-row.is-selected th,
 .map-row.is-selected td {

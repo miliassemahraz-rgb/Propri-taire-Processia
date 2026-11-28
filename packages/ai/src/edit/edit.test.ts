@@ -385,7 +385,7 @@ describe('model.edit : clarification', () => {
 
 describe('buildEditChangeSet : refus', () => {
   const plan = (action: Record<string, unknown>): EditPlan =>
-    ({ explanation: 'x', actions: [action], touched: [] }) as EditPlan;
+    ({ explanation: 'x', actions: [action], touched: [] }) as unknown as EditPlan;
 
   it('un code inconnu est refusé', () => {
     expect(() => build(pilot, plan({ action: 'remove', target: 'P99.9' }))).toThrow(EditPlanError);

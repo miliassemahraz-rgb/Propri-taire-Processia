@@ -56,12 +56,11 @@ describe('planRemoval', () => {
   it('une hypothèse est rejetée, un élément décidé est retiré', () => {
     const { model, taskA, taskB } = setup();
     const plan = planRemoval(model, [taskA.id, taskB.id], { reason: 'test' });
-    const kinds = Object.fromEntries(
-      plan.ops
-        .filter((op) => op.op !== 'update')
-        .map((op) => [op.op === 'set_layout' ? '' : op.id, op.op]),
-    );
-    expect(kinds[taskA.id]).toBe('remove');
-    expect(kinds[taskB.id]).toBe('reject_hypothesis');
+    const kinds = new Map<string, string>();
+    for (const op of plan.ops) {
+      if (op.op === 'remove' || op.op === 'reject_hypothesis') kinds.set(op.id, op.op);
+    }
+    expect(kinds.get(taskA.id)).toBe('remove');
+    expect(kinds.get(taskB.id)).toBe('reject_hypothesis');
   });
 });
