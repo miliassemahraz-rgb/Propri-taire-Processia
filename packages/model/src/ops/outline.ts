@@ -472,3 +472,37 @@ function diagramOfActivityKnown(a: Activity, known: Set<string>): DiagramId | un
 
 /** Identifiants des éléments de nœud d'un diagramme : ce que le BPMN doit porter en `processia:elementId`. */
 export const outlineNodeIds = (outline: DiagramOutline): string[] => outline.nodes.map((n) => n.id);
+
+/**
+ * Diagramme où l'élément se voit sur la carte (WP-21 : localisation d'un constat) : le macro-
+ * processus au niveau 0, un processus au niveau 1, une tâche au niveau 2, une étape au niveau 3 ;
+ * un événement, une passerelle ou un flux de séquence dans le diagramme de leur conteneur ; un flux
+ * d'information dans celui de son activité. `undefined` : l'élément n'est dessiné nulle part
+ * (acteur, règle, objet de données, constat…).
+ */
+export function diagramOfElement(model: BusinessModel, id: string): DiagramId | undefined {
+  const el = model.elements[id];
+  if (el === undefined) return undefined;
+  const known = new Set(listDiagrams(model));
+  const pick = (diagram: DiagramId): DiagramId | undefined =>
+    known.has(diagram) ? diagram : undefined;
+  switch (el.kind) {
+    case 'activity':
+      if (el.level === 'macro') return 'L0';
+      if (el.parentId === undefined) return undefined;
+      return pick(
+        `${el.level === 'process' ? 'L1' : el.level === 'task' ? 'L2' : 'L3'}:${el.parentId}`,
+      );
+    case 'event':
+    case 'gateway':
+    case 'sequence_flow': {
+      const container = model.elements[el.containerId];
+      if (container?.kind !== 'activity') return undefined;
+      return pick(`${container.level === 'process' ? 'L2' : 'L3'}:${container.id}`);
+    }
+    case 'information_flow':
+      return el.activityId === undefined ? undefined : diagramOfElement(model, el.activityId);
+    default:
+      return undefined;
+  }
+}

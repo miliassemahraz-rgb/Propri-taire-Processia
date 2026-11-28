@@ -31,6 +31,25 @@ export const FINDING_TYPES = [
 export const FindingTypeSchema = z.enum(FINDING_TYPES);
 export type FindingType = z.infer<typeof FindingTypeSchema>;
 
+/** Famille de chaque type de constat (spécification 2.4) : le type détermine la famille. */
+export const FINDING_FAMILY_OF: Record<FindingType, FindingFamily> = {
+  rekeying: 'waste',
+  repetitive_task: 'waste',
+  duplicate: 'waste',
+  redundant_control: 'waste',
+  useless_validation_loop: 'waste',
+  bottleneck: 'flow_and_delay',
+  waiting_time: 'flow_and_delay',
+  flow_break: 'flow_and_delay',
+  paper_or_email_transfer: 'flow_and_delay',
+  task_without_owner: 'organisation',
+  incompatible_roles: 'organisation',
+  single_person_dependency: 'organisation',
+  missing_control: 'risk_compliance',
+  missing_traceability: 'risk_compliance',
+  uncovered_obligation: 'risk_compliance',
+};
+
 export const FindingSchema = withBaseRules(
   z.strictObject({
     ...baseShape,
