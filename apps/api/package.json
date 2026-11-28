@@ -21,6 +21,7 @@
     "@nestjs/platform-express": "11.2.12",
     "@node-rs/argon2": "2.2.2",
     "@processia/ai": "workspace:*",
+    "@processia/bpmn": "workspace:*",
     "@processia/config": "workspace:*",
     "@processia/contracts": "workspace:*",
     "@processia/db": "workspace:*",
