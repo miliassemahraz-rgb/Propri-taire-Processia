@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { t } from '@processia/i18n';
 import {
   buildOutline,
@@ -8,10 +8,12 @@ import {
   type BusinessModel,
   type DiagramOutline,
 } from '@processia/model';
-import { Notice } from '@processia/ui';
+import { Button, Notice } from '@processia/ui';
+import { diagramToOpen, type DialoguePreview } from '../../lib/dialogue';
 import { useMode } from '../../lib/mode';
 import { markersByElement, stepLabel } from '../../lib/mapping';
 import { BpmnView } from './bpmn-view';
+import { DialoguePanel } from './dialogue-panel';
 import { ElementPanel } from './element-panel';
 import { SimpleView } from './simple-view';
 import { TextView } from './text-view';
@@ -26,6 +28,8 @@ interface Props {
   missionId: string;
   model: BusinessModel;
   canEdit: boolean;
+  /** Compte connecté : distingue ses demandes de celles d'un collègue dans le dialogue. */
+  selfId: string;
 }
 
 function titleOf(outline: DiagramOutline): string {
@@ -43,12 +47,13 @@ function titleOf(outline: DiagramOutline): string {
  * panneau de l'élément sélectionné et les marqueurs. Elle lit le modèle partagé : toute version
  * enregistrée, par soi ou par un autre consultant, met les trois vues à jour.
  */
-export function MappingViewer({ missionId, model, canEdit }: Props) {
+export function MappingViewer({ missionId, model, canEdit, selfId }: Props) {
   const { mode } = useMode();
   const [diagram, setDiagram] = useState<string>(ROOT);
   const [view, setView] = useState<MappingView>(mode === 'expert' ? 'bpmn' : 'simple');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState('');
+  const [preview, setPreview] = useState<DialoguePreview | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const firstRender = useRef(true);
 
@@ -90,6 +95,13 @@ export function MappingViewer({ missionId, model, canEdit }: Props) {
     }
     headingRef.current?.focus();
   }, [diagram]);
+
+  const onPreview = useCallback((next: DialoguePreview | null) => setPreview(next), []);
+  const afterOutline = useMemo(
+    () => (preview === null ? undefined : buildOutline(preview.after, diagram)),
+    [preview, diagram],
+  );
+  const levelToOpen = preview === null ? null : diagramToOpen(preview, diagram);
 
   function open(next: string): void {
     setDiagram(next);
@@ -216,7 +228,66 @@ export function MappingViewer({ missionId, model, canEdit }: Props) {
 
       <div className="map-layout">
         <section className="map-main" aria-label={t('cartography.viewer.views.label')}>
-          {view === 'simple' ? (
+          {preview !== null ? (
+            <div className="stack" data-testid="preview-pair">
+              <Notice tone="info" title={t('dialogue.preview.title')}>
+                <p>{t('dialogue.preview.note')}</p>
+                <p className="small">{t('dialogue.preview.legend')}</p>
+                <div className="row">
+                  {levelToOpen !== null ? (
+                    <Button
+                      variant="secondary"
+                      onPress={() => open(levelToOpen)}
+                      data-testid="preview-open-level"
+                    >
+                      {t('dialogue.preview.openLevel')}
+                    </Button>
+                  ) : null}
+                </div>
+              </Notice>
+              <section
+                aria-labelledby="preview-before"
+                className="stack-sm"
+                data-testid="preview-before"
+              >
+                <h3 id="preview-before" className="h3">
+                  {t('dialogue.preview.before', { version: preview.before.version })}
+                </h3>
+                <SimpleView
+                  outline={outline}
+                  title={`${title} (${t('dialogue.preview.before', { version: preview.before.version })})`}
+                  markers={markers}
+                  changes={preview.beforeChanges}
+                  selectedId={null}
+                  onSelect={select}
+                  onOpen={open}
+                />
+              </section>
+              <section
+                aria-labelledby="preview-after"
+                className="stack-sm"
+                data-testid="preview-after"
+              >
+                <h3 id="preview-after" className="h3">
+                  {t('dialogue.preview.after')}
+                </h3>
+                {afterOutline === undefined ? (
+                  <p className="muted">{t('dialogue.preview.missing')}</p>
+                ) : (
+                  <SimpleView
+                    outline={afterOutline}
+                    title={`${title} (${t('dialogue.preview.after')})`}
+                    markers={markersByElement(preview.after)}
+                    changes={preview.afterChanges}
+                    selectedId={null}
+                    onSelect={select}
+                    onOpen={open}
+                  />
+                )}
+              </section>
+            </div>
+          ) : null}
+          {preview === null && view === 'simple' ? (
             <SimpleView
               outline={outline}
               title={title}
@@ -226,7 +297,7 @@ export function MappingViewer({ missionId, model, canEdit }: Props) {
               onOpen={open}
             />
           ) : null}
-          {view === 'text' ? (
+          {preview === null && view === 'text' ? (
             <TextView
               model={model}
               outline={outline}
@@ -237,7 +308,7 @@ export function MappingViewer({ missionId, model, canEdit }: Props) {
               onOpen={open}
             />
           ) : null}
-          {view === 'bpmn' ? (
+          {preview === null && view === 'bpmn' ? (
             <BpmnView
               missionId={missionId}
               diagram={diagram}
@@ -252,14 +323,25 @@ export function MappingViewer({ missionId, model, canEdit }: Props) {
             />
           ) : null}
         </section>
-        <ElementPanel
-          missionId={missionId}
-          model={model}
-          outline={outline}
-          selectedId={selectedId}
-          canEdit={canEdit}
-          onOpen={open}
-        />
+        <div className="map-side stack">
+          <ElementPanel
+            missionId={missionId}
+            model={model}
+            outline={outline}
+            selectedId={selectedId}
+            canEdit={canEdit}
+            onOpen={open}
+          />
+          <DialoguePanel
+            missionId={missionId}
+            model={model}
+            diagram={diagram}
+            selectedId={selectedId}
+            canEdit={canEdit}
+            selfId={selfId}
+            onPreview={onPreview}
+          />
+        </div>
       </div>
     </div>
   );

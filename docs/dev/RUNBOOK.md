@@ -106,6 +106,12 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Pour voir des diagrammes réels : suivre la section WP-17 (analyser `PILOT_DESCRIPTION`, soumettre, valider, `POST mapping/flows`), puis ouvrir la page.
 - Tests : `packages/bpmn/src/outline.test.ts` (cohérence plan structuré / BPMN), `packages/model/src/ops/outline.test.ts`, `apps/web/src/lib/mapping.test.ts`, `apps/api/src/cartography/cartography.int.test.ts` (PostgreSQL), `e2e/tests/z-visionneuse.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-19-visionneuse.png`).
 
+## Cartographie : modification par dialogue (WP-20)
+
+- Panneau « Modifier par dialogue » sous le panneau de l'élément (page Cartographie, onglet « Visionneuse »). Exemple avec le pilote enchaîné : ouvrir le niveau 2 d'un processus, écrire « ajoute une validation par le chef de mission après la révision », lire l'aperçu avant/après, « Appliquer » ou « Abandonner ». Le fournisseur factice reconnaît six consignes types (`packages/test-fixtures/src/pilot-edit.ts`).
+- Routes (sous `/missions/:id`, `@RequiresPhase('mapping')`) : `GET dialogue`, `POST dialogue/messages` (corps `{ "text", "focus": { "diagram", "selectedId"? } }`), `POST dialogue/proposals/:proposalId/regenerate` ; applications par `GET|POST proposals/:id[/apply|/discard]` (WP-08). Le validateur reçoit 403.
+- Tests : `packages/ai/src/edit/edit.test.ts`, `packages/model/src/ops/removal.test.ts`, `apps/web/src/lib/dialogue.test.ts`, `apps/api/src/dialogue/dialogue.int.test.ts` (PostgreSQL), `e2e/tests/z-dialogue.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-20-dialogue.png`).
+
 ## Réinitialiser
 
 ```bash

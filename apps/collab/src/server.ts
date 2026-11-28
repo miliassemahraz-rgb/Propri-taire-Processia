@@ -37,6 +37,7 @@ const RELAYED_TYPES = new Set([
   'comment.created',
   'submission.updated',
   'notice.created',
+  'proposal.updated',
 ]);
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

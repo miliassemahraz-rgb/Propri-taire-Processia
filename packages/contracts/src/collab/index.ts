@@ -6,6 +6,7 @@ import type {
   SubmissionUpdatedMessage,
 } from '../validation/index.js';
 import type { RunProgressMessage } from '../sources/index.js';
+import type { ProposalUpdatedMessage } from '../model/index.js';
 
 /** Contrats de la coédition (WP-10, spécification 5). */
 
@@ -64,7 +65,8 @@ export type CollabStatelessMessage =
   | QuestionUpdatedMessage
   | CommentCreatedMessage
   | SubmissionUpdatedMessage
-  | NoticeCreatedMessage;
+  | NoticeCreatedMessage
+  | ProposalUpdatedMessage;
 
 /**
  * Messages sans état du document `workspace` : « enregistrer maintenant ». Le texte est regroupé

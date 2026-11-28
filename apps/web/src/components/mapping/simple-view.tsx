@@ -3,6 +3,7 @@
 import { useId, useMemo } from 'react';
 import { t } from '@processia/i18n';
 import type { DiagramOutline, OutlineNode } from '@processia/model';
+import type { ChangeKind } from '../../lib/dialogue';
 import { CARD_H, CARD_W, layoutSimple, nextSteps, type NodeMarkers } from '../../lib/mapping';
 import { groupLabel, natureLabel } from './labels';
 
@@ -10,9 +11,24 @@ interface Props {
   outline: DiagramOutline;
   title: string;
   markers: Map<string, NodeMarkers>;
+  /** Aperçu d'une modification (WP-20) : ajout, suppression ou modification de chaque étape. */
+  changes?: Map<string, ChangeKind>;
   selectedId: string | null;
   onSelect: (id: string) => void;
   onOpen: (diagram: string) => void;
+}
+
+const CHANGE_SYMBOL: Record<ChangeKind, string> = { added: '+ ', removed: '− ', modified: '~ ' };
+
+/** Mention d'un changement d'aperçu : en texte, jamais la couleur seule (RGAA 3.1). */
+export function ChangeTag({ change }: { change: ChangeKind | undefined }) {
+  if (change === undefined) return null;
+  return (
+    <span className={`map-tag map-tag--${change}`} data-testid={`change-${change}`}>
+      <span aria-hidden="true">{CHANGE_SYMBOL[change]}</span>
+      {t(`dialogue.change.${change}`)}
+    </span>
+  );
 }
 
 const shortLabel = (text: string): string => (text.length > 26 ? `${text.slice(0, 25)}…` : text);
@@ -65,7 +81,15 @@ function branchLine(outline: DiagramOutline, node: OutlineNode): string {
  * branches. Pas de notation BPMN. Les flèches sont décoratives : les mêmes enchaînements sont
  * dits en texte sur chaque carte et dans l'alternative textuelle.
  */
-export function SimpleView({ outline, title, markers, selectedId, onSelect, onOpen }: Props) {
+export function SimpleView({
+  outline,
+  title,
+  markers,
+  changes,
+  selectedId,
+  onSelect,
+  onOpen,
+}: Props) {
   const layout = useMemo(() => layoutSimple(outline), [outline]);
   const arrowId = useId();
   const byId = useMemo(() => new Map(outline.nodes.map((n) => [n.id, n])), [outline]);
@@ -163,6 +187,7 @@ export function SimpleView({ outline, title, markers, selectedId, onSelect, onOp
                             'map-card',
                             `map-card--${node.kind}`,
                             node.status === 'hypothesis' ? 'map-card--hypothesis' : '',
+                            changes?.has(node.id) ? `map-card--${changes.get(node.id)}` : '',
                             selected ? 'is-selected' : '',
                           ]
                             .filter(Boolean)
@@ -172,6 +197,7 @@ export function SimpleView({ outline, title, markers, selectedId, onSelect, onOp
                           data-testid="simple-card"
                           data-element-id={node.id}
                           data-element-code={node.code}
+                          data-change={changes?.get(node.id)}
                         >
                           <span className="map-card-meta">
                             <span className="map-card-num">{node.number}</span>
@@ -184,6 +210,7 @@ export function SimpleView({ outline, title, markers, selectedId, onSelect, onOp
                             </span>
                           ) : null}
                           <span className="map-card-tags">
+                            <ChangeTag change={changes?.get(node.id)} />
                             <MarkerTags markers={markers.get(node.id)} />
                           </span>
                         </button>

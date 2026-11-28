@@ -6,6 +6,7 @@ import type { DiagramOutline } from '@processia/model';
 import { Button, Notice } from '@processia/ui';
 import { endpoints } from '../../lib/endpoints';
 import { errorMessage } from '../../lib/errors';
+import type { ChangeKind } from '../../lib/dialogue';
 import type { NodeMarkers } from '../../lib/mapping';
 
 /** Ce que la visionneuse utilise de bpmn-js (le paquet ne type pas `get`). */
@@ -39,6 +40,7 @@ interface ViewerLike {
 }
 
 const FIT = 'fit' as const;
+const CHANGE_KINDS: ChangeKind[] = ['added', 'removed', 'modified'];
 const ELEMENT_ID_ATTR = 'processia:elementId';
 
 function elementIdOf(shape: Shape): string | undefined {
@@ -54,6 +56,8 @@ interface Props {
   /** Version du modèle : un changement relit le BPMN (mise à jour en direct). */
   version: number;
   markers: Map<string, NodeMarkers>;
+  /** Aperçu d'une modification (WP-20) : suppressions et modifications du niveau affiché. */
+  changes?: Map<string, ChangeKind>;
   selectedId: string | null;
   onSelect: (id: string) => void;
   onOpen: (diagram: string) => void;
@@ -74,6 +78,7 @@ export function BpmnView({
   outline,
   version,
   markers,
+  changes,
   selectedId,
   onSelect,
   onOpen,
@@ -191,9 +196,15 @@ export function BpmnView({
       if (id === undefined || shape.labelTarget !== undefined) continue;
       canvas.removeMarker(shape, 'processia-selected');
       canvas.removeMarker(shape, 'processia-hypothesis');
+      for (const kind of CHANGE_KINDS) canvas.removeMarker(shape, `processia-${kind}`);
       const m = markers.get(id);
+      const change = changes?.get(id);
       if (m?.hypothesis) canvas.addMarker(shape, 'processia-hypothesis');
-      if (m !== undefined && (m.hypothesis || m.findings > 0 || m.discrepancies > 0)) {
+      if (change !== undefined) canvas.addMarker(shape, `processia-${change}`);
+      if (
+        change !== undefined ||
+        (m !== undefined && (m.hypothesis || m.findings > 0 || m.discrepancies > 0))
+      ) {
         const tags = document.createElement('div');
         tags.className = 'map-overlay-tags';
         const add = (kind: string, label: string): void => {
@@ -202,15 +213,20 @@ export function BpmnView({
           tag.textContent = label;
           tags.append(tag);
         };
-        if (m.hypothesis) add('hypothesis', t('cartography.viewer.marker.hypothesis'));
-        if (m.findings > 0) add('finding', t('cartography.viewer.marker.finding'));
-        if (m.discrepancies > 0) add('discrepancy', t('cartography.viewer.marker.discrepancy'));
+        if (change !== undefined) add(change, t(`dialogue.change.${change}`));
+        if (m?.hypothesis) add('hypothesis', t('cartography.viewer.marker.hypothesis'));
+        if (m !== undefined && m.findings > 0) {
+          add('finding', t('cartography.viewer.marker.finding'));
+        }
+        if (m !== undefined && m.discrepancies > 0) {
+          add('discrepancy', t('cartography.viewer.marker.discrepancy'));
+        }
         overlays.add(shape, 'processia', { position: { top: -20, left: 0 }, html: tags });
       }
       if (id === selectedId) selectedShape = shape;
     }
     if (selectedShape !== undefined) canvas.addMarker(selectedShape, 'processia-selected');
-  }, [ready, imported, markers, selectedId]);
+  }, [ready, imported, markers, changes, selectedId]);
 
   const move = useCallback(
     (delta: number | 'first' | 'last') => {

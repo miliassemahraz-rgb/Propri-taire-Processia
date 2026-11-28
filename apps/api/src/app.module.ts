@@ -6,6 +6,7 @@ import { CartographyModule } from './cartography/cartography.module.js';
 import { ClientsModule } from './clients/clients.module.js';
 import { CollabModule } from './collab/collab.module.js';
 import { DbModule } from './db/db.module.js';
+import { DialogueModule } from './dialogue/dialogue.module.js';
 import { ExportsModule } from './exports/exports.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { HealthModule } from './health/health.module.js';
@@ -37,6 +38,7 @@ import { ValidationModule } from './validation/validation.module.js';
     ValidationModule,
     MappingModule,
     CartographyModule,
+    DialogueModule,
     HealthModule,
   ],
 })

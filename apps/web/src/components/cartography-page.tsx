@@ -25,6 +25,7 @@ import { endpoints } from '../lib/endpoints';
 import { errorMessage } from '../lib/errors';
 import { activeRun } from '../lib/guided';
 import { useGuidedRuns } from '../lib/guided-runs';
+import { HistorySection } from './analysis/history-section';
 import { MappingViewer } from './mapping/mapping-viewer';
 import { useMission } from './mission-frame';
 
@@ -218,7 +219,7 @@ function MacroTable({ group, ...rest }: { group: MacroGroup } & Omit<RowProps, '
 export function CartographyPage() {
   const mission = useMission();
   const missionId = mission.id;
-  const { canEdit } = useCollab();
+  const { canEdit, self } = useCollab();
   const model = useMissionModel();
   const headVersion = model?.version ?? null;
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' });
@@ -423,7 +424,20 @@ export function CartographyPage() {
                   {t('cartography.viewer.loading')}
                 </p>
               ) : (
-                <MappingViewer missionId={missionId} model={model} canEdit={canEdit} />
+                <div className="stack-lg">
+                  <MappingViewer
+                    missionId={missionId}
+                    model={model}
+                    canEdit={canEdit}
+                    selfId={self.id}
+                  />
+                  <HistorySection
+                    missionId={missionId}
+                    headVersion={model.version}
+                    selfId={self.id}
+                    canRollback={canEdit}
+                  />
+                </div>
               ),
           },
           { id: TAB_FLOWS, label: t('cartography.tabs.flows'), content: flows },
