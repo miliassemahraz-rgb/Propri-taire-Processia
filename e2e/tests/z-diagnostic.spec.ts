@@ -335,7 +335,7 @@ test.describe('validation de l’AS-IS et diagnostic', () => {
     await expect(viewer).toBeVisible({ timeout: 30_000 });
     await expect(viewer).toHaveAttribute('data-diagram', /^L[123]:/);
     await page.getByTestId('view-simple').click();
-    await expect(viewer.getByText('Constat', { exact: true }).first()).toBeVisible();
+    await expect(viewer.locator('.map-tag--finding').first()).toBeVisible();
     await expectNoSeriousViolations(page);
     await context.close();
   });

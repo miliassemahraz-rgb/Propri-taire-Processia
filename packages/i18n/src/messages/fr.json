@@ -1677,7 +1677,6 @@
     "detector": "règle {id}",
     "why": "Justification",
     "where": "Localisation",
-    "locationLink": "Voir {code} sur la cartographie",
     "notOnMap": "{code} (non représenté sur la carte)",
     "review": "Revue du consultant",
     "confirm": "Confirmer",

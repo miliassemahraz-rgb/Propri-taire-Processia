@@ -124,11 +124,7 @@ function FindingCard({ finding, model, missionId, canEdit, onConfirm, onReject }
                   {t('diagnostic.notOnMap', { code: `${location.code} ${location.label}` })}
                 </span>
               ) : (
-                <Link
-                  href={location.href}
-                  aria-label={t('diagnostic.locationLink', { code: location.code })}
-                  data-testid="finding-location-link"
-                >
+                <Link href={location.href} data-testid="finding-location-link">
                   <span className="mono">{location.code}</span> {location.label}
                 </Link>
               )}
