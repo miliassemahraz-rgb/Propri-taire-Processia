@@ -21,6 +21,7 @@ import {
   type ChunkDto,
   type ChunkViewDto,
   type CommentDto,
+  type CommentTargetKind,
   type CommitResult,
   type CreateCommentRequest,
   type CreateSubmissionRequest,
@@ -30,6 +31,7 @@ import {
   type ExportArtifactDto,
   type FlowDecisionRequest,
   type FlowDecisionResult,
+  type BpmnDiagramDto,
   type FlowOverviewDto,
   type ExportFormat,
   type NoticeDto,
@@ -248,6 +250,11 @@ export const endpoints = {
       schema: typed<CommitResult>(),
     }),
 
+  // Cartographie : BPMN d'un diagramme pour la visionneuse (WP-19)
+  bpmnDiagram: (id: string, diagram: string) =>
+    apiRequest(`/missions/${id}/bpmn/${encodeURIComponent(diagram)}`, {
+      schema: typed<BpmnDiagramDto>(),
+    }),
   // Cartographie : enchaînements des processus, niveaux 2 et 3 (WP-17)
   flowOverview: (id: string) =>
     apiRequest(`/missions/${id}/mapping/processes`, { schema: typed<FlowOverviewDto>() }),
@@ -322,8 +329,15 @@ export const endpoints = {
       body: { format },
       schema: typed<StartExportResult>(),
     }),
-  listComments: (id: string) =>
-    apiRequest(`/missions/${id}/comments`, { schema: typed<CommentDto[]>() }),
+  listComments: (id: string, target?: { targetKind: CommentTargetKind; targetId: string }) =>
+    apiRequest(
+      `/missions/${id}/comments${
+        target === undefined
+          ? ''
+          : `?targetKind=${target.targetKind}&targetId=${encodeURIComponent(target.targetId)}`
+      }`,
+      { schema: typed<CommentDto[]>() },
+    ),
   createComment: (id: string, body: CreateCommentRequest) =>
     apiRequest(`/missions/${id}/comments`, {
       method: 'POST',

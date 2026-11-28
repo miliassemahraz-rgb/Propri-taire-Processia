@@ -4,7 +4,15 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FlowDecisionRequest, FlowOverviewDto, FlowProcessDto } from '@processia/contracts';
 import { t } from '@processia/i18n';
-import { Button, DataTable, Notice, ProgressMeter, StatusBadge, showToast } from '@processia/ui';
+import {
+  Button,
+  DataTable,
+  Notice,
+  ProgressMeter,
+  StatusBadge,
+  Tabs,
+  showToast,
+} from '@processia/ui';
 import { useCollab, useMissionModel } from '../lib/collab';
 import {
   flowCounts,
@@ -17,8 +25,11 @@ import { endpoints } from '../lib/endpoints';
 import { errorMessage } from '../lib/errors';
 import { activeRun } from '../lib/guided';
 import { useGuidedRuns } from '../lib/guided-runs';
+import { MappingViewer } from './mapping/mapping-viewer';
 import { useMission } from './mission-frame';
 
+const TAB_VIEWER = 'viewer';
+const TAB_FLOWS = 'flows';
 const WATCHED = ['process_flow'] as const;
 const ACCEPT: FlowDecisionRequest = { decision: 'accept' };
 const REJECT: FlowDecisionRequest = { decision: 'reject' };
@@ -212,6 +223,7 @@ export function CartographyPage() {
   const headVersion = model?.version ?? null;
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' });
   const [announcement, setAnnouncement] = useState('');
+  const [tab, setTab] = useState<typeof TAB_VIEWER | typeof TAB_FLOWS>(TAB_VIEWER);
   const open = mappingOpen(mission.phase);
   const isValidator = mission.myRole === 'validator';
   const reloadRef = useRef<() => Promise<void>>(async () => {});
@@ -313,11 +325,11 @@ export function CartographyPage() {
   const failures = overview?.lastRun?.failures ?? [];
   const groups = groupByMacro(overview?.processes ?? []);
 
-  return (
-    <div className="stack-lg" data-testid="cartography">
+  const flows = (
+    <div className="stack-lg" data-testid="flows-panel">
       <div className="page-head">
         <div className="stack-sm">
-          <h1>{t('cartography.heading')}</h1>
+          <h2 className="h2">{t('cartography.flowsHeading')}</h2>
           <p className="muted">{t('cartography.intro')}</p>
           {overview !== null ? (
             <p className="muted small" data-testid="flow-summary">
@@ -332,7 +344,6 @@ export function CartographyPage() {
           {t('cartography.reviewLink')}
         </Link>
       </div>
-
       {canEdit ? (
         <div className="stack-sm">
           <div className="row">
@@ -392,6 +403,32 @@ export function CartographyPage() {
           onDecide={decide}
         />
       ))}
+    </div>
+  );
+
+  return (
+    <div className="stack-lg" data-testid="cartography">
+      <h1>{t('cartography.heading')}</h1>
+      <Tabs
+        label={t('cartography.tabs.label')}
+        selected={tab}
+        onSelectionChange={(id) => setTab(id === TAB_FLOWS ? TAB_FLOWS : TAB_VIEWER)}
+        items={[
+          {
+            id: TAB_VIEWER,
+            label: t('cartography.tabs.viewer'),
+            content:
+              model === null ? (
+                <p role="status" className="muted">
+                  {t('cartography.viewer.loading')}
+                </p>
+              ) : (
+                <MappingViewer missionId={missionId} model={model} canEdit={canEdit} />
+              ),
+          },
+          { id: TAB_FLOWS, label: t('cartography.tabs.flows'), content: flows },
+        ]}
+      />
     </div>
   );
 }

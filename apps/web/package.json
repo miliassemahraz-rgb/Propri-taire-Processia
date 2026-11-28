@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hocuspocus/provider": "3.4.4",
+    "bpmn-js": "18.33.1",
     "@processia/config": "workspace:*",
     "@processia/contracts": "workspace:*",
     "@processia/i18n": "workspace:*",

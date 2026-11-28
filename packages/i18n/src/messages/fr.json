@@ -1303,6 +1303,185 @@
       "pending": "{count} à examiner",
       "accept": "Confirmer le niveau 3",
       "acceptLabel": "Confirmer le niveau 3 de la tâche {label}"
-    }
+    },
+    "tabs": {
+      "label": "Parties de la cartographie",
+      "viewer": "Visionneuse",
+      "flows": "Enchaînements des processus"
+    },
+    "viewer": {
+      "loading": "Chargement du modèle…",
+      "empty": "Le modèle ne contient encore aucun macroprocessus : lancez l’analyse du métier.",
+      "unknownDiagram": "Ce niveau n’existe plus : retour à la cartographie globale.",
+      "breadcrumb": "Niveaux de la cartographie",
+      "level0": "Niveau 0 · {count} macroprocessus",
+      "crumb": "{code} {label}",
+      "crumbCurrent": "{code} {label} (niveau {level})",
+      "up": "Remonter d’un niveau",
+      "titleGlobal": "Cartographie globale",
+      "titleLevel": "{code} {label}",
+      "levelName": {
+        "L0": "Niveau 0",
+        "L1": "Niveau 1",
+        "L2": "Niveau 2",
+        "L3": "Niveau 3"
+      },
+      "views": {
+        "label": "Vue",
+        "simple": "Vue simplifiée",
+        "bpmn": "BPMN complet",
+        "text": "Alternative textuelle"
+      },
+      "legend": {
+        "heading": "Marqueurs",
+        "hypothesis": "Hypothèse : contour pointillé et mention « Hypothèse »",
+        "finding": "Constat du diagnostic : mention « Constat »",
+        "discrepancy": "Écart ouvert entre deux sources : mention « Écart »"
+      },
+      "simple": {
+        "region": "Vue simplifiée de {title}, une ligne par acteur, étapes dans l’ordre de lecture",
+        "lane": "Couloir : {name}",
+        "unassigned": "Non affecté",
+        "category": {
+          "steering": "Pilotage",
+          "core": "Réalisation",
+          "support": "Support",
+          "none": "Sans catégorie"
+        },
+        "open": "Ouvrir",
+        "openLabel": "Ouvrir le niveau inférieur de {label}",
+        "branch": "Si {condition} : étape {number}",
+        "branchDefault": "Sinon : étape {number}",
+        "branchPlain": "Ensuite : étape {number}",
+        "empty": "Ce niveau ne contient aucune étape."
+      },
+      "text": {
+        "caption": "Alternative textuelle de {title} : étapes dans l’ordre de lecture",
+        "columns": {
+          "number": "N°",
+          "step": "Étape",
+          "type": "Nature",
+          "actor": "Acteur",
+          "inputs": "Entrées",
+          "outputs": "Sorties",
+          "next": "Ensuite"
+        },
+        "none": "Aucun",
+        "end": "Fin du processus",
+        "select": "Sélectionner l’étape {number} : {label}",
+        "open": "Ouvrir le niveau inférieur",
+        "openLabel": "Ouvrir le niveau inférieur de l’étape {number} : {label}",
+        "branch": "Si {condition} : étape {number}",
+        "branchDefault": "Sinon : étape {number}",
+        "plain": "Étape {number}",
+        "count": "{count} étapes"
+      },
+      "kind": {
+        "macro": "Macroprocessus",
+        "process": "Processus",
+        "task": "Tâche",
+        "step": "Étape",
+        "start": "Début",
+        "end": "Fin",
+        "intermediate": "Événement",
+        "boundary": "Événement de bord",
+        "decision": "Décision"
+      },
+      "gateway": {
+        "exclusive": "Décision (un seul chemin)",
+        "parallel": "Chemins en parallèle",
+        "inclusive": "Un ou plusieurs chemins"
+      },
+      "execution": {
+        "manual": "Manuelle",
+        "user": "Sur poste",
+        "automatic": "Automatique",
+        "ai_agent": "Agent IA"
+      },
+      "trigger": {
+        "none": "Sans déclencheur",
+        "message": "Message reçu",
+        "timer": "Délai",
+        "error": "Erreur",
+        "signal": "Signal",
+        "conditional": "Condition"
+      },
+      "marker": {
+        "hypothesis": "Hypothèse",
+        "finding": "Constat",
+        "discrepancy": "Écart"
+      },
+      "bpmn": {
+        "region": "Schéma BPMN de {title} : flèches pour parcourir les étapes, Entrée pour ouvrir le niveau inférieur",
+        "loading": "Chargement du schéma…",
+        "error": "Le schéma n’a pas pu être chargé.",
+        "retry": "Réessayer",
+        "textLink": "Alternative textuelle du schéma",
+        "help": "Lecture seule : la modification passe par le dialogue. Clic : sélectionner ; double-clic ou Entrée : ouvrir le niveau inférieur.",
+        "updated": "Le schéma a été mis à jour (version {version}).",
+        "zoomIn": "Agrandir",
+        "zoomOut": "Réduire",
+        "zoomFit": "Ajuster à la fenêtre"
+      },
+      "announce": {
+        "selected": "Étape sélectionnée : {step}",
+        "opened": "Niveau ouvert : {title}"
+      },
+      "panel": {
+        "heading": "Élément sélectionné",
+        "none": "Sélectionnez une étape pour voir ses entrées, ses sorties, son responsable, ses règles et ses sources.",
+        "code": "Code",
+        "kind": "Nature",
+        "status": "Statut",
+        "origin": "Origine",
+        "rationale": "Justification",
+        "description": "Description",
+        "responsible": "Responsable",
+        "raci": "Autres acteurs",
+        "inputs": "Entrées",
+        "outputs": "Sorties",
+        "tools": "Outils",
+        "rules": "Règles",
+        "indicators": "Indicateurs",
+        "findings": "Constats",
+        "sources": "Sources",
+        "fields": "Champs",
+        "trigger": "Déclencheur",
+        "timer": "Délai",
+        "noValue": "Aucun",
+        "open": "Ouvrir le niveau inférieur",
+        "openLabel": "Ouvrir le niveau inférieur de {label}",
+        "role": {
+          "R": "Réalise",
+          "A": "Approuve",
+          "C": "Consulté",
+          "I": "Informé"
+        },
+        "measure": {
+          "volume": "Volume",
+          "lead_time": "Délai",
+          "duration": "Durée",
+          "frequency": "Fréquence",
+          "workload": "Charge",
+          "cost": "Coût",
+          "error_rate": "Taux d’erreur"
+        },
+        "severity": "Gravité {level}",
+        "openSource": "Voir dans la source",
+        "openSourceLabel": "Voir dans la source la citation « {quote} »"
+      },
+      "comments": {
+        "heading": "Commentaires",
+        "empty": "Aucun commentaire sur cet élément.",
+        "label": "Nouveau commentaire interne",
+        "send": "Publier",
+        "sent": "Commentaire publié",
+        "internal": "Interne à l’équipe",
+        "shared": "Partagé avec le validateur",
+        "authorLine": "{name}, le {date}",
+        "resolved": "Résolu"
+      }
+    },
+    "flowsHeading": "Construction des enchaînements"
   }
 }

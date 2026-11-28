@@ -99,6 +99,13 @@ La double authentification est obligatoire et n'est pas pré-enrôlée : à la p
 - Pour tester à la main : analyser `PILOT_DESCRIPTION`, soumettre le dossier (`POST submissions`, `{ "kind": "analysis_dossier" }`), le faire valider par `validateur@processia.local` (`POST submissions/:sid/validate`), puis `POST mapping/flows`. Le fournisseur factice répond avec `packages/test-fixtures/src/pilot-flow.ts` : environ 430 hypothèses pour les 45 processus ; « Relance des pièces manquantes » (processus « Relances clients », P04) se détaille avec `detailTaskIds`.
 - Tests : `packages/ai/src/flow/flow.test.ts` (unitaire), `apps/api/src/mapping/flow.int.test.ts` (intégration : worker dans le processus, Chromium pour les exports joints à la soumission, MinIO, Mailpit), `e2e/tests/z-cartographie.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-17-cartographie.png`).
 
+## Cartographie : visionneuse (WP-19)
+
+- Page `/missions/<id>/cartographie`, onglet « Visionneuse » (par défaut) : fil d'Ariane L0 à L3, vues « Vue simplifiée » (mode simple), « BPMN complet » (mode expert, `bpmn-js` `NavigatedViewer`) et « Alternative textuelle », panneau de l'élément sélectionné (entrées, sorties, responsable, règles, indicateurs, sources avec la visionneuse de source, commentaires internes). L'onglet « Enchaînements des processus » est la page de WP-17.
+- Route : `GET /missions/:id/bpmn/:diagramId?version=` (`L0`, `L1:<id>`, `L2:<id>`, `L3:<id>` ; réponse `{ diagram, version, xml }`), `@RequiresPhase('mapping')`, 403 pour le validateur. Lire la tête par un membre enregistre les positions nouvelles dans une version de cause `layout` (ADR 0026).
+- Pour voir des diagrammes réels : suivre la section WP-17 (analyser `PILOT_DESCRIPTION`, soumettre, valider, `POST mapping/flows`), puis ouvrir la page.
+- Tests : `packages/bpmn/src/outline.test.ts` (cohérence plan structuré / BPMN), `packages/model/src/ops/outline.test.ts`, `apps/web/src/lib/mapping.test.ts`, `apps/api/src/cartography/cartography.int.test.ts` (PostgreSQL), `e2e/tests/z-visionneuse.spec.ts` (`E2E_SCREENSHOT=1` régénère `docs/wp/WP-19-visionneuse.png`).
+
 ## Réinitialiser
 
 ```bash

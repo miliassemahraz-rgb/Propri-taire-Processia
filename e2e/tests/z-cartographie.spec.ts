@@ -140,6 +140,7 @@ test.describe('cartographie : enchaînements des processus', () => {
     const page = await context.newPage();
     await loginAnyState(page, ACCOUNTS.consultantA);
     await page.goto(`/missions/${missionId}/cartographie`);
+    await page.getByRole('tab', { name: 'Enchaînements des processus' }).click();
     await expect(page.getByTestId('flow-summary')).toHaveText(
       '0 processus sur 45 ont un enchaînement.',
     );
@@ -196,6 +197,7 @@ test.describe('cartographie : enchaînements des processus', () => {
     const page = await context.newPage();
     await loginAnyState(page, ACCOUNTS.consultantA);
     await page.goto(`/missions/${missionId}/cartographie`);
+    await page.getByRole('tab', { name: 'Enchaînements des processus' }).click();
     const relances = page.getByTestId('flow-row').filter({ hasText: 'Relances clients' });
     await relances.getByRole('button', { name: /^Tout confirmer/ }).click();
     await expect(relances).toContainText('Tout est examiné', { timeout: 30_000 });
@@ -235,6 +237,7 @@ test.describe('cartographie : enchaînements des processus', () => {
     const page = await context.newPage();
     await loginAnyState(page, ACCOUNTS.consultantA);
     await page.goto(`/missions/${missionId}/cartographie`);
+    await page.getByRole('tab', { name: 'Enchaînements des processus' }).click();
     await expect(page.getByTestId('flow-summary')).toBeVisible();
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({ path: SCREENSHOT });
