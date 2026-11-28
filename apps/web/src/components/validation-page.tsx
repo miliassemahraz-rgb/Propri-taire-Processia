@@ -9,6 +9,7 @@ import { endpoints } from '../lib/endpoints';
 import { errorMessage } from '../lib/errors';
 import { defaultSubmission, latestOf, validationSteps } from '../lib/validation';
 import { useMission } from './mission-frame';
+import { AsIsPanel } from './validation/as-is-panel';
 import { DossierPanel, type PanelProps } from './validation/dossier-panel';
 import { NoticesPanel } from './validation/notices-panel';
 import { ValidationStepper } from './validation/stepper';
@@ -16,21 +17,17 @@ import { ValidationStepper } from './validation/stepper';
 const POLL_MS = 5000;
 
 /**
- * Panneau par type de soumission. Le dossier d'analyse est complet ; l'AS-IS (WP-21) et le TO-BE
- * (WP-23, décision optimisation par optimisation) brancheront ici leur propre panneau, avec le
- * même contrat `PanelProps`, sans toucher au portail.
+ * Panneau par type de soumission. Le dossier d'analyse et l'AS-IS (WP-21, avec la cartographie de
+ * la version figée) sont complets ; le TO-BE (WP-23, décision optimisation par optimisation)
+ * branchera ici son propre panneau, avec le même contrat `PanelProps`, sans toucher au portail.
  */
-function PendingPanel({ submission }: PanelProps) {
-  return (
-    <Notice tone="info">
-      {submission.kind === 'as_is' ? t('validation.panel.asIs') : t('validation.panel.toBe')}
-    </Notice>
-  );
+function PendingPanel() {
+  return <Notice tone="info">{t('validation.panel.toBe')}</Notice>;
 }
 
 export const PANELS: Record<SubmissionKind, ComponentType<PanelProps>> = {
   analysis_dossier: DossierPanel,
-  as_is: PendingPanel,
+  as_is: AsIsPanel,
   to_be: PendingPanel,
 };
 

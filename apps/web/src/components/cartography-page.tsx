@@ -2,7 +2,12 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { FlowDecisionRequest, FlowOverviewDto, FlowProcessDto } from '@processia/contracts';
+import type {
+  FlowDecisionRequest,
+  FlowOverviewDto,
+  FlowProcessDto,
+  SubmissionKind,
+} from '@processia/contracts';
 import { t } from '@processia/i18n';
 import {
   Button,
@@ -26,9 +31,11 @@ import { errorMessage } from '../lib/errors';
 import { activeRun } from '../lib/guided';
 import { useGuidedRuns } from '../lib/guided-runs';
 import { HistorySection } from './analysis/history-section';
+import { SubmitToValidator } from './validation/submit-dialog';
 import { MappingViewer } from './mapping/mapping-viewer';
 import { useMission } from './mission-frame';
 
+const AS_IS: SubmissionKind = 'as_is';
 const TAB_VIEWER = 'viewer';
 const TAB_FLOWS = 'flows';
 const WATCHED = ['process_flow'] as const;
@@ -228,6 +235,15 @@ export function CartographyPage() {
   const open = mappingOpen(mission.phase);
   const isValidator = mission.myRole === 'validator';
   const reloadRef = useRef<() => Promise<void>>(async () => {});
+  // Lien d'un constat du diagnostic : `?element=<id>` ouvre la visionneuse sur cet élément (WP-21).
+  const [focusElementId, setFocusElementId] = useState<string | null>(null);
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('element');
+    if (id !== null && id !== '') {
+      setFocusElementId(id);
+      setTab(TAB_VIEWER);
+    }
+  }, []);
 
   const { runs, track } = useGuidedRuns(missionId, WATCHED, ({ run, dto, mine }) => {
     void reloadRef.current();
@@ -410,6 +426,33 @@ export function CartographyPage() {
   return (
     <div className="stack-lg" data-testid="cartography">
       <h1>{t('cartography.heading')}</h1>
+      {canEdit ? (
+        <section
+          className="card-soft stack-sm"
+          aria-labelledby="asis-title"
+          data-testid="asis-card"
+        >
+          <h2 id="asis-title" className="h4">
+            {t('cartography.asIs.heading')}
+          </h2>
+          <p className="muted small">{t('cartography.asIs.help')}</p>
+          <div className="row">
+            <SubmitToValidator missionId={missionId} kind={AS_IS} />
+            <Link
+              href={`/missions/${missionId}/validation`}
+              className="pr-button pr-button--secondary"
+            >
+              {t('cartography.asIs.validationLink')}
+            </Link>
+            <Link
+              href={`/missions/${missionId}/diagnostic`}
+              className="pr-button pr-button--secondary"
+            >
+              {t('cartography.asIs.diagnosticLink')}
+            </Link>
+          </div>
+        </section>
+      ) : null}
       <Tabs
         label={t('cartography.tabs.label')}
         selected={tab}
@@ -430,6 +473,7 @@ export function CartographyPage() {
                     model={model}
                     canEdit={canEdit}
                     selfId={self.id}
+                    focusElementId={focusElementId}
                   />
                   <HistorySection
                     missionId={missionId}

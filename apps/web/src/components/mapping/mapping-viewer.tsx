@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { t } from '@processia/i18n';
 import {
   buildOutline,
+  diagramOfElement,
   diagramTrail,
   type BusinessModel,
   type DiagramOutline,
@@ -30,6 +31,8 @@ interface Props {
   canEdit: boolean;
   /** Compte connecté : distingue ses demandes de celles d'un collègue dans le dialogue. */
   selfId: string;
+  /** Élément à montrer à l'ouverture (lien d'un constat du diagnostic, WP-21) : son niveau et sa sélection. */
+  focusElementId?: string | null;
 }
 
 function titleOf(outline: DiagramOutline): string {
@@ -47,7 +50,7 @@ function titleOf(outline: DiagramOutline): string {
  * panneau de l'élément sélectionné et les marqueurs. Elle lit le modèle partagé : toute version
  * enregistrée, par soi ou par un autre consultant, met les trois vues à jour.
  */
-export function MappingViewer({ missionId, model, canEdit, selfId }: Props) {
+export function MappingViewer({ missionId, model, canEdit, selfId, focusElementId = null }: Props) {
   const { mode } = useMode();
   const [diagram, setDiagram] = useState<string>(ROOT);
   const [view, setView] = useState<MappingView>(mode === 'expert' ? 'bpmn' : 'simple');
@@ -81,6 +84,18 @@ export function MappingViewer({ missionId, model, canEdit, selfId }: Props) {
   useEffect(() => {
     if (missing && diagram !== ROOT) setDiagram(ROOT);
   }, [missing, diagram]);
+
+  // Un lien vers un élément (constat du diagnostic) ouvre son niveau et le sélectionne, une fois.
+  const focused = useRef<string | null>(null);
+  useEffect(() => {
+    if (focusElementId === null || focused.current === focusElementId) return;
+    const target = diagramOfElement(model, focusElementId);
+    focused.current = focusElementId;
+    if (target === undefined) return;
+    setDiagram(target);
+    const shown = buildOutline(model, target)?.nodes.some((n) => n.id === focusElementId);
+    setSelectedId(shown === true ? focusElementId : null);
+  }, [model, focusElementId]);
 
   // Une sélection dont l'élément a disparu est abandonnée.
   useEffect(() => {

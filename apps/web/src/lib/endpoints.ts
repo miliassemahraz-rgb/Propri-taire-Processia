@@ -33,6 +33,9 @@ import {
   type DecisionRequest,
   type DecisionResult,
   type DeliverablesPreviewDto,
+  type DiagnosticOverviewDto,
+  type StartDiagnosticResult,
+  type SubmissionMappingDto,
   type ExportArtifactDto,
   type FlowDecisionRequest,
   type FlowDecisionResult,
@@ -310,6 +313,16 @@ export const endpoints = {
       schema: typed<FlowDecisionResult>(),
     }),
 
+  // Diagnostic de l'AS-IS validé (WP-21)
+  diagnosticOverview: (id: string) =>
+    apiRequest(`/missions/${id}/diagnostic`, { schema: typed<DiagnosticOverviewDto>() }),
+  startDiagnostic: (id: string) =>
+    apiRequest(`/missions/${id}/diagnostic/runs`, {
+      method: 'POST',
+      body: {},
+      schema: typed<StartDiagnosticResult>(),
+    }),
+
   // Livrables de l'étape 1 et exports du dossier d'analyse (WP-15)
   deliverables: (id: string) =>
     apiRequest(`/missions/${id}/deliverables`, { schema: typed<DeliverablesPreviewDto>() }),
@@ -353,6 +366,10 @@ export const endpoints = {
   submissionDocument: (id: string, submissionId: string) =>
     apiRequest(`/missions/${id}/submissions/${submissionId}/document`, {
       schema: typed<DeliverablesPreviewDto>(),
+    }),
+  submissionMapping: (id: string, submissionId: string) =>
+    apiRequest(`/missions/${id}/submissions/${submissionId}/mapping`, {
+      schema: typed<SubmissionMappingDto>(),
     }),
   submissionElements: (id: string, submissionId: string) =>
     apiRequest(`/missions/${id}/submissions/${submissionId}/elements`, {
