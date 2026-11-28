@@ -49,6 +49,8 @@ export const GUIDED_RUN_KINDS = [
   'answer',
   /** Lot d'enchaînements des processus (WP-17) : suivi comme les autres exécutions guidées. */
   'process_flow',
+  /** Diagnostic de l'AS-IS validé (WP-21). */
+  'diagnostic',
 ] as const;
 export type GuidedRunKind = (typeof GUIDED_RUN_KINDS)[number];
 

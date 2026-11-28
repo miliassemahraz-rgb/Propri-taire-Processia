@@ -80,7 +80,7 @@
     "ALREADY_DECIDED": "Cet élément a déjà été décidé par un autre consultant.",
     "QUESTION_NOT_OPEN": "Cette question a déjà reçu une réponse ou a été passée.",
     "GUIDED_IN_PROGRESS": "Cette opération est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
-    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation du dossier d’analyse par le client.",
+    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation de l’étape précédente par le client (dossier d’analyse pour la cartographie, AS-IS pour le diagnostic).",
     "FLOW_IN_PROGRESS": "La construction des enchaînements est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
     "NOTHING_TO_BUILD": "Il n’y a rien à construire : les enchaînements demandés existent déjà.",
     "NOTHING_TO_DECIDE": "Il n’y a plus d’hypothèse à décider ici."

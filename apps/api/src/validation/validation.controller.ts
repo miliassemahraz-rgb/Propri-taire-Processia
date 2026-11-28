@@ -23,6 +23,7 @@ import {
   type SubmissionDto,
   type SubmissionElementDto,
   type SubmissionKind,
+  type SubmissionMappingDto,
   type SubmissionPreviewDto,
   type ValidateSubmissionResult,
 } from '@processia/contracts';
@@ -102,6 +103,17 @@ export class ValidationController {
     @Param('submissionId', uuidParam) submissionId: string,
   ): Promise<DeliverablesPreviewDto> {
     return this.submissions.document(ctx, viewerOf(ctx, auth), submissionId);
+  }
+
+  /** Cartographie de la version figée d'un AS-IS soumis (vues simplifiée et textuelle, WP-21). */
+  @Can('submission.read')
+  @Get('submissions/:submissionId/mapping')
+  mapping(
+    @CurrentMission() ctx: MissionContext,
+    @CurrentAuth() auth: AuthContext,
+    @Param('submissionId', uuidParam) submissionId: string,
+  ): Promise<SubmissionMappingDto> {
+    return this.submissions.mapping(ctx, viewerOf(ctx, auth), submissionId);
   }
 
   @Can('submission.read')

@@ -11,3 +11,4 @@ export * from './validation/index.js';
 export * from './flow/index.js';
 export * from './cartography/index.js';
 export * from './dialogue/index.js';
+export * from './diagnostic/index.js';

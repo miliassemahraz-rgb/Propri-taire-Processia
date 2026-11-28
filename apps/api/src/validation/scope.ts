@@ -14,9 +14,26 @@ const NEVER_VALIDATED = new Set(['discrepancy', 'finding', 'optimisation']);
  * du validateur vers le contenu du modèle (PO-52).
  */
 export function deliveredElements(model: BusinessModel): Element[] {
-  return Object.values(deliverableView(model).elements)
-    .filter((element) => !NEVER_VALIDATED.has(element.kind))
-    .sort((a, b) => a.code.localeCompare(b.code, 'en', { numeric: true }));
+  return Object.values(deliveredModel(model).elements).sort((a, b) =>
+    a.code.localeCompare(b.code, 'en', { numeric: true }),
+  );
+}
+
+/**
+ * Le modèle que le validateur lit pour une version figée : la vue des livrables privée des types
+ * non validables, sans positions (le validateur n'a que les vues simplifiée et textuelle, WP-21).
+ * Les références vers un élément retiré ne sont pas nettoyées une seconde fois : un constat ou une
+ * optimisation n'est référencé par aucun élément livré.
+ */
+export function deliveredModel(model: BusinessModel): BusinessModel {
+  const view = deliverableView(model);
+  return {
+    ...view,
+    elements: Object.fromEntries(
+      Object.entries(view.elements).filter(([, element]) => !NEVER_VALIDATED.has(element.kind)),
+    ),
+    layout: {},
+  };
 }
 
 /** Hypothèses non décidées d'une version : exclues des livrables, listées au consultant. */

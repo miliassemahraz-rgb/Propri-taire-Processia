@@ -25,6 +25,7 @@
     "@processia/config": "workspace:*",
     "@processia/contracts": "workspace:*",
     "@processia/db": "workspace:*",
+    "@processia/diagnostic": "workspace:*",
     "@processia/exports": "workspace:*",
     "@processia/i18n": "workspace:*",
     "@processia/ingest": "workspace:*",
