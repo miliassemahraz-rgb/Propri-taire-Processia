@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { BusinessModel } from '@processia/model';
 import type { ExportArtifactDto } from '../deliverables/index.js';
 
 /** Contrats du circuit de validation, des commentaires et des signalements (WP-16, spécification 2.7). */
@@ -92,6 +93,15 @@ export interface SubmissionElementDto {
   label: string;
   kind: string;
   status: string;
+}
+
+/**
+ * Cartographie de la version figée d'une soumission `as_is` (WP-21), telle que la lit le validateur :
+ * le modèle de la version, réduit aux éléments livrés (sans hypothèse, écart, constat ni optimisation).
+ */
+export interface SubmissionMappingDto {
+  version: number;
+  model: BusinessModel;
 }
 
 export const COMMENT_TARGET_KINDS = [

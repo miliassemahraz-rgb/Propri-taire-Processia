@@ -54,6 +54,12 @@ export function errorMessage(error: unknown): string {
     if (error.code === 'CONFLICT' && reason === 'NOTHING_TO_BUILD') {
       return t('errors.NOTHING_TO_BUILD');
     }
+    if (error.code === 'CONFLICT' && reason === 'DIAGNOSTIC_IN_PROGRESS') {
+      return t('errors.DIAGNOSTIC_IN_PROGRESS');
+    }
+    if (error.code === 'CONFLICT' && reason === 'NOTHING_TO_DIAGNOSE') {
+      return t('errors.NOTHING_TO_DIAGNOSE');
+    }
     if (error.code === 'CONFLICT' && reason === 'NOTHING_TO_DECIDE') {
       return t('errors.NOTHING_TO_DECIDE');
     }

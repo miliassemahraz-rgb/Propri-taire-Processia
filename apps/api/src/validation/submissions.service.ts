@@ -15,6 +15,7 @@ import {
   type SubmissionDto,
   type SubmissionElementDto,
   type SubmissionKind,
+  type SubmissionMappingDto,
   type SubmissionPreviewDto,
   type SubmissionStatus,
   type SubmissionUpdatedMessage,
@@ -44,6 +45,7 @@ import type { MissionContext } from '../policy/mission-context.js';
 import { StorageService } from '../storage/storage.service.js';
 import {
   deliveredElements,
+  deliveredModel,
   excludedHypotheses,
   PHASE_AFTER_VALIDATION,
   phaseRank,
@@ -162,6 +164,20 @@ export class SubmissionsService {
         kind: element.kind,
         status: element.status.value,
       }));
+    });
+  }
+
+  /**
+   * Cartographie de l'AS-IS soumis (WP-21) : le modèle de la version figée, réduit aux éléments
+   * livrés (jamais la tête, jamais d'hypothèse), pour les vues simplifiée et textuelle du
+   * validateur. Réservé aux soumissions `as_is` : le TO-BE se lit avec WP-23.
+   */
+  async mapping(ctx: MissionContext, viewer: Viewer, id: string): Promise<SubmissionMappingDto> {
+    return ctx.run(async (tx) => {
+      const row = await this.load(tx, id, viewer);
+      if (row.kind !== 'as_is') throw new AuthError('NOT_FOUND');
+      const model = await this.models.loadModel(tx, ctx.missionId, row.modelVersion);
+      return { version: row.modelVersion, model: deliveredModel(model) };
     });
   }
 

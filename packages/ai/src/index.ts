@@ -24,3 +24,5 @@ export * from './flow/plan.js';
 export * from './flow/scope.js';
 export * from './pipelines/model-edit.js';
 export * from './edit/plan.js';
+export * from './pipelines/diagnostic.js';
+export * from './diagnostic/plan.js';

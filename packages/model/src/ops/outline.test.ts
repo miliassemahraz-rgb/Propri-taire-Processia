@@ -1,6 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { buildCompleteModel } from '../testing/index.js';
-import { buildOutline, diagramTrail, listDiagrams, parseDiagramId } from './outline.js';
+import {
+  buildActivity,
+  buildActor,
+  buildCompleteModel,
+  buildEvent,
+  buildInformationFlow,
+  buildModel,
+  buildSequenceFlow,
+  resetTestIds,
+} from '../testing/index.js';
+import {
+  buildOutline,
+  diagramOfElement,
+  diagramTrail,
+  listDiagrams,
+  parseDiagramId,
+} from './outline.js';
 
 describe('plan structuré d’un diagramme', () => {
   const model = buildCompleteModel();
@@ -30,5 +45,53 @@ describe('plan structuré d’un diagramme', () => {
     expect(macro?.drillTo).toBe(`L1:${macro?.id}`);
     expect(buildOutline(model, 'L1:inconnu')).toBeUndefined();
     expect(diagramTrail(model, 'L2:inconnu')).toEqual([]);
+  });
+});
+
+describe('diagramOfElement', () => {
+  it('place chaque élément dessiné dans un diagramme qui le contient', () => {
+    resetTestIds();
+    const macro = buildActivity({ level: 'macro', label: 'Macro' });
+    const process = buildActivity({ level: 'process', parentId: macro.id });
+    const task = buildActivity({ level: 'task', parentId: process.id });
+    const step = buildActivity({ level: 'step', parentId: task.id });
+    const start = buildEvent({ containerId: process.id, position: 'start' });
+    const end = buildEvent({ containerId: process.id, position: 'end' });
+    const flow = buildSequenceFlow({ containerId: process.id, fromId: start.id, toId: task.id });
+    const flow2 = buildSequenceFlow({ containerId: process.id, fromId: task.id, toId: end.id });
+    const stepStart = buildEvent({ containerId: task.id, position: 'start' });
+    const info = buildInformationFlow({ activityId: step.id });
+    const model = buildModel([
+      macro,
+      process,
+      task,
+      step,
+      start,
+      end,
+      flow,
+      flow2,
+      stepStart,
+      info,
+    ]);
+    expect(diagramOfElement(model, macro.id)).toBe('L0');
+    expect(diagramOfElement(model, process.id)).toBe(`L1:${macro.id}`);
+    expect(diagramOfElement(model, task.id)).toBe(`L2:${process.id}`);
+    expect(diagramOfElement(model, step.id)).toBe(`L3:${task.id}`);
+    expect(diagramOfElement(model, start.id)).toBe(`L2:${process.id}`);
+    expect(diagramOfElement(model, flow.id)).toBe(`L2:${process.id}`);
+    expect(diagramOfElement(model, stepStart.id)).toBe(`L3:${task.id}`);
+    expect(diagramOfElement(model, info.id)).toBe(`L3:${task.id}`);
+    for (const id of [process.id, task.id, step.id, start.id, stepStart.id]) {
+      const diagram = diagramOfElement(model, id) as string;
+      expect(buildOutline(model, diagram)?.nodes.map((n) => n.id)).toContain(id);
+    }
+  });
+
+  it('ne place ni un acteur ni un élément inconnu', () => {
+    resetTestIds();
+    const actor = buildActor();
+    const model = buildModel([actor]);
+    expect(diagramOfElement(model, actor.id)).toBeUndefined();
+    expect(diagramOfElement(model, 'inconnu')).toBeUndefined();
   });
 });

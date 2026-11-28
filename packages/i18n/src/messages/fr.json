@@ -80,10 +80,12 @@
     "ALREADY_DECIDED": "Cet élément a déjà été décidé par un autre consultant.",
     "QUESTION_NOT_OPEN": "Cette question a déjà reçu une réponse ou a été passée.",
     "GUIDED_IN_PROGRESS": "Cette opération est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
-    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation du dossier d’analyse par le client.",
+    "PHASE_LOCKED": "Cette étape n’est accessible qu’après la validation de l’étape précédente par le client (dossier d’analyse pour la cartographie, AS-IS pour le diagnostic).",
     "FLOW_IN_PROGRESS": "La construction des enchaînements est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
     "NOTHING_TO_BUILD": "Il n’y a rien à construire : les enchaînements demandés existent déjà.",
-    "NOTHING_TO_DECIDE": "Il n’y a plus d’hypothèse à décider ici."
+    "NOTHING_TO_DECIDE": "Il n’y a plus d’hypothèse à décider ici.",
+    "DIAGNOSTIC_IN_PROGRESS": "Le diagnostic est déjà en cours pour la mission. Patientez jusqu’à sa fin.",
+    "NOTHING_TO_DIAGNOSE": "Il n’y a rien à diagnostiquer : l’AS-IS ne contient encore aucune tâche confirmée."
   },
   "warnings": {
     "CAPABILITY_MISSING": {
@@ -174,7 +176,8 @@
       "analysis": "Analyse",
       "deliverables": "Livrables",
       "validation": "Validation",
-      "mapping": "Cartographie"
+      "mapping": "Cartographie",
+      "diagnostic": "Diagnostic"
     },
     "mode": {
       "label": "Mode d’affichage",
@@ -224,7 +227,8 @@
     "missionAnalysis": "Analyse de la mission",
     "missionDeliverables": "Livrables de la mission",
     "missionValidation": "Validation de la mission",
-    "missionMapping": "Cartographie de la mission"
+    "missionMapping": "Cartographie de la mission",
+    "missionDiagnostic": "Diagnostic de la mission"
   },
   "notFound": {
     "heading": "Page introuvable",
@@ -1133,7 +1137,8 @@
       "document": "Dossier",
       "elements": "Éléments",
       "exports": "Fichiers",
-      "discussion": "Discussion"
+      "discussion": "Discussion",
+      "mapping": "Cartographie"
     },
     "panel": {
       "soon": "La validation de ce livrable arrivera avec les étapes suivantes du produit.",
@@ -1244,10 +1249,28 @@
         "EMPTY_MODEL": "Le modèle ne contient encore rien à soumettre. Lancez d’abord l’analyse.",
         "WRONG_PHASE": "Cette étape n’est pas encore ouverte.",
         "ALREADY_VALIDATED": "Le dossier d’analyse est déjà validé. Les modifications ultérieures sont signalées au validateur."
+      },
+      "buttonAsIs": "Soumettre l’AS-IS au validateur",
+      "titleAsIs": "Soumettre l’AS-IS au validateur",
+      "introAsIs": "Vous allez figer la version {version} de la cartographie et la soumettre au validateur du client. Il la lira en lecture seule, niveau par niveau, sans voir votre travail en cours.",
+      "excludedHelpAsIs": "Ces hypothèses (enchaînements non confirmés, par exemple) ne figureront pas dans l’AS-IS soumis. Confirmez-les avant de soumettre si elles font partie du processus actuel.",
+      "excludedMore": "… et {count} autres hypothèses.",
+      "blockerAsIs": {
+        "EMPTY_MODEL": "Le modèle ne contient encore rien à soumettre.",
+        "WRONG_PHASE": "L’AS-IS se soumet une fois le dossier d’analyse validé.",
+        "ALREADY_VALIDATED": "L’AS-IS est déjà validé : le diagnostic est ouvert."
       }
     },
     "gate": {
       "locked": "La cartographie s’ouvre après la validation du dossier d’analyse."
+    },
+    "mapping": {
+      "heading": "Cartographie de l’AS-IS",
+      "intro": "Les processus tels que le cabinet les exerce aujourd’hui, dans la version figée de la soumission. Parcourez-les niveau par niveau ; commentez une étape pour la signaler.",
+      "loading": "Chargement de la cartographie…",
+      "empty": "Cette version ne contient aucun macroprocessus.",
+      "selectHint": "Choisissez une étape pour la commenter.",
+      "commentFor": "Commentaires sur {code}"
     }
   },
   "cartography": {
@@ -1482,7 +1505,13 @@
         "resolved": "Résolu"
       }
     },
-    "flowsHeading": "Construction des enchaînements"
+    "flowsHeading": "Construction des enchaînements",
+    "asIs": {
+      "heading": "Valider l’AS-IS",
+      "help": "Quand les enchaînements sont relus, soumettez l’AS-IS au validateur. Seuls les éléments confirmés lui sont soumis ; les hypothèses restantes sont listées avant l’envoi. Une fois l’AS-IS validé, le diagnostic s’ouvre.",
+      "validationLink": "Suivre la validation",
+      "diagnosticLink": "Ouvrir le diagnostic"
+    }
   },
   "dialogue": {
     "heading": "Modifier par dialogue",
@@ -1586,5 +1615,82 @@
       "missing": "Ce niveau n’existe plus après la modification.",
       "legend": "Aperçu : ajouté (vert), modifié (orange), supprimé (rouge), toujours avec une mention."
     }
+  },
+  "diagnostic": {
+    "heading": "Diagnostic de l’AS-IS",
+    "intro": "L’outil relève, dans l’AS-IS validé par le client, ce qui coûte du temps, de l’argent ou du risque. Des règles automatiques et l’IA proposent des constats ; chacun est une hypothèse que vous confirmez ou rejetez. Chaque constat se voit sur la cartographie.",
+    "locked": "Le diagnostic s’ouvre quand le client a validé l’AS-IS.",
+    "lockedLink": "Suivre la validation",
+    "validatorNotice": "Le diagnostic est un travail de l’équipe Processia. Vous validerez ensuite le TO-BE, optimisation par optimisation.",
+    "loading": "Chargement du diagnostic…",
+    "run": "Lancer le diagnostic",
+    "rerun": "Relancer le diagnostic",
+    "runHelp": "Les règles automatiques passent sur tout l’AS-IS, puis l’IA analyse chaque macroprocessus. Un constat déjà présent ou rejeté n’est pas reproposé.",
+    "started": "Diagnostic lancé.",
+    "progress": "Diagnostic en cours",
+    "progressText": "{percent} %",
+    "done": "Diagnostic terminé.",
+    "doneVersion": "Version {version} enregistrée.",
+    "failed": "Le diagnostic a échoué.",
+    "failedDetail": "Relancez-le : les constats déjà écrits sont conservés.",
+    "failuresHeading": "Certaines analyses ont échoué :",
+    "failureItem": "{code} : {error}",
+    "summary": "{total} constats : {pending} à examiner, {confirmed} confirmés. Périmètre : {macros} macroprocessus.",
+    "empty": "Aucun constat pour l’instant. Lancez le diagnostic.",
+    "noScope": "L’AS-IS ne contient encore aucune tâche confirmée : il n’y a rien à diagnostiquer.",
+    "family": {
+      "waste": "Gaspillages",
+      "flow_and_delay": "Flux et délais",
+      "organisation": "Organisation",
+      "risk_compliance": "Risques et conformité"
+    },
+    "familyCount": "{count} constats",
+    "familyEmpty": "Aucun constat dans cette famille.",
+    "type": {
+      "rekeying": "Ressaisie",
+      "repetitive_task": "Tâche répétitive",
+      "duplicate": "Doublon",
+      "redundant_control": "Contrôle redondant",
+      "useless_validation_loop": "Boucle de validation inutile",
+      "bottleneck": "Goulet d’étranglement",
+      "waiting_time": "Temps d’attente",
+      "flow_break": "Rupture de flux",
+      "paper_or_email_transfer": "Transfert par papier ou courriel",
+      "task_without_owner": "Tâche sans responsable",
+      "incompatible_roles": "Rôles incompatibles",
+      "single_person_dependency": "Dépendance à une seule personne",
+      "missing_control": "Contrôle manquant",
+      "missing_traceability": "Traçabilité manquante",
+      "uncovered_obligation": "Obligation non couverte"
+    },
+    "severityLabel": "Gravité",
+    "severity": {
+      "low": "mineure",
+      "medium": "importante",
+      "high": "critique"
+    },
+    "detection": {
+      "rule": "Règle automatique",
+      "ai": "Proposé par l’IA"
+    },
+    "detectionLabel": "Origine",
+    "detector": "règle {id}",
+    "why": "Justification",
+    "where": "Localisation",
+    "notOnMap": "{code} (non représenté sur la carte)",
+    "review": "Revue du consultant",
+    "confirm": "Confirmer",
+    "confirmLabel": "Confirmer le constat {code}",
+    "reject": "Rejeter",
+    "rejectLabel": "Rejeter le constat {code}",
+    "rejectTitle": "Rejeter le constat {code} ?",
+    "rejectBody": "Le constat sera retiré du diagnostic et conservé dans l’archive des rejets ; il ne sera pas reproposé.",
+    "rejectReason": "Motif du rejet (facultatif)",
+    "rejectConfirm": "Rejeter le constat",
+    "cancel": "Annuler",
+    "confirmed": "Constat {code} confirmé.",
+    "rejected": "Constat {code} rejeté.",
+    "showMore": "Afficher les {count} autres constats",
+    "showLess": "Réduire la liste"
   }
 }

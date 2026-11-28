@@ -7,3 +7,4 @@ export * from './pilot-guided.js';
 export * from './pilot-deliverables.js';
 export * from './pilot-flow.js';
 export * from './pilot-edit.js';
+export * from './pilot-diagnostic.js';

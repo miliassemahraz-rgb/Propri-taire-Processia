@@ -22,6 +22,7 @@ export const GUIDED_KINDS: readonly GuidedRunKind[] = [
   'summary',
   'answer',
   'process_flow',
+  'diagnostic',
 ];
 
 export interface GuidedRunState {

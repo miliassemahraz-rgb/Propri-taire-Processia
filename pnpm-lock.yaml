@@ -68,6 +68,9 @@ importers:
       '@processia/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@processia/diagnostic':
+        specifier: workspace:*
+        version: link:../../packages/diagnostic
       '@processia/exports':
         specifier: workspace:*
         version: link:../../packages/exports

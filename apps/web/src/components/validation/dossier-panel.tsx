@@ -12,7 +12,16 @@ import type {
 } from '@processia/contracts';
 import { t } from '@processia/i18n';
 import type { ElementKind, ElementStatus } from '@processia/model';
-import { Button, DataTable, Dialog, Notice, Tabs, TextField, showToast } from '@processia/ui';
+import {
+  Button,
+  DataTable,
+  Dialog,
+  Notice,
+  Tabs,
+  TextField,
+  showToast,
+  type TabItem,
+} from '@processia/ui';
 import { EXPORT_FORMATS_ORDER, shortSha } from '../../lib/deliverables';
 import { endpoints } from '../../lib/endpoints';
 import { errorMessage } from '../../lib/errors';
@@ -374,11 +383,12 @@ function TeamActions({
 
 /**
  * Soumission du dossier d'analyse : lecture seule de la version figée (livrables, éléments),
- * fichiers joints, discussion, et la décision du validateur. Les panneaux de l'AS-IS et du TO-BE
- * (WP-21, WP-23) se branchent de la même façon dans `PANELS`.
+ * fichiers joints, discussion, et la décision du validateur. Le panneau de l'AS-IS (WP-21) la reprend
+ * avec un onglet « Cartographie » en tête ; celui du TO-BE (WP-23) se branche de la même façon.
  */
-export function DossierPanel(props: PanelProps) {
+export function DossierPanel(props: PanelProps & { leadingTabs?: TabItem[] }) {
   const {
+    leadingTabs = [],
     missionId,
     submission,
     comments,
@@ -478,6 +488,7 @@ export function DossierPanel(props: PanelProps) {
       <Tabs
         label={t('validation.tabs.label')}
         items={[
+          ...leadingTabs,
           {
             id: TAB.document,
             label: t('validation.tabs.document'),

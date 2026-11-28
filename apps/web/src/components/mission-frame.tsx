@@ -77,6 +77,7 @@ export function MissionFrame({ children }: { children: ReactNode }) {
           { href: `${base}/analyse`, label: t('shell.nav.analysis') },
           { href: `${base}/livrables`, label: t('shell.nav.deliverables') },
           { href: `${base}/cartographie`, label: t('shell.nav.mapping') },
+          { href: `${base}/diagnostic`, label: t('shell.nav.diagnostic') },
           { href: `${base}/validation`, label: t('shell.nav.validation') },
           { href: `${base}/equipe`, label: t('shell.nav.team') },
         ];

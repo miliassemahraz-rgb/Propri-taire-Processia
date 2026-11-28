@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import type { SubmissionPreviewDto } from '@processia/contracts';
+import type { SubmissionKind, SubmissionPreviewDto } from '@processia/contracts';
 import { t } from '@processia/i18n';
 import type { ElementKind } from '@processia/model';
 import { Button, Dialog, Notice, TextField, showToast } from '@processia/ui';
@@ -14,11 +14,22 @@ type Loaded =
   | { status: 'error'; message: string }
   | { status: 'ready'; preview: SubmissionPreviewDto };
 
+/** Hypothèses listées d'emblée dans la boîte de dialogue ; les autres sont comptées (l'AS-IS en compte des centaines). */
+const EXCLUDED_SHOWN = 40;
+
 /**
- * « Soumettre au validateur » (en-tête de l'espace Analyse, maquette `Analyse.dc.html`) :
- * l'aperçu fige la version de tête et liste les hypothèses exclues avant l'envoi (CDC 3.4).
+ * « Soumettre au validateur » (en-tête de l'espace Analyse, maquette `Analyse.dc.html`, et page
+ * Cartographie pour l'AS-IS, WP-21) : l'aperçu fige la version de tête et liste les hypothèses
+ * exclues avant l'envoi (CDC 3.4).
  */
-export function SubmitToValidator({ missionId }: { missionId: string }) {
+export function SubmitToValidator({
+  missionId,
+  kind = 'analysis_dossier',
+}: {
+  missionId: string;
+  kind?: SubmissionKind;
+}) {
+  const asIs = kind === 'as_is';
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' });
@@ -32,7 +43,7 @@ export function SubmitToValidator({ missionId }: { missionId: string }) {
     try {
       setLoaded({
         status: 'ready',
-        preview: await endpoints.submissionPreview(missionId, 'analysis_dossier'),
+        preview: await endpoints.submissionPreview(missionId, kind),
       });
     } catch (error) {
       setLoaded({ status: 'error', message: errorMessage(error) });
@@ -43,7 +54,7 @@ export function SubmitToValidator({ missionId }: { missionId: string }) {
     setBusy(true);
     try {
       const created = await endpoints.submit(missionId, {
-        kind: 'analysis_dossier',
+        kind,
         ...(note.trim() === '' ? {} : { comment: note.trim() }),
       });
       showToast({ tone: 'success', title: t('validation.submit.done', { round: created.round }) });
@@ -59,8 +70,14 @@ export function SubmitToValidator({ missionId }: { missionId: string }) {
   const preview = loaded.status === 'ready' ? loaded.preview : null;
   return (
     <>
-      <Button onPress={() => void show()}>{t('validation.submit.button')}</Button>
-      <Dialog title={t('validation.submit.title')} isOpen={open} onOpenChange={setOpen}>
+      <Button onPress={() => void show()} data-testid={`submit-${kind}`}>
+        {asIs ? t('validation.submit.buttonAsIs') : t('validation.submit.button')}
+      </Button>
+      <Dialog
+        title={asIs ? t('validation.submit.titleAsIs') : t('validation.submit.title')}
+        isOpen={open}
+        onOpenChange={setOpen}
+      >
         <div className="stack" data-testid="submit-dialog">
           {loaded.status === 'loading' ? (
             <p role="status">{t('validation.submit.loading')}</p>
@@ -72,13 +89,19 @@ export function SubmitToValidator({ missionId }: { missionId: string }) {
           ) : null}
           {preview !== null ? (
             <>
-              <p>{t('validation.submit.intro', { version: preview.modelVersion })}</p>
+              <p>
+                {asIs
+                  ? t('validation.submit.introAsIs', { version: preview.modelVersion })
+                  : t('validation.submit.intro', { version: preview.modelVersion })}
+              </p>
               <p data-testid="submit-included">
                 {t('validation.submit.included', { count: preview.includedCount })}
               </p>
               {preview.blocker !== null ? (
                 <Notice tone="warning" role="alert">
-                  {t(`validation.submit.blocker.${preview.blocker}`)}
+                  {asIs
+                    ? t(`validation.submit.blockerAsIs.${preview.blocker}`)
+                    : t(`validation.submit.blocker.${preview.blocker}`)}
                 </Notice>
               ) : null}
               <section className="stack-sm" aria-labelledby="submit-excluded">
@@ -91,9 +114,13 @@ export function SubmitToValidator({ missionId }: { missionId: string }) {
                   <p className="muted small">{t('validation.submit.excludedNone')}</p>
                 ) : (
                   <>
-                    <p className="muted small">{t('validation.submit.excludedHelp')}</p>
+                    <p className="muted small">
+                      {asIs
+                        ? t('validation.submit.excludedHelpAsIs')
+                        : t('validation.submit.excludedHelp')}
+                    </p>
                     <ul className="stack-sm" aria-label={t('validation.submit.excludedList')}>
-                      {preview.excludedHypotheses.map((hypothesis) => (
+                      {preview.excludedHypotheses.slice(0, EXCLUDED_SHOWN).map((hypothesis) => (
                         <li key={hypothesis.id}>
                           <span className="strong">{hypothesis.code}</span> {hypothesis.label}{' '}
                           <span className="muted small">
@@ -102,6 +129,13 @@ export function SubmitToValidator({ missionId }: { missionId: string }) {
                         </li>
                       ))}
                     </ul>
+                    {preview.excludedHypotheses.length > EXCLUDED_SHOWN ? (
+                      <p className="muted small" data-testid="submit-excluded-more">
+                        {t('validation.submit.excludedMore', {
+                          count: preview.excludedHypotheses.length - EXCLUDED_SHOWN,
+                        })}
+                      </p>
+                    ) : null}
                   </>
                 )}
               </section>
