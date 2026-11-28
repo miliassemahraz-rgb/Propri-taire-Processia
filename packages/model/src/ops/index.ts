@@ -13,3 +13,4 @@ export * from './types.js';
 export * from './views.js';
 export * from './reject.js';
 export * from './outline.js';
+export * from './removal.js';

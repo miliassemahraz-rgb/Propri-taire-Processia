@@ -22,3 +22,5 @@ export * from './guided/plan.js';
 export * from './pipelines/process-flow.js';
 export * from './flow/plan.js';
 export * from './flow/scope.js';
+export * from './pipelines/model-edit.js';
+export * from './edit/plan.js';
